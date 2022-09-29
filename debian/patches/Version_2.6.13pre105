@@ -1,0 +1,36 @@
+Description: <short summary of the patch>
+ TODO: Put a short summary on the line above and replace this paragraph
+ with a longer explanation of this change. Complete the meta-information
+ with other relevant fields (see below for details). To make it easier, the
+ information below has been extracted from the changelog. Adjust it or drop
+ it.
+ .
+ gcl (2.6.12-108) unstable; urgency=medium
+ .
+   * Version_2.6.13pre105
+Author: Camm Maguire <camm@debian.org>
+
+---
+The information above should follow the Patch Tagging Guidelines, please
+checkout http://dep.debian.net/deps/dep3/ to learn about the format. Here
+are templates for supplementary fields that you might want to add:
+
+Origin: <vendor|upstream|other>, <url of original patch>
+Bug: <url in upstream bugtracker>
+Bug-Debian: https://bugs.debian.org/<bugnumber>
+Bug-Ubuntu: https://launchpad.net/bugs/<bugnumber>
+Forwarded: <no|not-needed|url proving that it has been forwarded>
+Reviewed-By: <name and email of someone who approved the patch>
+Last-Update: 2021-11-09
+
+--- gcl-2.6.12.orig/o/number.c
++++ gcl-2.6.12/o/number.c
+@@ -65,7 +65,7 @@ struct {int min,max;} bigger_fixnums;
+ struct fixnum_struct *bigger_fixnum_table;
+ #if !defined(IM_FIX_BASE) || defined(USE_SAFE_CDR)
+ #define STATIC_BIGGER_FIXNUM_TABLE_BITS 10
+-static struct fixnum_struct bigger_fixnum_table1[1<<(STATIC_BIGGER_FIXNUM_TABLE_BITS+1)];
++static struct fixnum_struct bigger_fixnum_table1[1<<(STATIC_BIGGER_FIXNUM_TABLE_BITS+1)] OBJ_ALIGN;
+ #endif
+ 
+ DEFUN_NEW("ALLOCATE-BIGGER-FIXNUM-RANGE",object,fSallocate_bigger_fixnum_range,SI,2,2,NONE,OI,IO,OO,OO,(fixnum min,fixnum max),"")  {

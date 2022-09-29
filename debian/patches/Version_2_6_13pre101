@@ -1,0 +1,87 @@
+Description: <short summary of the patch>
+ TODO: Put a short summary on the line above and replace this paragraph
+ with a longer explanation of this change. Complete the meta-information
+ with other relevant fields (see below for details). To make it easier, the
+ information below has been extracted from the changelog. Adjust it or drop
+ it.
+ .
+ gcl (2.6.12-104) unstable; urgency=medium
+ .
+   * Version_2.6.13pre100
+   * standardize cstack start address on 32bit arm
+Author: Camm Maguire <camm@debian.org>
+
+---
+The information above should follow the Patch Tagging Guidelines, please
+checkout http://dep.debian.net/deps/dep3/ to learn about the format. Here
+are templates for supplementary fields that you might want to add:
+
+Origin: <vendor|upstream|other>, <url of original patch>
+Bug: <url in upstream bugtracker>
+Bug-Debian: https://bugs.debian.org/<bugnumber>
+Bug-Ubuntu: https://launchpad.net/bugs/<bugnumber>
+Forwarded: <no|not-needed|url proving that it has been forwarded>
+Reviewed-By: <name and email of someone who approved the patch>
+Last-Update: 2021-10-10
+
+--- gcl-2.6.12.orig/h/notcomp.h
++++ gcl-2.6.12/h/notcomp.h
+@@ -299,7 +299,7 @@ char FN1[PATH_MAX],FN2[PATH_MAX],FN3[PAT
+ #define coerce_to_filename(a_,b_) coerce_to_filename1(a_,b_,sizeof(b_))
+ 
+ #include <errno.h>
+-#define massert(a_) ({errno=0;if (!(a_)||errno) assert_error(#a_,__LINE__,__FILE__,__FUNCTION__);})
++#define massert(a_) ({errno=0;if (!(a_)) assert_error(#a_,__LINE__,__FILE__,__FUNCTION__);})
+ 
+ extern bool writable_malloc;
+ #define writable_malloc_wrap(f_,rt_,a_...) ({rt_ v;bool w=writable_malloc;writable_malloc=1;v=f_(a_);writable_malloc=w;v;})
+--- gcl-2.6.12.orig/lsp/gcl_directory.lsp
++++ gcl-2.6.12/lsp/gcl_directory.lsp
+@@ -71,7 +71,7 @@
+     (setq *current-directory* (current-directory-pathname))))
+ 
+ (defun which (s)
+-  (let ((r (with-open-file (s (apply 'string-concatenate "|" #-winnt "which "
++  (let ((r (with-open-file (s (apply 'string-concatenate "|" #-winnt "command -v "
+ 				     #+winnt "for %i in (" s #+winnt ".exe) do @echo.%~$PATH:i" nil))
+ 			   (read-line s nil 'eof))))
+     (unless (eq r 'eof)
+--- gcl-2.6.12.orig/o/cmpaux.c
++++ gcl-2.6.12/o/cmpaux.c
+@@ -560,3 +560,8 @@ DEFUN_NEW("FIND-INIT-NAME", object, fSfi
+ 
+ }
+ 
++DEFUN_NEW("SEEK-TO-END-OFILE",object,fSseek_to_end_ofile,SI,1,1,NONE,OO,OO,OO,OO,(object sm),"") {
++  check_type_stream(&sm);
++  SEEK_TO_END_OFILE(sm->sm.sm_fp);
++  RETURN1(sm);
++}
+--- gcl-2.6.12.orig/o/main.c
++++ gcl-2.6.12/o/main.c
+@@ -449,12 +449,21 @@ gcl_cleanup(int gc) {
+ /*gcc boolean expression tail position bug*/
+ static char *stack_to_be_allocated;
+ 
+-void
+-get_stack_to_be_allocated(unsigned long size) {
+-  stack_to_be_allocated=alloca(size);
+-  memset(stack_to_be_allocated,0,size);
++int
++stack_ret(char *s,unsigned long size) {
++  int r,i;
++  for (i=r=0;i<size;i++)
++    r^=((unsigned char)s[i])|((ufixnum)(s+i));
++  return r;
+ }
+ 
++int
++get_stack_to_be_allocated(unsigned long size) {
++   stack_to_be_allocated=alloca(size);
++   memset(stack_to_be_allocated,0,size);
++   return stack_ret(stack_to_be_allocated,size);
++ }
++
+ DEFUN_NEW("EQUAL-TAIL-RECURSION-CHECK",object,fSequal_tail_recursion_check,SI,1,1,NONE,II,OO,OO,OO,(fixnum s),"") {
+   object x0=make_list(s/sizeof(object)),x1=make_list(s/sizeof(object));
+   char *w;
