@@ -1,4 +1,4 @@
-This is gcl-si.info, produced by makeinfo version 5.2 from gcl-si.texi.
+This is gcl-si.info, produced by makeinfo version 6.7 from gcl-si.texi.
 
 INFO-DIR-SECTION GNU Common Lisp
 START-INFO-DIR-ENTRY
@@ -14,57 +14,57 @@ File: gcl-si.info,  Node: Top,  Next: Numbers,  Prev: (dir),  Up: (dir)
 
 * Menu:
 
-* Numbers::			
-* Sequences and Arrays and Hash Tables::  
-* Characters::			
-* Lists::			
-* Streams and Reading::		
-* Special Forms and Functions::	 
-* Compilation::			
-* Symbols::			
-* Operating System::		
-* Structures::			
-* Iteration and Tests::		
-* User Interface::		
-* Doc::				
-* Type::			
-* GCL Specific::		
-* C Interface::			
-* System Definitions::		
-* Debugging::			
-* Miscellaneous::		
-* Compiler Definitions::	
-* Function and Variable Index::	 
+* Numbers::
+* Sequences and Arrays and Hash Tables::
+* Characters::
+* Lists::
+* Streams and Reading::
+* Special Forms and Functions::
+* Compilation::
+* Symbols::
+* Operating System::
+* Structures::
+* Iteration and Tests::
+* User Interface::
+* Doc::
+* Type::
+* GCL Specific::
+* C Interface::
+* System Definitions::
+* Debugging::
+* Miscellaneous::
+* Compiler Definitions::
+* Function and Variable Index::
 
  -- The Detailed Node Listing --
 
 Operating System
 
-* Command Line::                
-* Operating System Definitions::  
+* Command Line::
+* Operating System Definitions::
 
 GCL Specific
 
-* Bignums::			
+* Bignums::
 
 C Interface
 
-* Available Symbols::		
+* Available Symbols::
 
 System Definitions
 
-* Regular Expressions::		
+* Regular Expressions::
 
 Debugging
 
-* Source Level Debugging in Emacs::  
-* Low Level Debug Functions::	
+* Source Level Debugging in Emacs::
+* Low Level Debug Functions::
 
 Miscellaneous
 
-* Environment::			
-* Inititialization::		
-* Low Level X Interface::	
+* Environment::
+* Inititialization::
+* Low Level X Interface::
 
 
 File: gcl-si.info,  Node: Numbers,  Next: Sequences and Arrays and Hash Tables,  Prev: Top,  Up: Top
@@ -90,7 +90,7 @@ File: gcl-si.info,  Node: Numbers,  Next: Sequences and Arrays and Hash Tables, 
      Package:LISP
 
      Returns, as three values, the integer interpretation of significand
-     F, the exponent E, and the sign S of the given float, so that	E
+     F, the exponent E, and the sign S of the given float, so that E
      FLOAT = S * F * B	where B = (FLOAT-RADIX FLOAT)
 
      F is a non-negative integer, E is an integer, and S is either 1 or
@@ -206,14 +206,14 @@ File: gcl-si.info,  Node: Numbers,  Next: Sequences and Arrays and Hash Tables, 
 
      Returns an integer produced by performing the logical operation
      specified by OP on the two integers.  OP must be the value of one
-     of the following constants:	BOOLE-CLR	BOOLE-C1	BOOLE-XOR
-     BOOLE-ANDC1	BOOLE-SET	BOOLE-C2	BOOLE-EQV	BOOLE-ANDC2	BOOLE-1
-     BOOLE-AND	BOOLE-NAND	BOOLE-ORC1	BOOLE-2	BOOLE-IOR	BOOLE-NOR
+     of the following constants: BOOLE-CLR	BOOLE-C1	BOOLE-XOR
+     BOOLE-ANDC1 BOOLE-SET	BOOLE-C2	BOOLE-EQV	BOOLE-ANDC2 BOOLE-1
+     BOOLE-AND	BOOLE-NAND	BOOLE-ORC1 BOOLE-2	BOOLE-IOR	BOOLE-NOR
      BOOLE-ORC2 See the variable docs of these constants for their
      operations.
 
  -- Constant: SHORT-FLOAT-EPSILON
-     Package:LISP The smallest positive short-float that satisfies	(not
+     Package:LISP The smallest positive short-float that satisfies (not
      (= (float 1 e) (+ (float 1 e) e))).
 
  -- Function: LOGORC2 (integer1 integer2)
@@ -413,7 +413,7 @@ File: gcl-si.info,  Node: Numbers,  Next: Sequences and Arrays and Hash Tables, 
      Returns the size part (in GCL, the car part) of the byte specifier.
 
  -- Constant: SHORT-FLOAT-NEGATIVE-EPSILON
-     Package:LISP The smallest positive short-float that satisfies	(not
+     Package:LISP The smallest positive short-float that satisfies (not
      (= (float 1 e) (- (float 1 e) e))).
 
  -- Function: REM (number divisor)
@@ -436,14 +436,14 @@ File: gcl-si.info,  Node: Numbers,  Next: Sequences and Arrays and Hash Tables, 
      Package:LISP
 
      Returns, as three values, the significand F, the exponent E, and
-     the sign S of the given float, so that	E	FLOAT = S * F * B	where B
+     the sign S of the given float, so that E FLOAT = S * F * B	where B
      = (FLOAT-RADIX FLOAT)
 
      S and F are floating-point numbers of the same float format as
      FLOAT, and E is an integer.
 
  -- Constant: LONG-FLOAT-EPSILON
-     Package:LISP The smallest positive long-float that satisfies	(not
+     Package:LISP The smallest positive long-float that satisfies (not
      (= (float 1 e) (+ (float 1 e) e))).
 
  -- Function: FROUND (number &optional (divisor 1))
@@ -657,7 +657,7 @@ File: gcl-si.info,  Node: Numbers,  Next: Sequences and Arrays and Hash Tables, 
      Package:LISP The fixnum closest in value to negative infinity.
 
  -- Constant: LONG-FLOAT-NEGATIVE-EPSILON
-     Package:LISP The smallest positive long-float that satisfies	(not
+     Package:LISP The smallest positive long-float that satisfies (not
      (= (float 1 e) (- (float 1 e) e))).
 
  -- Function: >= (number &rest more-numbers)
@@ -2541,10 +2541,10 @@ File: gcl-si.info,  Node: Streams and Reading,  Next: Special Forms and Function
  -- Function: PPRINT (object &optional (stream *standard-output*))
      Package:LISP
 
-     Pretty-prints OBJECT. Returns OBJECT. Equivalent to	(WRITE :STREAM
+     Pretty-prints OBJECT. Returns OBJECT. Equivalent to (WRITE :STREAM
      STREAM :PRETTY T) The SI:PRETTY-PRINT-FORMAT property N (which must
      be a non-negative integer) of a symbol SYMBOL controls the
-     pretty-printing of form	(SYMBOL f1 ...  fN fN+1 ...  fM) in such a
+     pretty-printing of form (SYMBOL f1 ...  fN fN+1 ...  fM) in such a
      way that the subforms fN+1, ..., fM are regarded as the 'body' of
      the entire form.  For instance, the property value of 2 is
      initially given to the symbol DO.
@@ -2599,7 +2599,7 @@ File: gcl-si.info,  Node: Streams and Reading,  Next: Special Forms and Function
      Package:LISP
 
      Outputs a newline character, and then prints OBJECT in the mostly
-     readable representation.  Returns OBJECT. Equivalent to	(PROGN
+     readable representation.  Returns OBJECT. Equivalent to (PROGN
      (TERPRI STREAM) (WRITE OBJECT :STREAM STREAM :ESCAPE T)).
 
  -- Function: SET-MACRO-CHARACTER (char function &optional
@@ -2643,7 +2643,7 @@ File: gcl-si.info,  Node: Streams and Reading,  Next: Special Forms and Function
      Package:LISP
 
      Prints OBJECT without escape characters.  Returns OBJECT.
-     Equivalent to	(WRITE OBJECT :STREAM STREAM :ESCAPE NIL).
+     Equivalent to (WRITE OBJECT :STREAM STREAM :ESCAPE NIL).
 
  -- Function: CLEAR-OUTPUT (&optional (stream *standard-output*))
      Package:LISP
@@ -3120,7 +3120,7 @@ File: gcl-si.info,  Node: Streams and Reading,  Next: Special Forms and Function
      Package:LISP
 
      Returns as a string the printed representation of OBJECT without
-     escape characters.  Equivalent to	(WRITE-TO-STRING OBJECT :ESCAPE
+     escape characters.  Equivalent to (WRITE-TO-STRING OBJECT :ESCAPE
      NIL).
 
  -- Variable: *STANDARD-INPUT*
@@ -3219,15 +3219,6 @@ File: gcl-si.info,  Node: Special Forms and Functions,  Next: Compilation,  Prev
 
  -- Constant: LAMBDA-LIST-KEYWORDS
      Package:LISP List of all the lambda-list keywords used in GCL.
-
- -- Function: GET-SETF-METHOD (form)
-     Package:LISP
-
-     Returns the five values (or five 'gangs') constituting the SETF
-     method for FORM. See the doc of DEFINE-SETF-METHOD for the meanings
-     of the gangs.  It is an error if the third value (i.e., the list of
-     store variables) is not a one-element list.  See the doc of
-     GET-SETF-METHOD-MULTIPLE-VALUE for comparison.
 
  -- Special Form: THE
      Package:LISP
@@ -3368,9 +3359,9 @@ File: gcl-si.info,  Node: Special Forms and Functions,  Next: Compilation,  Prev
           (defun name lambda-list {decl | doc}* {form}*)
 
      Defines a function as the global function definition of the symbol
-     NAME. The complete syntax of a lambda-list is:	({var}*	[&optional
-     {var | (var [initform [svar]])}*]	[&rest var]	[&key {var | ({var |
-     (keyword var)} [initform [svar]])}*	[&allow-other-keys]]	[&aux {var
+     NAME. The complete syntax of a lambda-list is: ({var}* [&optional
+     {var | (var [initform [svar]])}*] [&rest var] [&key {var | ({var |
+     (keyword var)} [initform [svar]])}* [&allow-other-keys]] [&aux {var
      | (var [initform])}*]) The doc-string DOC, if supplied, is saved as
      a FUNCTION doc and can be retrieved by (documentation 'NAME
      'function).
@@ -3761,11 +3752,11 @@ File: gcl-si.info,  Node: Special Forms and Functions,  Next: Compilation,  Prev
      (ACCESS-FUN ...).  When a form (setf (ACCESS-FUN arg1 ...  argn)
      value) is being evaluated, the FORMs are first evaluated as a PROGN
      with the parameters in DEFMACRO-LAMBDA-LIST bound to ARG1 ...
-     ARGn.  Assuming that the last FORM returns five values	(temp-var-1
-     ...  temp-var-k)	(value-from-1 ...  value-form-k)	(store-var)
-     storing-form	access-form in order, the whole SETF is then expanded
-     into	(let* ((temp-var-1 value-from-1) ...  (temp-k value-form-k)
-     (store-var VALUE))	storing-from) Incidentally, the five values are
+     ARGn.  Assuming that the last FORM returns five values (temp-var-1
+     ...  temp-var-k) (value-from-1 ...  value-form-k) (store-var)
+     storing-form access-form in order, the whole SETF is then expanded
+     into (let* ((temp-var-1 value-from-1) ...  (temp-k value-form-k)
+     (store-var VALUE)) storing-from) Incidentally, the five values are
      called the five gangs of a SETF method.  The doc-string DOC, if
      supplied, is saved as a SETF doc and can be retrieved by
      (documentation 'NAME 'setf).
@@ -4145,7 +4136,7 @@ that variable has value :defaults, then the following hold:
 Partial:
      defstructs, defvar, defparameter
 Full:
-     defmacro, defconstant, defsetf, define-setf-method,	deftype,
+     defmacro, defconstant, defsetf, define-setf-method, deftype,
      package ops, proclaim
 None:
      defun, others
@@ -4514,11 +4505,11 @@ File: gcl-si.info,  Node: Symbols,  Next: Operating System,  Prev: Compilation, 
      Package:LISP
 
      Returns the doc-string of DOC-TYPE for SYMBOL; NIL if none exists.
-     Possible doc-types are:	FUNCTION (special forms, macros, and
-     functions)	VARIABLE (dynamic variables, including constants)	TYPE
-     (types defined by DEFTYPE)	STRUCTURE (structures defined by
-     DEFSTRUCT)	SETF (SETF methods defined by DEFSETF,
-     DEFINE-SETF-METHOD, and	DEFINE-MODIFY-MACRO) All built-in special
+     Possible doc-types are: FUNCTION (special forms, macros, and
+     functions) VARIABLE (dynamic variables, including constants) TYPE
+     (types defined by DEFTYPE) STRUCTURE (structures defined by
+     DEFSTRUCT) SETF (SETF methods defined by DEFSETF,
+     DEFINE-SETF-METHOD, and DEFINE-MODIFY-MACRO) All built-in special
      forms, macros, functions, and variables have their doc-strings.
 
  -- Function: GENTEMP (&optional (prefix "t") (package *package*))
@@ -4604,8 +4595,8 @@ File: gcl-si.info,  Node: Operating System,  Next: Structures,  Prev: Symbols,  
 
 * Menu:
 
-* Command Line::                
-* Operating System Definitions::  
+* Command Line::
+* Operating System Definitions::
 
 
 File: gcl-si.info,  Node: Command Line,  Next: Operating System Definitions,  Prev: Operating System,  Up: Operating System
@@ -4826,7 +4817,7 @@ File: gcl-si.info,  Node: Operating System Definitions,  Prev: Command Line,  Up
                the maximum number of pages for the type class
                the percentage of used cells to cells so-far allocated
                the number of times the garbage collector has been called
-               to	collect cells of the type class
+               to collect cells of the type class
                the implementation types that belongs to the type class
           the number of pages actually allocated for contiguous blocks
           the maximum number of pages for contiguous blocks
@@ -5494,7 +5485,7 @@ File: gcl-si.info,  Node: Type,  Next: GCL Specific,  Prev: Doc,  Up: Top
           (deftype name lambda-list {decl | doc}* {form}*)
 
      Defines a new type-specifier abbreviation in terms of an
-     'expansion' function	(lambda lambda-list1 {decl}* {form}*) where
+     'expansion' function (lambda lambda-list1 {decl}* {form}*) where
      lambda-list1 is identical to LAMBDA-LIST except that all optional
      parameters with no default value specified in LAMBDA-LIST defaults
      to the symbol '*', but not to NIL. When the type system of GCL
@@ -5744,7 +5735,7 @@ File: gcl-si.info,  Node: GCL Specific,  Next: C Interface,  Prev: Type,  Up: To
 
 * Menu:
 
-* Bignums::			
+* Bignums::
 
 
 File: gcl-si.info,  Node: Bignums,  Prev: GCL Specific,  Up: GCL Specific
@@ -5818,7 +5809,7 @@ File: gcl-si.info,  Node: C Interface,  Next: System Definitions,  Prev: GCL Spe
 
 * Menu:
 
-* Available Symbols::		
+* Available Symbols::
 
 
 File: gcl-si.info,  Node: Available Symbols,  Prev: C Interface,  Up: C Interface
@@ -6215,7 +6206,7 @@ File: gcl-si.info,  Node: System Definitions,  Next: Debugging,  Prev: C Interfa
      Package:SI
 
      GCL/BSD specific: Loads the FASL file FILE while linking the object
-     files and libraries specified by STRING. For example,	(faslink
+     files and libraries specified by STRING. For example, (faslink
      "foo.o" "bar.o boo.o -lpixrect") loads foo.o while linking two
      object files (bar.o and boo.o) and the library pixrect.  Usually,
      foo.o consists of the C language interface for the functions
@@ -6434,7 +6425,7 @@ File: gcl-si.info,  Node: System Definitions,  Next: Debugging,  Prev: C Interfa
      package; /* the package symbols are in by default */ object index;
      /* integer.  The current_dump index on write */ object filepos; /*
      nil or the position of the start */ object table_length; /* On read
-     it is set to the size dump array needed	or 0	*/ object macro ; }
+     it is set to the size dump array needed or 0 */ object macro ; }
 
      We did not use a defstruct for this, because we want the compiler
      to use this and it makes bootstrapping more difficult.  It is in
@@ -6633,7 +6624,7 @@ File: gcl-si.info,  Node: System Definitions,  Next: Debugging,  Prev: C Interfa
 
 * Menu:
 
-* Regular Expressions::		
+* Regular Expressions::
 
 
 File: gcl-si.info,  Node: Regular Expressions,  Prev: System Definitions,  Up: System Definitions
@@ -6771,8 +6762,8 @@ File: gcl-si.info,  Node: Debugging,  Next: Miscellaneous,  Prev: System Definit
 
 * Menu:
 
-* Source Level Debugging in Emacs::  
-* Low Level Debug Functions::	
+* Source Level Debugging in Emacs::
+* Low Level Debug Functions::
 
 
 File: gcl-si.info,  Node: Source Level Debugging in Emacs,  Next: Low Level Debug Functions,  Prev: Debugging,  Up: Debugging
@@ -6900,9 +6891,9 @@ File: gcl-si.info,  Node: Miscellaneous,  Next: Compiler Definitions,  Prev: Deb
 
 * Menu:
 
-* Environment::			
-* Inititialization::		
-* Low Level X Interface::	
+* Environment::
+* Inititialization::
+* Low Level X Interface::
 
 
 File: gcl-si.info,  Node: Environment,  Next: Inititialization,  Prev: Miscellaneous,  Up: Miscellaneous
@@ -7093,7 +7084,7 @@ Appendix A Function and Variable Index
 * ***:                                   User Interface.      (line  25)
 * *AFTER-GBC-HOOK*:                      System Definitions.  (line 254)
 * *APPLYHOOK*:                           Special Forms and Functions.
-                                                              (line 622)
+                                                              (line 613)
 * *BREAK-ENABLE*:                        User Interface.      (line  44)
 * *BREAK-ON-WARNINGS*:                   User Interface.      (line  64)
 * *CASE-FOLD-SEARCH*:                    System Definitions.  (line 733)
@@ -7113,7 +7104,7 @@ Appendix A Function and Variable Index
 * *DEFAULT-TIME-ZONE*:                   System Definitions.  (line 365)
 * *ERROR-OUTPUT*:                        User Interface.      (line  98)
 * *EVALHOOK*:                            Special Forms and Functions.
-                                                              (line 248)
+                                                              (line 239)
 * *FEATURES*:                            Compilation.         (line 251)
 * *GBC-MESSAGE*:                         System Definitions.  (line 244)
 * *GBC-NOTIFY*:                          System Definitions.  (line 249)
@@ -7126,7 +7117,7 @@ Appendix A Function and Variable Index
 * *LOAD-PATHNAME*:                       System Definitions.  (line 640)
 * *LOAD-VERBOSE*:                        Streams and Reading. (line 595)
 * *MACROEXPAND-HOOK*:                    Special Forms and Functions.
-                                                              (line 376)
+                                                              (line 367)
 * *MAKE-CONSTANT:                        System Definitions.  (line 186)
 * *MAKE-SPECIAL:                         System Definitions.  (line 281)
 * *MODULES*:                             Operating System Definitions.
@@ -7214,12 +7205,12 @@ Appendix A Function and Variable Index
 * ALPHA-CHAR-P:                          Characters.          (line 151)
 * ALPHANUMERICP:                         Characters.          (line 230)
 * AND:                                   Special Forms and Functions.
-                                                              (line 450)
+                                                              (line 441)
 * APPEND:                                Lists.               (line 585)
 * APPLY:                                 Special Forms and Functions.
-                                                              (line 410)
+                                                              (line 401)
 * APPLYHOOK:                             Special Forms and Functions.
-                                                              (line 368)
+                                                              (line 359)
 * APROPOS:                               Doc.                 (line   6)
 * APROPOS-LIST:                          Symbols.             (line 315)
 * AREF:                                  Sequences and Arrays and Hash Tables.
@@ -7284,7 +7275,7 @@ Appendix A Function and Variable Index
 * BIT-XOR:                               Sequences and Arrays and Hash Tables.
                                                               (line 403)
 * BLOCK:                                 Special Forms and Functions.
-                                                              (line 391)
+                                                              (line 382)
 * BOOLE:                                 Numbers.             (line 135)
 * BOOLE-1:                               Numbers.             (line 493)
 * BOOLE-2:                               Numbers.             (line 554)
@@ -7329,16 +7320,16 @@ Appendix A Function and Variable Index
 * CADDR:                                 Lists.               (line 574)
 * CADR:                                  Lists.               (line 237)
 * CALL-ARGUMENTS-LIMIT:                  Special Forms and Functions.
-                                                              (line 523)
+                                                              (line 514)
 * CAR:                                   Lists.               (line 460)
 * CASE:                                  Special Forms and Functions.
-                                                              (line 528)
+                                                              (line 519)
 * CATCH:                                 Special Forms and Functions.
-                                                              (line 487)
+                                                              (line 478)
 * CATCH-BAD-SIGNALS:                     System Definitions.  (line 225)
 * CATCH-FATAL:                           System Definitions.  (line 448)
 * CCASE:                                 Special Forms and Functions.
-                                                              (line  62)
+                                                              (line  53)
 * CDAAAR:                                Lists.               (line 482)
 * CDAADR:                                Lists.               (line 143)
 * CDAAR:                                 Lists.               (line 357)
@@ -7405,13 +7396,13 @@ Appendix A Function and Variable Index
 * COMPILED-FUNCTION-NAME:                System Definitions.  (line 107)
 * COMPILED-FUNCTION-P:                   Compilation.         (line 196)
 * COMPILER-LET:                          Special Forms and Functions.
-                                                              (line 559)
+                                                              (line 550)
 * COMPLEX:                               Numbers.             (line 568)
 * COMPLEXP:                              Numbers.             (line 507)
 * CONCATENATE:                           Sequences and Arrays and Hash Tables.
                                                               (line 464)
 * COND:                                  Special Forms and Functions.
-                                                              (line 469)
+                                                              (line 460)
 * CONJUGATE:                             Numbers.             (line 712)
 * CONS:                                  Lists.               (line 118)
 * CONSP:                                 Lists.               (line  55)
@@ -7434,37 +7425,37 @@ Appendix A Function and Variable Index
 * COUNT-IF-NOT:                          Sequences and Arrays and Hash Tables.
                                                               (line 380)
 * CTYPECASE:                             Special Forms and Functions.
-                                                              (line 733)
+                                                              (line 724)
 * DBL:                                   System Definitions.  (line 662)
 * DECF:                                  Numbers.             (line 448)
 * DECLARE:                               Special Forms and Functions.
-                                                              (line 173)
+                                                              (line 164)
 * DECODE-FLOAT:                          Numbers.             (line 366)
 * DECODE-UNIVERSAL-TIME:                 Operating System Definitions.
                                                               (line  42)
 * DEFCFUN:                               GCL Specific.        (line  44)
 * DEFCONSTANT:                           Special Forms and Functions.
-                                                              (line 675)
+                                                              (line 666)
 * DEFENTRY:                              GCL Specific.        (line 153)
 * DEFINE-COMPILER-MACRO:                 System Definitions.  (line 654)
 * DEFINE-INLINE-FUNCTION:                System Definitions.  (line 644)
 * DEFINE-MODIFY-MACRO:                   Special Forms and Functions.
-                                                              (line 497)
+                                                              (line 488)
 * DEFINE-SETF-METHOD:                    Special Forms and Functions.
-                                                              (line 539)
+                                                              (line 530)
 * DEFLA:                                 GCL Specific.        (line 136)
 * DEFMACRO:                              Special Forms and Functions.
-                                                              (line 216)
+                                                              (line 207)
 * DEFPARAMETER:                          Special Forms and Functions.
-                                                              (line 769)
+                                                              (line 760)
 * DEFSETF:                               Special Forms and Functions.
-                                                              (line  88)
+                                                              (line  79)
 * DEFSTRUCT:                             Structures.          (line   6)
 * DEFTYPE:                               Type.                (line  58)
 * DEFUN:                                 Special Forms and Functions.
-                                                              (line 150)
+                                                              (line 141)
 * DEFVAR:                                Special Forms and Functions.
-                                                              (line 779)
+                                                              (line 770)
 * DELETE:                                Sequences and Arrays and Hash Tables.
                                                               (line 267)
 * DELETE-DUPLICATES:                     Sequences and Arrays and Hash Tables.
@@ -7493,14 +7484,14 @@ Appendix A Function and Variable Index
 * DOCUMENTATION:                         Symbols.             (line 236)
 * DOLIST:                                Iteration and Tests. (line  59)
 * DOTIMES:                               Special Forms and Functions.
-                                                              (line 315)
+                                                              (line 306)
 * DOUBLE-FLOAT-EPSILON:                  Numbers.             (line 754)
 * DOUBLE-FLOAT-NEGATIVE-EPSILON:         Numbers.             (line 188)
 * DPB:                                   Numbers.             (line 701)
 * DRIBBLE:                               User Interface.      (line 101)
 * DYNAMIC-EXTENT:                        Type.                (line  77)
 * ECASE:                                 Special Forms and Functions.
-                                                              (line 278)
+                                                              (line 269)
 * ED:                                    User Interface.      (line  56)
 * EIGHTH:                                Lists.               (line  76)
 * ELT:                                   Sequences and Arrays and Hash Tables.
@@ -7519,15 +7510,15 @@ Appendix A Function and Variable Index
 * EQUAL:                                 Iteration and Tests. (line  82)
 * EQUALP:                                Iteration and Tests. (line  74)
 * ERROR:                                 Special Forms and Functions.
-                                                              (line 691)
+                                                              (line 682)
 * ERROR-SET:                             System Definitions.  (line  97)
 * ETYPECASE:                             Special Forms and Functions.
-                                                              (line 120)
+                                                              (line 111)
 * EVAL:                                  Special Forms and Functions.
-                                                              (line 744)
+                                                              (line 735)
 * EVAL-WHEN:                             Compilation.         (line  65)
 * EVALHOOK:                              Special Forms and Functions.
-                                                              (line 716)
+                                                              (line 707)
 * EVENP:                                 Numbers.             (line 476)
 * EVERY:                                 Sequences and Arrays and Hash Tables.
                                                               (line 732)
@@ -7564,7 +7555,7 @@ Appendix A Function and Variable Index
 * FIRST:                                 Lists.               (line 372)
 * FIXNUMP:                               System Definitions.  (line 191)
 * FLET:                                  Special Forms and Functions.
-                                                              (line 264)
+                                                              (line 255)
 * FLOAT:                                 Numbers.             (line 534)
 * FLOAT-DIGITS:                          Numbers.             (line 802)
 * FLOAT-PRECISION:                       Numbers.             (line 691)
@@ -7587,11 +7578,11 @@ Appendix A Function and Variable Index
 * FRS-VS:                                System Definitions.  (line 410)
 * FTRUNCATE:                             Numbers.             (line 169)
 * FUNCALL:                               Special Forms and Functions.
-                                                              (line 518)
+                                                              (line 509)
 * FUNCTION:                              Special Forms and Functions.
-                                                              (line 354)
+                                                              (line 345)
 * FUNCTIONP:                             Special Forms and Functions.
-                                                              (line 253)
+                                                              (line 244)
 * FWRITE:                                System Definitions.  (line 484)
 * GBC:                                   GCL Specific.        (line 110)
 * GBC-TIME:                              System Definitions.  (line 475)
@@ -7610,10 +7601,8 @@ Appendix A Function and Variable Index
 * GET-MACRO-CHARACTER:                   Streams and Reading. (line 512)
 * GET-OUTPUT-STREAM-STRING:              Streams and Reading. (line 671)
 * GET-PROPERTIES:                        Lists.               (line 541)
-* GET-SETF-METHOD:                       Special Forms and Functions.
-                                                              (line   9)
 * GET-SETF-METHOD-MULTIPLE-VALUE:        Special Forms and Functions.
-                                                              (line 480)
+                                                              (line 471)
 * GET-STRING-INPUT-STREAM-INDEX:         System Definitions.  (line  80)
 * GET-UNIVERSAL-TIME:                    Operating System Definitions.
                                                               (line 144)
@@ -7622,7 +7611,7 @@ Appendix A Function and Variable Index
 * GETHASH:                               Sequences and Arrays and Hash Tables.
                                                               (line 297)
 * GO:                                    Special Forms and Functions.
-                                                              (line 604)
+                                                              (line 595)
 * GPROF-QUIT:                            Compilation.         (line 210)
 * GPROF-SET:                             Compilation.         (line 221)
 * GPROF-START:                           Compilation.         (line 201)
@@ -7636,9 +7625,9 @@ Appendix A Function and Variable Index
 * HOST-NAMESTRING:                       Operating System Definitions.
                                                               (line  13)
 * IDENTITY:                              Special Forms and Functions.
-                                                              (line 665)
+                                                              (line 656)
 * IF:                                    Special Forms and Functions.
-                                                              (line 696)
+                                                              (line 687)
 * IHS-FUN:                               System Definitions.  (line 180)
 * IHS-VS:                                System Definitions.  (line 118)
 * IMAGPART:                              Numbers.             (line 422)
@@ -7660,11 +7649,11 @@ Appendix A Function and Variable Index
 * ISQRT:                                 Numbers.             (line 732)
 * KEYWORDP:                              Symbols.             (line  14)
 * LABELS:                                Special Forms and Functions.
-                                                              (line 416)
+                                                              (line 407)
 * LAMBDA-LIST-KEYWORDS:                  Special Forms and Functions.
                                                               (line   6)
 * LAMBDA-PARAMETERS-LIMIT:               Special Forms and Functions.
-                                                              (line 259)
+                                                              (line 250)
 * LAST:                                  Lists.               (line 195)
 * LCM:                                   Numbers.             (line 438)
 * LDB:                                   Numbers.             (line 335)
@@ -7680,9 +7669,9 @@ Appendix A Function and Variable Index
 * LEAST-POSITIVE-SINGLE-FLOAT:           Numbers.             (line 504)
 * LENGTH:                                Lists.               (line  81)
 * LET:                                   Special Forms and Functions.
-                                                              (line 460)
+                                                              (line 451)
 * LET*:                                  Special Forms and Functions.
-                                                              (line 131)
+                                                              (line 122)
 * LINK:                                  Compilation.         (line  22)
 * LISP-IMPLEMENTATION-TYPE:              Operating System Definitions.
                                                               (line 195)
@@ -7700,7 +7689,7 @@ Appendix A Function and Variable Index
 * LISTP:                                 Lists.               (line  65)
 * LOAD:                                  Streams and Reading. (line  16)
 * LOCALLY:                               Special Forms and Functions.
-                                                              (line 657)
+                                                              (line 648)
 * LOG:                                   Numbers.             (line 182)
 * LOGAND:                                Numbers.             (line 549)
 * LOGANDC1:                              Numbers.             (line 499)
@@ -7729,11 +7718,11 @@ Appendix A Function and Variable Index
 * MACHINE-VERSION:                       GCL Specific.        (line  33)
 * MACRO-FUNCTION:                        Symbols.             (line 170)
 * MACROEXPAND:                           Special Forms and Functions.
-                                                              (line  73)
+                                                              (line  64)
 * MACROEXPAND-1:                         Special Forms and Functions.
-                                                              (line 511)
+                                                              (line 502)
 * MACROLET:                              Special Forms and Functions.
-                                                              (line 592)
+                                                              (line 583)
 * MAKE-ALL-PROCLAIMS:                    Compiler Definitions.
                                                               (line  43)
 * MAKE-ARRAY:                            Sequences and Arrays and Hash Tables.
@@ -7801,17 +7790,17 @@ Appendix A Function and Variable Index
 * MOST-POSITIVE-SHORT-FLOAT:             Numbers.             (line  17)
 * MOST-POSITIVE-SINGLE-FLOAT:            Numbers.             (line 496)
 * MULTIPLE-VALUE-BIND:                   Special Forms and Functions.
-                                                              (line 164)
+                                                              (line 155)
 * MULTIPLE-VALUE-CALL:                   Special Forms and Functions.
-                                                              (line  80)
+                                                              (line  71)
 * MULTIPLE-VALUE-LIST:                   Special Forms and Functions.
-                                                              (line 575)
+                                                              (line 566)
 * MULTIPLE-VALUE-PROG1:                  Special Forms and Functions.
-                                                              (line 583)
+                                                              (line 574)
 * MULTIPLE-VALUE-SETQ:                   Special Forms and Functions.
-                                                              (line 648)
+                                                              (line 639)
 * MULTIPLE-VALUES-LIMIT:                 Special Forms and Functions.
-                                                              (line 363)
+                                                              (line 354)
 * NAME-CHAR:                             Characters.          (line   6)
 * NAMESTRING:                            Streams and Reading. (line 382)
 * NANI:                                  System Definitions.  (line 318)
@@ -7822,7 +7811,7 @@ Appendix A Function and Variable Index
 * NINTH:                                 Lists.               (line 477)
 * NLOAD:                                 System Definitions.  (line 669)
 * NOT:                                   Special Forms and Functions.
-                                                              (line 670)
+                                                              (line 661)
 * NOTANY:                                Sequences and Arrays and Hash Tables.
                                                               (line 489)
 * NOTEVERY:                              Sequences and Arrays and Hash Tables.
@@ -7858,7 +7847,7 @@ Appendix A Function and Variable Index
 * OPEN:                                  Streams and Reading. (line  22)
 * OPEN-FASD:                             System Definitions.  (line 578)
 * OR:                                    Special Forms and Functions.
-                                                              (line 723)
+                                                              (line 714)
 * OUTPUT-STREAM-P:                       Streams and Reading. (line 252)
 * OUTPUT-STREAM-STRING:                  System Definitions.  (line  74)
 * PACKAGE-NAME:                          Symbols.             (line 302)
@@ -7901,26 +7890,26 @@ Appendix A Function and Variable Index
 * PROCLAMATION:                          GCL Specific.        (line 146)
 * PROF:                                  System Definitions.  (line 425)
 * PROG:                                  Special Forms and Functions.
-                                                              (line 613)
+                                                              (line 604)
 * PROG*:                                 Special Forms and Functions.
-                                                              (line 382)
+                                                              (line 373)
 * PROG1:                                 Special Forms and Functions.
-                                                              (line 141)
+                                                              (line 132)
 * PROG2:                                 Special Forms and Functions.
-                                                              (line 289)
+                                                              (line 280)
 * PROGN:                                 Special Forms and Functions.
-                                                              (line 401)
+                                                              (line 392)
 * PROGV:                                 Special Forms and Functions.
-                                                              (line 298)
+                                                              (line 289)
 * PROVIDE:                               Compilation.         (line 190)
 * PSETF:                                 Special Forms and Functions.
-                                                              (line 749)
+                                                              (line 740)
 * PSETQ:                                 Symbols.             (line  73)
 * PUSH:                                  Lists.               (line 349)
 * PUSHNEW:                               Lists.               (line 395)
 * PUTPROP:                               System Definitions.  (line  33)
 * QUOTE:                                 Special Forms and Functions.
-                                                              (line 308)
+                                                              (line 299)
 * RANDOM:                                Numbers.             (line 809)
 * RANDOM-STATE-P:                        Numbers.             (line 683)
 * RASSOC:                                Lists.               (line  86)
@@ -7968,9 +7957,9 @@ Appendix A Function and Variable Index
 * RESET-STACK-LIMITS:                    System Definitions.  (line 236)
 * REST:                                  Lists.               (line 242)
 * RETURN:                                Special Forms and Functions.
-                                                              (line 429)
+                                                              (line 420)
 * RETURN-FROM:                           Special Forms and Functions.
-                                                              (line 629)
+                                                              (line 620)
 * REVAPPEND:                             Lists.               (line 227)
 * REVERSE:                               Sequences and Arrays and Hash Tables.
                                                               (line  81)
@@ -7999,7 +7988,7 @@ Appendix A Function and Variable Index
 * SET-MACRO-CHARACTER:                   Streams and Reading. (line 119)
 * SET-SYNTAX-FROM-CHAR:                  Streams and Reading. (line 403)
 * SETF:                                  Special Forms and Functions.
-                                                              (line  27)
+                                                              (line  18)
 * SETQ:                                  Symbols.             (line 101)
 * SEVENTH:                               Lists.               (line 173)
 * SGC-ON:                                System Definitions.  (line 501)
@@ -8034,7 +8023,7 @@ Appendix A Function and Variable Index
 * SORT:                                  Sequences and Arrays and Hash Tables.
                                                               (line 371)
 * SPECIAL-FORM-P:                        Special Forms and Functions.
-                                                              (line 325)
+                                                              (line 316)
 * SPECIALP:                              System Definitions.  (line  68)
 * SQRT:                                  Numbers.             (line 621)
 * STABLE-SORT:                           Sequences and Arrays and Hash Tables.
@@ -8114,17 +8103,17 @@ Appendix A Function and Variable Index
 * SYSTEM:                                GCL Specific.        (line   6)
 * T:                                     Symbols.             (line 118)
 * TAGBODY:                               Special Forms and Functions.
-                                                              (line 112)
+                                                              (line 103)
 * TAILP:                                 Lists.               (line  50)
 * TAN:                                   Numbers.             (line 233)
 * TANH:                                  Numbers.             (line 241)
 * TENTH:                                 Lists.               (line  60)
 * TERPRI:                                Streams and Reading. (line 167)
 * THE:                                   Special Forms and Functions.
-                                                              (line  18)
+                                                              (line   9)
 * THIRD:                                 Lists.               (line 128)
 * THROW:                                 Special Forms and Functions.
-                                                              (line 759)
+                                                              (line 750)
 * TIME:                                  Operating System Definitions.
                                                               (line 181)
 * TOP-LEVEL:                             System Definitions.  (line 401)
@@ -8134,7 +8123,7 @@ Appendix A Function and Variable Index
 * TRUNCATE:                              Numbers.             (line 323)
 * TYPE-OF:                               Type.                (line  11)
 * TYPECASE:                              Special Forms and Functions.
-                                                              (line 439)
+                                                              (line 430)
 * TYPEP:                                 Type.                (line  22)
 * UNCATCH-BAD-SIGNALS:                   System Definitions.  (line 343)
 * UNEXPORT:                              Symbols.             (line 267)
@@ -8142,21 +8131,21 @@ Appendix A Function and Variable Index
 * UNION:                                 Lists.               (line 438)
 * UNIVERSAL-ERROR-HANDLER:               System Definitions.  (line 124)
 * UNLESS:                                Special Forms and Functions.
-                                                              (line 639)
+                                                              (line 630)
 * UNREAD-CHAR:                           Streams and Reading. (line 387)
 * UNTRACE:                               User Interface.      (line  16)
 * UNUSE-PACKAGE:                         Symbols.             (line 112)
 * UNWIND-PROTECT:                        Special Forms and Functions.
-                                                              (line 706)
+                                                              (line 697)
 * UPPER-CASE-P:                          Characters.          (line 157)
 * USE-FAST-LINKS:                        GCL Specific.        (line 218)
 * USE-PACKAGE:                           Symbols.             (line  59)
 * USER-HOMEDIR-PATHNAME:                 Operating System Definitions.
                                                               (line  51)
 * VALUES:                                Special Forms and Functions.
-                                                              (line 570)
+                                                              (line 561)
 * VALUES-LIST:                           Special Forms and Functions.
-                                                              (line 686)
+                                                              (line 677)
 * VECTOR:                                Sequences and Arrays and Hash Tables.
                                                               (line   6)
 * VECTOR-POP:                            Sequences and Arrays and Hash Tables.
@@ -8170,7 +8159,7 @@ Appendix A Function and Variable Index
 * VS:                                    System Definitions.  (line 348)
 * WARN:                                  User Interface.      (line 114)
 * WHEN:                                  Special Forms and Functions.
-                                                              (line  53)
+                                                              (line  44)
 * WHO-CALLS:                             Compiler Definitions.
                                                               (line  87)
 * WITH-INPUT-FROM-STRING:                Streams and Reading. (line 273)
@@ -8196,36 +8185,41 @@ Appendix A Function and Variable Index
 
 Tag Table:
 Node: Top291
-Node: Numbers1233
-Node: Sequences and Arrays and Hash Tables23630
-Node: Characters49423
-Node: Lists56819
-Node: Streams and Reading70593
-Node: Special Forms and Functions95980
-Node: Compilation121632
-Node: Symbols134272
-Node: Operating System144030
-Node: Command Line144238
-Node: Operating System Definitions148244
-Node: Structures155543
-Node: Iteration and Tests157095
-Node: User Interface160545
-Node: Doc169571
-Node: Type172820
-Node: GCL Specific175480
-Node: Bignums183907
-Node: C Interface186597
-Node: Available Symbols186761
-Node: System Definitions187240
-Node: Regular Expressions217547
-Node: Debugging223637
-Node: Source Level Debugging in Emacs223841
-Node: Low Level Debug Functions228086
-Node: Miscellaneous229086
-Node: Environment229300
-Node: Inititialization229925
-Node: Low Level X Interface230469
-Node: Compiler Definitions231066
-Node: Function and Variable Index236361
+Node: Numbers1147
+Node: Sequences and Arrays and Hash Tables23544
+Node: Characters49337
+Node: Lists56733
+Node: Streams and Reading70507
+Node: Special Forms and Functions95894
+Node: Compilation121157
+Node: Symbols133797
+Node: Operating System143555
+Node: Command Line143745
+Node: Operating System Definitions147751
+Node: Structures155050
+Node: Iteration and Tests156602
+Node: User Interface160052
+Node: Doc169078
+Node: Type172327
+Node: GCL Specific174987
+Node: Bignums183411
+Node: C Interface186101
+Node: Available Symbols186263
+Node: System Definitions186742
+Node: Regular Expressions217047
+Node: Debugging223137
+Node: Source Level Debugging in Emacs223338
+Node: Low Level Debug Functions227583
+Node: Miscellaneous228583
+Node: Environment228791
+Node: Inititialization229416
+Node: Low Level X Interface229960
+Node: Compiler Definitions230557
+Node: Function and Variable Index235852
 
 End Tag Table
+
+
+Local Variables:
+coding: utf-8
+End:

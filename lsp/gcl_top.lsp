@@ -24,24 +24,14 @@
 ;;;;  Revised on July 11, by Carl Hoffman.
 
 
-(in-package "LISP")
-;(export 'lisp)
-(export '(+ ++ +++ - * ** *** / // ///))
-(export '(break warn))
-(export '*break-on-warnings*)
-(export '*break-enable*)
-
-(in-package 'system)
+(in-package :si)
 
 (export '*break-readtable*)
 (export '(loc *debug-print-level*))
 
 (export '(vs ihs-vs ihs-fun frs-vs frs-bds frs-ihs bds-var bds-val super-go))
 
-(eval-when 
-    (compile)
-  (proclaim '(optimize (safety 2) (space 3)))
-  (defvar *command-args* nil))
+(defvar *command-args* nil)
 
 (defvar +)
 (defvar ++)
@@ -75,8 +65,6 @@
 (defvar *break-enable* t)
 (defvar *break-message* "")
 
-(defvar *break-on-warnings* nil)
-
 (defvar *break-readtable* nil)
 
 (defvar *top-level-hook* nil)
@@ -95,13 +83,13 @@
       (progn 
 	(cond
 	 (*multiply-stacks* (setq *multiply-stacks* nil))
-	 ((probe-file "init.lsp") (load "init.lsp"))))
+	 ((when (fboundp 'probe-file) (probe-file "init.lsp")) (load "init.lsp"))))
       (when (if (symbolp *top-level-hook*) (fboundp *top-level-hook*) (functionp *top-level-hook*))
 	(funcall *top-level-hook*)))
 
     (when (boundp '*system-banner*)
       (format t *system-banner*)
-      (format t "Temporary directory for compiler files set to ~a~%" *tmp-dir*))
+      (format t "Temporary directory for compiler files:~%~a~%" *tmp-dir*))
 
     (loop
       (setq +++ ++ ++ + + -)
@@ -134,6 +122,8 @@
 
 (defvar *error-p* nil)
 
+(defvar *lib-directory* nil)
+
 (defun process-some-args (args &optional compile &aux *load-verbose*)
   (when args
     (let ((x (pop args)))
@@ -160,7 +150,7 @@
 	   (file (cdr (assoc :compile compile)))
 	   (o (cdr (assoc :o compile)))
 	   (compile (remove :o (remove :compile compile :key 'car) :key 'car))
-	   (compile (cons (cons :output-file (or o file)) compile))
++	   (compile (cons (cons :output-file (or o (merge-pathnames ".o" file))) compile))
 	   (result (system:error-set `(apply 'compile-file ,file ',(mapcan (lambda (x) (list (car x) (cdr x))) compile)))))
       (bye (if (or *error-p* (equal result '(nil))) 1 0)))))
 
@@ -330,7 +320,7 @@
                      (lambda-block-closure (cddddr fun))
                      (t (cond
 			 ((and (symbolp (car fun))
-			       (or (special-form-p(car fun))
+			       (or (special-operator-p(car fun))
 				   (fboundp (car fun))))
 			  (car fun))
 			 (t '(:zombi))))))
@@ -384,7 +374,7 @@
              (lambda-block-closure (nth 4 fun))
              (lambda-closure 'lambda-closure)
              (t (if (and (symbolp (car fun))
-			 (or (special-form-p (car fun))
+			 (or (special-operator-p (car fun))
 			     (fboundp (car fun))))
 		    (car fun) :zombi)
 		    )))
@@ -532,15 +522,12 @@ add a new one, add a 'si::break-command property:")
 
 ;;make sure '/' terminated
 
-(defun coerce-slash-terminated (v )
-  (declare (string v))
-  (or (stringp v) (error "not a string ~a" v))
+(defun coerce-slash-terminated (v)
   (let ((n (length v)))
-    (declare (fixnum n))
-    (unless (and (> n 0) (eql
-			  (the character(aref v (the fixnum (- n 1)))) #\/))
-	    (setf v (format nil "~a/" v))))
-  v)
+    (if (and (> n 0) (eql (aref v (1- n)) #\/))
+	v
+      (string-concatenate v "/"))))
+
 (defun fix-load-path (l)
   (when (not (equal l *fixed-load-path*))
       (do ((x l (cdr x)) )
@@ -594,28 +581,35 @@ First directory is checked for first name and all extensions etc."
 
 (defvar *tmp-dir*)
 
-(defun wine-tmp-redirect ()
-  (let* ((s (find-symbol "*WINE-DETECTED*" (find-package "SYSTEM"))))
-    (when (and s (symbol-value s))
-      (list *system-directory*))))
-	 
+(defun ensure-dir-string (str)
+  (if (eq (stat1 str) :directory)
+      (coerce-slash-terminated str)
+    str))
 
-(defun get-temp-dir nil
- (dolist (x `(,@(wine-tmp-redirect) ,@(mapcar 'getenv '("TMPDIR" "TMP" "TEMP")) "/tmp" ""))
-   (when (or (stringp x) (pathnamep x))
-     (let* ((x (truename (pathname x)))
-	    (y (namestring (make-pathname :name (pathname-name x) :type (pathname-type x) :version (pathname-version x))))
-	    (y (unless (zerop (length y)) (list y))))
-       (when (eq :directory (car (stat x)))
-	 (return-from get-temp-dir 
-	   (namestring 
-	    (make-pathname 
-	     :device (pathname-device x)
-	     :directory (append (pathname-directory x) y)))))))))
+(defun get-temp-dir ()
+  (dolist (x `(,@(mapcar 'si::getenv '("TMPDIR" "TMP" "TEMP")) "/tmp" ""))
+    (when x
+      (let ((x (coerce-slash-terminated x)))
+	(when (eq (stat1 x) :directory)
+	  (return-from get-temp-dir x))))))
+
+
+
+(defvar *cc* "cc")
+(defvar *ld* "ld")
+(defvar *objdump* nil)
+
+(defvar *current-directory* *system-directory*)
+
+(defun current-directory-pathname nil (pathname (coerce-slash-terminated (getcwd))))
 
 (defun set-up-top-level (&aux (i (argc)) tem)
   (declare (fixnum i))
-  (setq *tmp-dir* (get-temp-dir))
+  (setq *current-directory* (current-directory-pathname))
+  (setq *tmp-dir* (get-temp-dir)
+	*cc* (or (get-path *cc*) *cc*)
+	*ld* (or (get-path *ld*) *ld*)
+	*objdump* (get-path "objdump --source "))
   (dotimes (j i) (push (argv j) tem))
   (setq *command-args* (nreverse tem))
   (setq tem *lib-directory*)
@@ -625,9 +619,7 @@ First directory is checked for first name and all extensions etc."
       (when dir
 	(setq *lib-directory* (coerce-slash-terminated dir)))))
   (unless (and *load-path* (equal tem *lib-directory*))
-    (setq *load-path* (cons (string-concatenate *lib-directory* "lsp/") *load-path*))
-    (setq *load-path* (cons (string-concatenate *lib-directory* "gcl-tk/") *load-path*))
-    (setq *load-path* (cons (string-concatenate *lib-directory*  "xgcl-2/") *load-path*)))
+    (mapc (lambda (x) (push (string-concatenate *lib-directory* x) *load-path*)) '("lsp/" "gcl-tk/" "xgcl-2/")))
   (unless (boundp '*system-directory*)
     (setq *system-directory* (namestring (truename (make-pathname :name nil :type nil :defaults (argv 0))))))))
 

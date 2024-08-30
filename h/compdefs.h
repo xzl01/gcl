@@ -51,7 +51,6 @@ complex
 I
 NOT_SPECIAL
 VOL
-compiled_functionp(x)
 mpz_even_p(x)
 mpz_odd_p(x)
 mpz_sgn(x)
@@ -59,6 +58,7 @@ NULL
 FALSE
 TRUE
 is_imm_fixnum(x)
+is_unmrkd_imm_fixnum(x)
 aref1
 VFUN_NARGS
 KEYTYPE
@@ -114,3 +114,13 @@ stp_ordinary
 SIGNED_CHAR(x)
 FEerror(x,y...)
 FEwrong_type_argument(x,y)
+BIT_ENDIAN(x)
+integerp(x)
+rationalp(x)
+floatp(x)
+realp(x)
+numberp(x)
+vectorp(x)
+arrayp(x)
+compiled_function_p(x)
+pathname_designatorp(x)

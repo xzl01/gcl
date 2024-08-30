@@ -212,7 +212,7 @@ fasload(object faslfile) {
 
     set_type_of(&dum,t_stream);
     dum.sm.sm_mode=smm_input;
-    dum.sm.sm_object0=sLstring_char;
+    dum.sm.sm_object0=sLcharacter;
 
     link_callbacks.add_archive_element=madd_archive_element;
     link_callbacks.multiple_definition=mmultiple_definition;
@@ -269,9 +269,7 @@ fasload(object faslfile) {
   curr_size=(unsigned long)current;
   max_align=1<<max_align;
 
-  memory = alloc_object(t_cfdata);
-  memory->cfd.cfd_self = 0;
-  memory->cfd.cfd_start = 0;
+  memory=new_cfdata();
   memory->cfd.cfd_size = curr_size + (max_align > sizeof(char *) ? max_align :0);
   
   memory->cfd.cfd_start=alloc_contblock(memory->cfd.cfd_size);

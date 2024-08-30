@@ -1,4 +1,4 @@
-(in-package 'si)
+(in-package :si)
 ;;; Autoloaders.
 
 
@@ -67,8 +67,7 @@
 (autoload 'ftruncate '|gcl_numlib|)
 #-unix (autoload 'get-decoded-time '|gcl_mislib|)
 #+aosvs (autoload 'get-universal-time '|gcl_mislib|)
-(autoload 'get-setf-method '|gcl_setf|)
-(autoload 'get-setf-method-multiple-value '|gcl_setf|)
+(autoload 'get-setf-expansion '|gcl_setf|)
 (autoload 'inspect '|gcl_describe|)
 (autoload 'intersection '|gcl_listlib|)
 (autoload 'isqrt '|gcl_numlib|)
@@ -207,14 +206,8 @@
 ;; So to stop users from invoking this
 #+sun
 (defun user-homedir-pathname ()
- (let* ((tem (si::getenv "HOME"))
-	(l (- (length tem) 1)))
-   (cond ((null tem) nil)
-	 (t 
-	  (or (and (>= l 0)
-		   (eql (aref tem l) #\/))
-	      (setq tem (concatenate 'string tem "/")))
-	  (pathname tem)))))
-
+ (let* ((tem (si::getenv "HOME")))
+   (when tem
+     (pathname (coerce-slash-terminated tem)))))
 
 (AUTOLOAD 'init-readline '|gcl_readline|)

@@ -1,45 +1,35 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<!-- Created by GNU Texinfo 5.2, http://www.gnu.org/software/texinfo/ -->
+<!-- Created by GNU Texinfo 6.7, http://www.gnu.org/software/texinfo/ -->
 <head>
-<title>GCL TK Manual: place</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>place (GCL TK Manual)</title>
 
-<meta name="description" content="GCL TK Manual: place">
-<meta name="keywords" content="GCL TK Manual: place">
+<meta name="description" content="place (GCL TK Manual)">
+<meta name="keywords" content="place (GCL TK Manual)">
 <meta name="resource-type" content="document">
 <meta name="distribution" content="global">
 <meta name="Generator" content="makeinfo">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link href="index.html#Top" rel="start" title="Top">
+<link href="index.html" rel="start" title="Top">
 <link href="wm.html#SEC_Contents" rel="contents" title="Table of Contents">
-<link href="Control.html#Control" rel="up" title="Control">
-<link href="raise.html#raise" rel="next" title="raise">
-<link href="pack.html#pack" rel="prev" title="pack">
+<link href="Control.html" rel="up" title="Control">
+<link href="raise.html" rel="next" title="raise">
+<link href="pack.html" rel="prev" title="pack">
 <style type="text/css">
 <!--
 a.summary-letter {text-decoration: none}
-blockquote.smallquotation {font-size: smaller}
+blockquote.indentedblock {margin-right: 0em}
 div.display {margin-left: 3.2em}
 div.example {margin-left: 3.2em}
-div.indentedblock {margin-left: 3.2em}
 div.lisp {margin-left: 3.2em}
-div.smalldisplay {margin-left: 3.2em}
-div.smallexample {margin-left: 3.2em}
-div.smallindentedblock {margin-left: 3.2em; font-size: smaller}
-div.smalllisp {margin-left: 3.2em}
-kbd {font-style:oblique}
+kbd {font-style: oblique}
 pre.display {font-family: inherit}
 pre.format {font-family: inherit}
 pre.menu-comment {font-family: serif}
 pre.menu-preformatted {font-family: serif}
-pre.smalldisplay {font-family: inherit; font-size: smaller}
-pre.smallexample {font-size: smaller}
-pre.smallformat {font-family: inherit; font-size: smaller}
-pre.smalllisp {font-size: smaller}
-span.nocodebreak {white-space:nowrap}
-span.nolinebreak {white-space:nowrap}
-span.roman {font-family:serif; font-weight:normal}
-span.sansserif {font-family:sans-serif; font-weight:normal}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
 ul.no-bullet {list-style: none}
 -->
 </style>
@@ -47,19 +37,16 @@ ul.no-bullet {list-style: none}
 
 </head>
 
-<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
-<a name="place"></a>
-<div class="header">
+<body lang="en">
+<span id="place"></span><div class="header">
 <p>
-Next: <a href="raise.html#raise" accesskey="n" rel="next">raise</a>, Previous: <a href="pack.html#pack" accesskey="p" rel="prev">pack</a>, Up: <a href="Control.html#Control" accesskey="u" rel="up">Control</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
+Next: <a href="raise.html" accesskey="n" rel="next">raise</a>, Previous: <a href="pack.html" accesskey="p" rel="prev">pack</a>, Up: <a href="Control.html" accesskey="u" rel="up">Control</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
 </div>
 <hr>
-<a name="place-1"></a>
-<h3 class="section">3.15 place</h3>
+<span id="place-1"></span><h3 class="section">3.15 place</h3>
 
 <p>place \- Geometry manager for fixed or rubber-sheet placement
-</p><a name="Synopsis-28"></a>
-<h4 class="unnumberedsubsec">Synopsis</h4>
+</p><span id="Synopsis-28"></span><h4 class="unnumberedsubsec">Synopsis</h4>
 <p><b>place </b><i>window option value </i><span class="roman">?</span><i>option value ...</i>?
 </p><br>
 <p><b>place configure </b><i>window option value </i><span class="roman">?</span><i>option value ...</i>?
@@ -70,8 +57,7 @@ Next: <a href="raise.html#raise" accesskey="n" rel="next">raise</a>, Previous: <
 </p><br>
 <p><b>place slaves </b><i>window</i>
 </p>
-<a name="Description-26"></a>
-<h4 class="unnumberedsubsec">Description</h4>
+<span id="Description-26"></span><h4 class="unnumberedsubsec">Description</h4>
 
 <p>The placer is a geometry manager for Tk.
 It provides simple fixed placement of windows, where you specify
@@ -232,8 +218,7 @@ the saved information.
 </p>
 </dd>
 </dl>
-<a name="g_t_0022Fine-Points_0022"></a>
-<h4 class="unnumberedsubsec">&quot;Fine Points&quot;</h4>
+<span id="g_t_0022Fine-Points_0022"></span><h4 class="unnumberedsubsec">&quot;Fine Points&quot;</h4>
 
 <p>It is not necessary for the master window to be the parent
 of the slave window.
@@ -271,13 +256,12 @@ set their requested sizes).
 To control the sizes of these windows, make them windows like
 frames and canvases that provide configuration options for this purpose.
 </p>
-<a name="Keywords-29"></a>
-<h4 class="unnumberedsubsec">Keywords</h4>
+<span id="Keywords-29"></span><h4 class="unnumberedsubsec">Keywords</h4>
 <p>geometry manager, height, location, master, place, rubber sheet, slave, width
 </p><hr>
 <div class="header">
 <p>
-Next: <a href="raise.html#raise" accesskey="n" rel="next">raise</a>, Previous: <a href="pack.html#pack" accesskey="p" rel="prev">pack</a>, Up: <a href="Control.html#Control" accesskey="u" rel="up">Control</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
+Next: <a href="raise.html" accesskey="n" rel="next">raise</a>, Previous: <a href="pack.html" accesskey="p" rel="prev">pack</a>, Up: <a href="Control.html" accesskey="u" rel="up">Control</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
 </div>
 
 

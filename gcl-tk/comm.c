@@ -66,7 +66,7 @@ fScheck_fd_for_input(fixnum fd,fixnum timeout) {
 
 
 struct connection_state *
-setup_connection_state(fd)
+setup_connection_state(int fd)
 { struct connection_state * res;
   res = (void *)malloc(sizeof(struct connection_state));
   bzero(res,sizeof(struct connection_state));
@@ -183,7 +183,7 @@ int m;
     { bcopy(sfd->valid_data,sfd->read_buffer,sfd->valid_data_size);
       sfd->valid_data=sfd->read_buffer;}
    /* there is at least a packet size of space available */   
-  if ((fix(FFN(fScheck_fd_for_input)(sfd->fd,sfd->write_timeout))>0));
+  if ((fix(FFN(fScheck_fd_for_input)(sfd->fd,sfd->write_timeout))>0))
      again:
         {char *start = sfd->valid_data+sfd->valid_data_size;
         nread = SAFE_READ(sfd->fd,start,

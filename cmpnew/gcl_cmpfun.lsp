@@ -19,7 +19,7 @@
 ;; Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 
 
-(in-package 'compiler)
+(in-package :compiler)
 
 (si:putprop 'princ 'c1princ 'c1)
 (si:putprop 'princ 'c2princ 'c2)
@@ -91,6 +91,7 @@
                        (cond ((char= char #\\) (wt "\\\\"))
                              ((char= char #\") (wt "\\\""))
                              ((char= char #\Newline) (wt "\\n"))
+			     ((char= char #\Return) (wt "\\r"))
                              (t (wt char)))))
                 (wt "\",")
                 (if (null vv-index) (wt "Cnil") (wt (vv-str vv-index)))
@@ -556,6 +557,14 @@
 	   ((null type) nil)
 	   ((setq f (assoc type *type-alist* :test 'equal))
 	    (list (cdr f) x))
+	   ((setq f (when (symbolp type) (get type 'si::type-predicate)))
+	    (list f x))
+	   ((and (consp type) (eq (car type) 'or))
+	    `(or ,@(mapcar (lambda (y) `(typep ,x ',y)) (cdr type))))
+	   ((and (consp type) (eq (car type) 'member))
+	    `(or ,@(mapcar (lambda (y) `(eql ,x ',y)) (cdr type))))
+	   ((and (consp type) (eq (car type) 'eql))
+	    `(eql ,x ',(cadr type)))
 	   ((and (consp type)
 		 (or (and (eq (car type) 'vector)
 			  (null (cddr type)))
@@ -565,7 +574,7 @@
 		      (equal (third type) '(*)))))
 	    (setq tem (si::best-array-element-type
 		       (second type)))
-	    (cond ((eq tem 'string-char) `(stringp ,x))
+	    (cond ((eq tem 'character) `(stringp ,x))
 		  ((eq tem 'bit) `(bit-vector-p ,x))
 		  ((setq tem (position tem *aet-types*))
 		   `(the boolean (vector-type ,x ,tem)))))
@@ -595,7 +604,9 @@
 		  (t
 		   `(si::structure-subtype-p
 		     ,x ',type))))
-;	   ((and (print (list 'slow 'typep type)) nil))
+	   ((and (symbolp type) (setq tem (get type 'si::deftype-definition)))
+	    `(typep ,x ',(funcall tem)))
+	   ;; ((and (print (list 'slow 'typep type)) nil))
 	   (t nil)))
     (and new (c1expr `(the boolean , new)))))
 
@@ -803,7 +814,7 @@
 
 
 (defvar *aet-types*
-  #(T STRING-CHAR SIGNED-CHAR FIXNUM SHORT-FLOAT LONG-FLOAT
+  #(T CHARACTER SIGNED-CHAR FIXNUM SHORT-FLOAT LONG-FLOAT
 			SIGNED-CHAR
 			UNSIGNED-CHAR SIGNED-SHORT UNSIGNED-SHORT))
 
@@ -811,7 +822,7 @@
 (defun aet-c-type (type)
   (ecase type
     ((t) "object")
-    ((string-char signed-char) "char")
+    ((character signed-char) "char")
     (fixnum "fixnum")
     (unsigned-char "unsigned char")
     (unsigned-short "unsigned short")
@@ -869,36 +880,6 @@
 	 (c1expr (cmp-eval (cons f args))))))
 
 
-(si::putprop 'do 'co1special-fix-decl 'co1special)
-(si::putprop 'do* 'co1special-fix-decl 'co1special)
-(si::putprop 'prog 'co1special-fix-decl 'co1special)
-(si::putprop 'prog* 'co1special-fix-decl 'co1special)
-
-(defun co1special-fix-decl (f args)
-  (flet ((fixup (forms &aux decls )
-	  (block nil
-		 (tagbody
-		  top
-		  (or (consp forms) (go end))
-		  (let ((tem (car forms)))
-		    (if (and (consp tem)
-			     (setq tem  (cmp-macroexpand tem))
-			     (eq (car tem) 'declare))
-			(progn (push tem decls) (pop forms))
-		      (go end)))
-		      (go top)
-	      		; all decls made explicit.
-		      end
-		     (return  (nconc (nreverse decls) forms))))))
-	(c1expr
-	  (cmp-macroexpand
-	    (case f
-	      ((do do*) `(,f ,(car args)
-			     ,(second args)
-			     ,@ (fixup (cddr args))))
-	      ((prog prog*)
-	       `(,f ,(car args)
-		    ,@ (fixup (cdr args)))))))))
 (si::putprop 'sublis 'co1sublis 'co1)
 (defun co1sublis (f args &aux test) f
  (and (case (length args)
@@ -976,9 +957,13 @@
 	   (wt-nl "}}")
 	   (wt-nl "vs_top=(vs_base=base+" base ")+" (- *vs* base) ";")
 	   (unwind-exit 'fun-val nil (cons 'values 2))))
-	((unwind-exit (get-inline-loc `((t t) t #.(flags rfa) 
-					,(concatenate 'string
-						      "({struct htent *_z=gethash"
-						      (if *safe-compile* "_with_check" "")
-						      "(#0,#1);_z->hte_key==OBJNULL ? (#2) : _z->hte_value;})"))
-					args)))))
+	((let ((*inline-blocks* 0)
+	       (*restore-avma*  *restore-avma*)
+	       (fd `((t t) t #.(flags rfa) 
+		     ,(concatenate 'string
+				   "({struct htent *_z=gethash"
+				   (if *safe-compile* "_with_check" "")
+				   "(#0,#1);_z->hte_key==OBJNULL ? (#2) : _z->hte_value;})")))) 
+	   (save-avma fd)
+	   (unwind-exit (get-inline-loc fd args))
+	   (close-inline-blocks)))))

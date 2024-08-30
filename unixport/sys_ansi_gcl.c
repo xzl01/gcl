@@ -7,6 +7,10 @@ void
 gcl_init_init()
 {
 
+  object features;
+  features=find_symbol(make_simple_string("*FEATURES*"),system_package);
+  features->s.s_dbind=make_cons(make_keyword("ANSI-CL"),make_cons(make_keyword("COMMON-LISP"),features->s.s_dbind));
+
   build_symbol_table();
 
   lsp_init("../lsp/gcl_export.lsp");
@@ -37,7 +41,6 @@ gcl_init_system(object no_init)
 #ifdef HAVE_JAPI_H
   ar_check_init(gcl_japi,no_init);
 #endif
-  ar_check_init(gcl_iolib,no_init);
   ar_check_init(gcl_listlib,no_init);
   ar_check_init(gcl_mislib,no_init);
   ar_check_init(gcl_numlib,no_init);
@@ -52,9 +55,23 @@ gcl_init_system(object no_init)
   ar_check_init(gcl_defpackage,no_init);
   ar_check_init(gcl_make_defpackage,no_init);
   ar_check_init(gcl_sharp,no_init);
+
+  ar_check_init(gcl_sharp_uv,no_init);
+  ar_check_init(gcl_namestring,no_init);
+  ar_check_init(gcl_logical_pathname_translations,no_init);
+  ar_check_init(gcl_make_pathname,no_init);
+  ar_check_init(gcl_parse_namestring,no_init);
+  ar_check_init(gcl_translate_pathname,no_init);
+  ar_check_init(gcl_directory,no_init);
+  ar_check_init(gcl_merge_pathnames,no_init);
+  ar_check_init(gcl_truename,no_init);
+  ar_check_init(gcl_rename_file,no_init);
+  ar_check_init(gcl_wild_pathname_p,no_init);
+  ar_check_init(gcl_pathname_match_p,no_init);
+	
+  ar_check_init(gcl_iolib,no_init);
   ar_check_init(gcl_fpe,no_init);
 
-	
   ar_check_init(gcl_cmpinline,no_init);
   ar_check_init(gcl_cmputil,no_init);
 
@@ -86,7 +103,7 @@ gcl_init_system(object no_init)
   ar_check_init(gcl_cmpmain,no_init);
 
 #ifdef HAVE_XGCL
-  lsp_init("../xgcl-2/sysdef.lisp");
+  lsp_init("../xgcl-2/package.lisp");
   ar_check_init(gcl_Xlib,no_init);
   ar_check_init(gcl_Xutil,no_init);
   ar_check_init(gcl_X,no_init);
@@ -103,6 +120,7 @@ gcl_init_system(object no_init)
   ar_check_init(gcl_index,no_init);
 #endif
   
+  lsp_init("../pcl/package.lisp");
   ar_check_init(gcl_pcl_pkg,no_init);
   ar_check_init(gcl_pcl_walk,no_init);
   ar_check_init(gcl_pcl_iterate,no_init);
@@ -138,6 +156,7 @@ gcl_init_system(object no_init)
   ar_check_init(gcl_pcl_precom1,no_init);
   ar_check_init(gcl_pcl_precom2,no_init);
 
+  lsp_init("../clcs/package.lisp");
   ar_check_init(gcl_clcs_precom,no_init);
   ar_check_init(gcl_clcs_handler,no_init);
   ar_check_init(gcl_clcs_conditions,no_init);

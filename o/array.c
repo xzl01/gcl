@@ -211,14 +211,18 @@ DEFUN_NEW("ASET1", object, fSaset1, SI, 3, 3, NONE, OO, IO, OO,OO,(object x, fix
       break;
     case aet_bit:
       i +=  BV_OFFSET(x);
-    AGAIN_BIT: 
       ASSURE_TYPE(val,t_fixnum);
-      {int v = Mfix(val);
-       if (v == 0) CLEAR_BITREF(x,i);
-       else if (v == 1) SET_BITREF(x,i);
-       else {val= fSincorrect_type(val,sLbit);
-	     goto AGAIN_BIT;}
-       break;}
+      switch (Mfix(val)) {
+      case 0:
+	CLEAR_BITREF(x,i);
+	break;
+      case 1:
+	SET_BITREF(x,i);
+	break;
+      default:
+	TYPE_ERROR(val,sLbit);
+      }
+      break;
     case aet_fix:
       ASSURE_TYPE(val,t_fixnum);
       (x->fixa.fixa_self[i]) = Mfix(val);
@@ -445,6 +449,11 @@ fSmake_vector1_1(fixnum n,fixnum elt_type,object staticp) {
   VFUN_NARGS=3;
   return FFN(fSmake_vector1)(make_fixnum(n),make_fixnum(elt_type),staticp);
 }
+object 
+fSmake_vector1_2(fixnum n,fixnum elt_type,object staticp,object fillp) {
+  VFUN_NARGS=4;
+  return FFN(fSmake_vector1)(make_fixnum(n),make_fixnum(elt_type),staticp,fillp);
+}
 
 
 static object DFLT_aet_object = Cnil;	
@@ -457,15 +466,15 @@ static longfloat DFLT_aet_lf = 0.0;
 static object Iname_t = sLt;
 static struct { char * dflt; object *namep;} aet_types[] =
 {   {(char *)	&DFLT_aet_object,	&Iname_t,},	/*  t  */
-    {(char *)	&DFLT_aet_ch, &sLstring_char,},/*  string-char  */
+    {(char *)	&DFLT_aet_ch, &sLcharacter,},/*  character  */
     {(char *)	&DFLT_aet_fix, &sLbit,},		/*  bit  */
     {(char *)	&DFLT_aet_fix,	&sLfixnum,}, 	/*  fixnum  */
     {(char *)	&DFLT_aet_sf, &sLshort_float,},			/*  short-float  */
     {(char *)	&DFLT_aet_lf, &sLlong_float,},	/*  long-float  */
-    {(char *)	&DFLT_aet_char,&sLsigned_char,},               /* signed char */
-    {(char *)    &DFLT_aet_char,&sLunsigned_char,},               /* unsigned char */
-    {(char *)	&DFLT_aet_short,&sLsigned_short,},              /* signed short */
-    {(char *)	&DFLT_aet_short, &sLunsigned_short},    /*  unsigned short   */
+    {(char *)	&DFLT_aet_char,&sSsigned_char,},               /* signed char */
+    {(char *)   &DFLT_aet_char,&sSunsigned_char,},               /* unsigned char */
+    {(char *)	&DFLT_aet_short,&sSsigned_short,},              /* signed short */
+    {(char *)	&DFLT_aet_short, &sSunsigned_short},    /*  unsigned short   */
 	};
 
 DEFUN_NEW("GET-AELTTYPE",object,fSget_aelttype,SI,1,1,NONE,OO,OO,OO,OO,(object x),"")
@@ -845,31 +854,33 @@ raw_aet_ptr(object x, short int typ)
 	*/     
 
 void
-gset(void *p1, void *val, int n, int typ)
-{ if (val==0)
+gset(void *p1, void *val, int n, int typ) {
+
+  if (val==0)
     val = aet_types[typ].dflt;
-    switch (typ){
+
+  switch (typ){
 
 #define GSET(p,n,typ,val) {typ x = *((typ *) val); GSET1(p,n,typ,x)}
-#define GSET1(p,n,typ,val) while (n-- > 0) \
+#define GSET1(p,n,typ,val) while (n-- > 0)	\
       { *((typ *) p) = val; \
-	  p = p + sizeof(typ); \
-	  } break;
+	p = p + sizeof(typ);			\
+      } break;
 
-    case aet_object: GSET(p1,n,object,val);
-    case aet_ch:     GSET(p1,n,char,val);
-      /* Note n is number of fixnum WORDS for bit */
-    case aet_bit:    GSET(p1,n,fixnum,val);
-    case aet_fix:    GSET(p1,n,fixnum,val);
-    case aet_sf:     GSET(p1,n,shortfloat,val);
-    case aet_lf:     GSET(p1,n,longfloat,val);
-    case aet_char:   GSET(p1,n,char,val);
-    case aet_uchar:  GSET(p1,n,unsigned char,val);
-    case aet_short:  GSET(p1,n,short,val);
-    case aet_ushort: GSET(p1,n,unsigned short,val);
-    default:         FEerror("bad elttype",0);
-    }
+  case aet_object: GSET(p1,n,object,val);
+  case aet_ch:     GSET(p1,n,char,val);
+    /* Note n is number of fixnum WORDS for bit */
+  case aet_bit:    GSET(p1,n,fixnum,val);
+  case aet_fix:    GSET(p1,n,fixnum,val);
+  case aet_sf:     GSET(p1,n,shortfloat,val);
+  case aet_lf:     GSET(p1,n,longfloat,val);
+  case aet_char:   GSET(p1,n,char,val);
+  case aet_uchar:  GSET(p1,n,unsigned char,val);
+  case aet_short:  GSET(p1,n,short,val);
+  case aet_ushort: GSET(p1,n,unsigned short,val);
+  default:         FEerror("bad elttype",0);
   }
+}
 
 
 #define W_SIZE (BV_BITS*sizeof(fixnum))    
@@ -889,38 +900,43 @@ implementation dependent results.")
   int n1=fix(n1o),nc;
   if (VFUN_NARGS==4)
     { n1 = x->v.v_dim - i1;}
-  if (typ1==aet_bit)
-    {if (i1 % CHAR_SIZE)
-     badcopy:
-       FEerror("Bit copies only if aligned",0);
-    else
-      {int rest=n1%CHAR_SIZE;
-       if (rest!=0 )
-	 {if (typ2!=aet_bit)
-	    goto badcopy;
-	    {while(rest> 0)
-	       { fSaset1(y,i2+n1-rest,(fLrow_major_aref(x,i1+n1-rest)));
-		 rest--;}
-	     }}
-       i1=i1/CHAR_SIZE ;
-       n1=n1/CHAR_SIZE;
-       typ1=aet_char;
-     }};
-  if (typ2==aet_bit)
-    {if (i2 % CHAR_SIZE)
-       goto badcopy;
-       i2=i2/CHAR_SIZE ;}
-  if ((typ1 ==aet_object ||
-       typ2  ==aet_object) && typ1 != typ2)
+  if (typ1==aet_bit) {
+    if (i1 % CHAR_SIZE)
+    badcopy:
+      FEerror("Bit copies only if aligned",0);
+    else {
+      int rest=n1%CHAR_SIZE;
+      if (rest!=0) {
+	if (typ2!=aet_bit)
+	  goto badcopy;
+	while(rest> 0) {
+	  fSaset1(y,i2+n1-rest,(fLrow_major_aref(x,i1+n1-rest)));
+	  rest--;
+	}
+      }
+      i1=i1/CHAR_SIZE ;
+      n1=n1/CHAR_SIZE;
+      typ1=aet_char;
+    }
+  }
+
+  if (typ2==aet_bit) {
+    if (i2 % CHAR_SIZE)
+      goto badcopy;
+    i2=i2/CHAR_SIZE ;
+  }
+
+  if ((typ1 ==aet_object || typ2  ==aet_object) && typ1 != typ2)
     FEerror("Can't copy between different array types",0);
   nc=n1 * aet_sizes[(int)typ1];
-  if (i1+n1 > x->a.a_dim
-      || ((y->a.a_dim - i2) *aet_sizes[(int)typ2]) < nc)
+  if (i1+n1 > x->a.a_dim || ((y->a.a_dim - i2) *aet_sizes[(int)typ2]) < nc)
     FEerror("Copy  out of bounds",0);
   bcopy(x->ust.ust_self + (i1*aet_sizes[(int)typ1]),
 	y->ust.ust_self + (i2*aet_sizes[(int)typ2]),
 	nc);
+
   return x;
+
 }
 
 /* X is the header of an array.  This supplies the body which
@@ -1127,9 +1143,9 @@ Icheck_displaced(object displaced_list, object ar, int dim)
 /*  } */
 /* } */
 
-DEFUNO_NEW("REPLACE-ARRAY",object,fSreplace_array,SI,2,2,NONE,
-       OO,OO,OO,OO,void,siLreplace_array,(object old,object new),"")
-{ struct dummy fw ;
+DEFUN_NEW("REPLACE-ARRAY",object,fSreplace_array,SI,2,2,NONE,OO,OO,OO,OO,(object old,object new),"") {
+
+  struct dummy fw;
   fw = old->d;
 
   old = IisArray(old);

@@ -148,17 +148,19 @@ DEFUN_NEW("FLD",object,fSfld,SI,1,1,NONE,OI,OO,OO,OO,(fixnum val),"") {
 
 #endif
 
-DEFUN_NEW("*FIXNUM",fixnum,fSAfixnum,SI,1,1,NONE,II,OO,OO,OO,(fixnum addr),"") {
-  RETURN1(*(fixnum *)addr);
+/* For now ignore last three args governing offsets and data modification, just to
+   support fpe sync with master*/
+DEFUN_NEW("*FIXNUM",object,fSAfixnum,SI,4,4,NONE,II,OO,OO,OO,(fixnum addr,object x,object y,object z),"") {
+  RETURN1((object)*(fixnum *)addr);
 }
-DEFUN_NEW("*FLOAT",object,fSAfloat,SI,1,1,NONE,OI,OO,OO,OO,(fixnum addr),"") {
+DEFUN_NEW("*FLOAT",object,fSAfloat,SI,4,4,NONE,OI,OO,OO,OO,(fixnum addr,object x,object y,object z),"") {
   RETURN1(make_shortfloat(*(float *)addr));
 }
-DEFUN_NEW("*DOUBLE",object,fSAdouble,SI,1,1,NONE,OI,OO,OO,OO,(fixnum addr),"") {
+DEFUN_NEW("*DOUBLE",object,fSAdouble,SI,4,4,NONE,OI,OO,OO,OO,(fixnum addr,object x,object y,object z),"") {
   RETURN1(make_longfloat(*(double *)addr));
 }
 
-DEFUN_NEW("FEENABLEEXCEPT",fixnum,fSfeenableexcept,SI,1,1,NONE,II,OO,OO,OO,(fixnum x),"") {
+DEFUN_NEW("FEENABLEEXCEPT",object,fSfeenableexcept,SI,1,1,NONE,II,OO,OO,OO,(fixnum x),"") {
 
 #ifdef HAVE_FEENABLEEXCEPT
 
@@ -178,11 +180,11 @@ DEFUN_NEW("FEENABLEEXCEPT",fixnum,fSfeenableexcept,SI,1,1,NONE,II,OO,OO,OO,(fixn
   }    
 #endif
 
-  RETURN1(x);
+  RETURN1((object)x);
 
 }
 
-DEFUN_NEW("FEDISABLEEXCEPT",fixnum,fSfedisableexcept,SI,0,0,NONE,IO,OO,OO,OO,(void),"") {
+DEFUN_NEW("FEDISABLEEXCEPT",object,fSfedisableexcept,SI,0,0,NONE,IO,OO,OO,OO,(void),"") {
 
   fixnum x;
 
@@ -203,33 +205,33 @@ DEFUN_NEW("FEDISABLEEXCEPT",fixnum,fSfedisableexcept,SI,0,0,NONE,IO,OO,OO,OO,(vo
   }
 #endif
 
-  RETURN1(x);
+  RETURN1((object)x);
 }
 
 #if defined(__x86_64__) || defined(__i386__)
 
 #define FE_TEST(x87sw_,mxcsr_,excepts_) ((x87sw_)&(excepts_))|(~((mxcsr_)>>7)&excepts_)
 
-DEFUN_NEW("FPE_CODE",fixnum,fSfpe_code,SI,2,2,NONE,II,OO,OO,OO,(fixnum x87sw,fixnum mxcsr),"") {
+DEFUN_NEW("FPE_CODE",object,fSfpe_code,SI,2,2,NONE,II,OO,OO,OO,(fixnum x87sw,fixnum mxcsr),"") {
 
-  RETURN1(FE_TEST(x87sw,mxcsr,FE_INVALID) ? FPE_FLTINV :
-	  (FE_TEST(x87sw,mxcsr,FE_DIVBYZERO) ? FPE_FLTDIV :
-	   (FE_TEST(x87sw,mxcsr,FE_OVERFLOW) ? FPE_FLTOVF :
-	    (FE_TEST(x87sw,mxcsr,FE_UNDERFLOW) ? FPE_FLTUND :
-	     (FE_TEST(x87sw,mxcsr,FE_INEXACT) ? FPE_FLTRES : 0)))));
+  RETURN1((object)(long)(FE_TEST(x87sw,mxcsr,FE_INVALID) ? FPE_FLTINV :
+			 (FE_TEST(x87sw,mxcsr,FE_DIVBYZERO) ? FPE_FLTDIV :
+			  (FE_TEST(x87sw,mxcsr,FE_OVERFLOW) ? FPE_FLTOVF :
+			   (FE_TEST(x87sw,mxcsr,FE_UNDERFLOW) ? FPE_FLTUND :
+			    (FE_TEST(x87sw,mxcsr,FE_INEXACT) ? FPE_FLTRES : 0))))));
 }
 
 #if defined(__MINGW32__) || defined(__CYGWIN__)
 
-DEFUN_NEW("FNSTSW",fixnum,fSfnstsw,SI,0,0,NONE,II,OO,OO,OO,(void),"") {
-  volatile unsigned short t;
+DEFUN_NEW("FNSTSW",object,fSfnstsw,SI,0,0,NONE,II,OO,OO,OO,(void),"") {
+  volatile unsigned short t=0;
   ASM ("fnstsw %0" :: "m" (t));
-  RETURN1(t);
+  RETURN1((object)(long)t);
 }
-DEFUN_NEW("STMXCSR",fixnum,fSstmxcsr,SI,0,0,NONE,II,OO,OO,OO,(void),"") {
-  volatile unsigned int t;
+DEFUN_NEW("STMXCSR",object,fSstmxcsr,SI,0,0,NONE,II,OO,OO,OO,(void),"") {
+  volatile unsigned int t=0;
   ASM ("stmxcsr %0" :: "m" (t));
-  RETURN1(t);
+  RETURN1((object)(long)t);
 }
 
 #endif
@@ -259,11 +261,10 @@ DEF_ORDINARY("FLOATING-POINT-ERROR",sSfloating_point_error,SI,"");
 static void
 sigpipe(void)
 {
-	gcl_signal(SIGPIPE, sigpipe);
-	perror("");
-	FEerror("Broken pipe", 0);
+  unblock_signals(SIGPIPE,SIGPIPE);
+  perror("");
+  FEerror("Broken pipe", 0);
 }
-
 
 void
 sigint(void)
@@ -271,8 +272,6 @@ sigint(void)
   unblock_signals(SIGINT,SIGINT);
   terminal_interrupt(1);
 }
-
-
 
 static void
 sigalrm(void)
@@ -295,12 +294,18 @@ sigio(void)
 {ifuncall1(sSsigio_interrupt,Cnil);}
 
 
+static void
+sigterm(void)
+{do_gcl_abort();}
+
+
 
 void
 install_default_signals(void)
 {	gcl_signal(SIGFPE, sigfpe3);
 	gcl_signal(SIGPIPE, sigpipe);
 	gcl_signal(SIGINT, sigint);
+	gcl_signal(SIGTERM, sigterm);
 	gcl_signal(SIGUSR1, sigusr1);
 	gcl_signal(SIGIO, sigio);
 	gcl_signal(SIGALRM, sigalrm);

@@ -19,7 +19,7 @@
 ;; Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 
 
-(in-package 'compiler)
+(in-package :compiler)
 
 (export '(*suppress-compiler-warnings*
           *suppress-compiler-notes*
@@ -180,33 +180,27 @@
     (or (member-if (lambda (x) (when (consp x) (eq (car x) fname))) *funs*)
 	(macro-function fname))))
 
-(defun do-macro-expansion (how form &aux env)
-  (dolist (v *funs*)
+(defun macro-env (&aux env)
+  (dolist (v *funs* (when env (list nil (nreverse env) nil)))
     (when (consp v)
-      (push (list (car v) 'macro (cadr v)) env))) 
-  (when env (setq env (list nil (nreverse env) nil)))
-  (let ((x (multiple-value-list (cmp-toplevel-eval `(,@how ',form ',env)))))
-    (if (car x)
-        (let ((*print-case* :upcase))
-          (incf *error-count*)
-          (print-current-form)
-          (format t ";;; The macro form ~s was not expanded successfully.~%" form)
-          `(error "Macro-expansion of ~s failed at compile time." ',form))
-        (cadr x))))
+      (push (list (car v) 'macro (cadr v)) env))))
 
 (defun cmp-macroexpand (form)
   (if (macro-def-p form)
-      (do-macro-expansion '(macroexpand) form)
+      (macroexpand form (macro-env))
     form))
 
 (defun cmp-macroexpand-1 (form)
   (if (macro-def-p form)
-      (do-macro-expansion '(macroexpand-1) form)
+      (macroexpand-1 form (macro-env))
     form))
 
-(defun cmp-expand-macro (fd fname args &aux env (form (cons fname args)))
+(defun cmp-expand-macro (fd fname args &aux (form (cons fname args)))
   (if (macro-def-p form)
-      (do-macro-expansion `(funcall *macroexpand-hook* ',fd) form)
+      (let ((env (macro-env)))
+	(if (eq *macroexpand-hook* 'funcall)
+	    (funcall fd form env)
+	  (funcall *macroexpand-hook* fd form env)))
     form))
 
 (defvar *compiler-break-enable* nil)
@@ -214,7 +208,7 @@
 (defun cmp-toplevel-eval (form)
    (let* ((si::*ihs-base* si::*ihs-top*)
           (si::*ihs-top* (1- (si::ihs-top)))
-          (*break-enable* *compiler-break-enable*)
+          (si::*break-enable* *compiler-break-enable*)
           (si::*break-hidden-packages*
            (cons (find-package 'compiler)
                  si::*break-hidden-packages*)))
@@ -223,7 +217,7 @@
 (dolist (v '(si::cdefn lfun inline-safe inline-unsafe
 		       inline-always c1conditional c2 c1 c1+ co1
 		       si::structure-access co1special
-		       top-level-macro t3 t2 t1 package-operation))
+		       top-level-macro t3 t2 t1))
 	   (si::putprop v t 'compiler-prop ))
 
 (defun  compiler-def-hook (symbol code) symbol code nil)

@@ -54,11 +54,13 @@ License for more details.
 
 #define ulmax(a_,b_) ({ul _a=a_,_b=b_;_a<_b ? _b : _a;})
 #define ALLOC_SEC(sec) (sec->sh_flags&SHF_ALLOC && (sec->sh_type==SHT_PROGBITS || sec->sh_type==SHT_NOBITS))
-#define  LOAD_SEC(sec) (sec->sh_flags&SHF_ALLOC &&  sec->sh_type==SHT_PROGBITS)
-#define  LOAD_SYM(sym) ({ul _b=ELF_ST_BIND(sym->st_info),_t=ELF_ST_TYPE(sym->st_info);	\
-      sym->st_value && (_b==STB_GLOBAL || _b==STB_WEAK || (_t>=STT_LOPROC && _t<=STT_HIPROC));})
+#define LOAD_SEC(sec) (sec->sh_flags&SHF_ALLOC &&  sec->sh_type==SHT_PROGBITS)
+#define LOAD_SYM(sym,st1) (sym->st_value && (EXT_SYM(sym,st1)||LOCAL_SYM(sym)))
+#define EXT_SYM(sym,st1) (ELF_ST_BIND(sym->st_info)==STB_GLOBAL||ELF_ST_BIND(sym->st_info)==STB_WEAK||LOAD_SYM_BY_NAME(sym,st1))
+#define LOCAL_SYM(sym) ELF_ST_BIND(sym->st_info)==STB_LOCAL
+#define LOAD_SYM_BY_NAME(sym,st1) 0
 
-#define MASK(n) (~(~0L << (n)))
+#define MASK(n) (~(~0ULL << (n)))
 
 
 
@@ -181,8 +183,7 @@ relocate(Sym *sym1,void *v,ul a,ul start,ul *got,ul *gote) {
 #include RELOC_H
 
   default:
-    fprintf(stderr, "Unknown reloc type %lu\n", tp);
-    massert(tp&~tp);
+    massert(!emsg("Unknown reloc type %lu\n", tp));
 
   }
 
@@ -234,13 +235,38 @@ relocate_symbols(Sym *sym,Sym *syme,Shdr *sec1,Shdr *sece,const char *st1) {
       sym->st_value=a->address;
 
     else if (ELF_ST_BIND(sym->st_info)!=STB_LOCAL)
-      massert(!fprintf(stderr,"Unrelocated non-local symbol: %s\n",st1+sym->st_name));
+      massert(!emsg("Unrelocated non-local symbol: %s\n",st1+sym->st_name));
 	
   }
 
   return 0;
   
 }
+
+#ifdef LARGE_MEMORY_MODEL
+
+DEFUN_NEW("MARK-AS-LARGE-MEMORY-MODEL",object,fSmark_as_large_memory_model,SI,1,1,
+	  NONE,OO,OO,OO,OO,(object x),"") {
+
+  FILE *f;
+  void *ve;
+  Ehdr *fhp;
+
+  coerce_to_filename(x,FN1);
+
+  massert(f=fopen(FN1,"r+"));
+  massert(fhp=get_mmap_shared(f,&ve));
+
+  fhp->e_flags|=1;
+
+  massert(!un_mmap(fhp,ve));
+  massert(!fclose(f));
+
+  return Cnil;
+
+}
+
+#endif
 
 static object
 load_memory(Shdr *sec1,Shdr *sece,void *v1,ul **got,ul **gote) {
@@ -271,13 +297,19 @@ load_memory(Shdr *sec1,Shdr *sece,void *v1,ul **got,ul **gote) {
     sz+=gsz;
   }
 
-  memory=alloc_object(t_cfdata);
+  memory=new_cfdata();
   memory->cfd.cfd_size=sz;
-  memory->cfd.cfd_self=0;
-  memory->cfd.cfd_start=0;
-  prefer_low_mem_contblock=TRUE;
-  memory->cfd.cfd_start=alloc_contblock(sz);
-  prefer_low_mem_contblock=FALSE;
+  memory->cfd.cfd_start=alloc_code_space(sz,
+#ifdef MAX_DEFAULT_MEMORY_MODEL_CODE_ADDRESS
+#ifdef LARGE_MEMORY_MODEL
+					 (((Ehdr *)v1)->e_flags) ? -1UL : MAX_DEFAULT_MEMORY_MODEL_CODE_ADDRESS
+#else
+					 MAX_DEFAULT_MEMORY_MODEL_CODE_ADDRESS
+#endif
+#else
+					 -1UL
+#endif
+					 );
 
   a=(ul)memory->cfd.cfd_start;
   a=(a+ma)&~ma;
@@ -413,7 +445,7 @@ calc_space(ul *ns,ul *sl,Sym *sym1,Sym *syme,const char *st1,Sym *d1,Sym *de,con
 
   for (sym=sym1;sym<syme;sym++) {
     
-    if (!LOAD_SYM(sym))
+    if (!LOAD_SYM(sym,st1))
       continue;
 
     if (d1) {
@@ -433,13 +465,13 @@ calc_space(ul *ns,ul *sl,Sym *sym1,Sym *syme,const char *st1,Sym *d1,Sym *de,con
 
 static int
 load_ptable(struct node **a,char **s,Sym *sym1,Sym *syme,const char *st1,
-	    Sym *d1,Sym *de,const char *ds1) {
+	    Sym *d1,Sym *de,const char *ds1,ufixnum lp) {
 
   Sym *sym,*d;
 
   for (sym=sym1;sym<syme;sym++) {
 
-    if (!LOAD_SYM(sym))
+    if (!LOAD_SYM(sym,st1) || (EXT_SYM(sym,st1) ? lp : !lp))
       continue;
 
     if (d1) {
@@ -490,15 +522,22 @@ load_self_symbols() {
   massert(!calc_space(&ns,&sl,dsym1,dsyme,dst1,NULL,NULL,NULL));
   massert(!calc_space(&ns,&sl,sym1,syme,st1,dsym1,dsyme,dst1));
 
-  c_table.alloc_length=c_table.length=ns;
+  c_table.alloc_length=ns;
   massert(c_table.ptable=malloc(sizeof(*c_table.ptable)*c_table.alloc_length));
   massert(s=malloc(sl));
 
   a=c_table.ptable;
-  massert(!load_ptable(&a,&s,dsym1,dsyme,dst1,NULL,NULL,NULL));
-  massert(!load_ptable(&a,&s,sym1,syme,st1,dsym1,dsyme,dst1));
-  
+  massert(!load_ptable(&a,&s,dsym1,dsyme,dst1,NULL,NULL,NULL,0));
+  massert(!load_ptable(&a,&s,sym1,syme,st1,dsym1,dsyme,dst1,0));
+  c_table.length=a-c_table.ptable;
   qsort(c_table.ptable,c_table.length,sizeof(*c_table.ptable),node_compare);
+
+  c_table.local_ptable=a;
+  massert(!load_ptable(&a,&s,sym1,syme,st1,dsym1,dsyme,dst1,1));
+  c_table.local_length=a-c_table.local_ptable;
+  qsort(c_table.local_ptable,c_table.local_length,sizeof(*c_table.local_ptable),node_compare);
+
+  massert(c_table.alloc_length==c_table.length+c_table.local_length);
 
   massert(!un_mmap(v1,ve));
   massert(!fclose(f));
@@ -544,15 +583,13 @@ int
 fasload(object faslfile) {
 
   FILE *fp;
-  char filename[256],*sn,*st1,*dst1;
+  char *sn,*st1,*dst1;
   ul init_address=0,end,gs=0,*got=&gs,*gote=got+1;
-  object memory,data;
+  object memory;
   Shdr *sec1,*sece;
   Sym *sym1,*syme,*dsym1,*dsyme;
   void *v1,*ve;
 
-  coerce_to_filename(faslfile, filename);
-  faslfile = open_stream(faslfile, smm_input, Cnil, sKerror);
   fp = faslfile->sm.sm_fp;
   
   massert(v1=get_mmap(fp,&ve));
@@ -572,10 +609,8 @@ fasload(object faslfile) {
   massert(!relocate_code(v1,sec1,sece,sym1,got,gote));
   
   massert(!fseek(fp,end,SEEK_SET));
-  data=feof(fp) ? 0 : read_fasl_vector(faslfile);
   
   massert(!un_mmap(v1,ve));
-  close_stream(faslfile);
   
   massert(!clear_protect_memory(memory));
 
@@ -586,7 +621,7 @@ fasload(object faslfile) {
 #endif  
 
   init_address-=(ul)memory->cfd.cfd_start;
-  call_init(init_address,memory,data,0);
+  call_init(init_address,memory,faslfile);
   
   if(symbol_value(sLAload_verboseA)!=Cnil)
     printf("start address -T %p ",memory->cfd.cfd_start);

@@ -1,45 +1,35 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<!-- Created by GNU Texinfo 5.2, http://www.gnu.org/software/texinfo/ -->
+<!-- Created by GNU Texinfo 6.7, http://www.gnu.org/software/texinfo/ -->
 <head>
-<title>GCL TK Manual: button</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>button (GCL TK Manual)</title>
 
-<meta name="description" content="GCL TK Manual: button">
-<meta name="keywords" content="GCL TK Manual: button">
+<meta name="description" content="button (GCL TK Manual)">
+<meta name="keywords" content="button (GCL TK Manual)">
 <meta name="resource-type" content="document">
 <meta name="distribution" content="global">
 <meta name="Generator" content="makeinfo">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link href="index.html#Top" rel="start" title="Top">
+<link href="index.html" rel="start" title="Top">
 <link href="wm.html#SEC_Contents" rel="contents" title="Table of Contents">
-<link href="Widgets.html#Widgets" rel="up" title="Widgets">
-<link href="listbox.html#listbox" rel="next" title="listbox">
-<link href="Widgets.html#Widgets" rel="prev" title="Widgets">
+<link href="Widgets.html" rel="up" title="Widgets">
+<link href="listbox.html" rel="next" title="listbox">
+<link href="Widgets.html" rel="prev" title="Widgets">
 <style type="text/css">
 <!--
 a.summary-letter {text-decoration: none}
-blockquote.smallquotation {font-size: smaller}
+blockquote.indentedblock {margin-right: 0em}
 div.display {margin-left: 3.2em}
 div.example {margin-left: 3.2em}
-div.indentedblock {margin-left: 3.2em}
 div.lisp {margin-left: 3.2em}
-div.smalldisplay {margin-left: 3.2em}
-div.smallexample {margin-left: 3.2em}
-div.smallindentedblock {margin-left: 3.2em; font-size: smaller}
-div.smalllisp {margin-left: 3.2em}
-kbd {font-style:oblique}
+kbd {font-style: oblique}
 pre.display {font-family: inherit}
 pre.format {font-family: inherit}
 pre.menu-comment {font-family: serif}
 pre.menu-preformatted {font-family: serif}
-pre.smalldisplay {font-family: inherit; font-size: smaller}
-pre.smallexample {font-size: smaller}
-pre.smallformat {font-family: inherit; font-size: smaller}
-pre.smalllisp {font-size: smaller}
-span.nocodebreak {white-space:nowrap}
-span.nolinebreak {white-space:nowrap}
-span.roman {font-family:serif; font-weight:normal}
-span.sansserif {font-family:sans-serif; font-weight:normal}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
 ul.no-bullet {list-style: none}
 -->
 </style>
@@ -47,22 +37,18 @@ ul.no-bullet {list-style: none}
 
 </head>
 
-<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
-<a name="button"></a>
-<div class="header">
+<body lang="en">
+<span id="button"></span><div class="header">
 <p>
-Next: <a href="listbox.html#listbox" accesskey="n" rel="next">listbox</a>, Previous: <a href="Widgets.html#Widgets" accesskey="p" rel="prev">Widgets</a>, Up: <a href="Widgets.html#Widgets" accesskey="u" rel="up">Widgets</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
+Next: <a href="listbox.html" accesskey="n" rel="next">listbox</a>, Previous: <a href="Widgets.html" accesskey="p" rel="prev">Widgets</a>, Up: <a href="Widgets.html" accesskey="u" rel="up">Widgets</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
 </div>
 <hr>
-<a name="button-1"></a>
-<h3 class="section">2.1 button</h3>
+<span id="button-1"></span><h3 class="section">2.1 button</h3>
 
 <p>button \- Create and manipulate button widgets
-</p><a name="Synopsis"></a>
-<h4 class="unnumberedsubsec">Synopsis</h4>
+</p><span id="Synopsis"></span><h4 class="unnumberedsubsec">Synopsis</h4>
 <p><b>button</b><i> </i><i>pathName </i><span class="roman">?</span><i>options</i>?
-</p><a name="Standard-Options"></a>
-<h4 class="unnumberedsubsec">Standard Options</h4>
+</p><span id="Standard-Options"></span><h4 class="unnumberedsubsec">Standard Options</h4>
 
 
 <div class="example">
@@ -73,9 +59,8 @@ background        disabledForeground  padY
 </pre></div>
 
 
-<p>See <a href="options.html#options">options</a>, for more information.
-</p><a name="Arguments-for-Button"></a>
-<h4 class="unnumberedsubsec">Arguments for Button</h4>
+<p>See <a href="options.html">options</a>, for more information.
+</p><span id="Arguments-for-Button"></span><h4 class="unnumberedsubsec">Arguments for Button</h4>
 
 
 <dl compact="compact">
@@ -137,8 +122,7 @@ from the size of the bitmap or text being displayed in it.
 </p></dd>
 </dl>
 
-<a name="Description"></a>
-<h4 class="unnumberedsubsec">Description</h4>
+<span id="Description"></span><h4 class="unnumberedsubsec">Description</h4>
 
 <p>The <b>button</b> command creates a new window (given by the
 <i>pathName</i> argument) and makes it into a button widget.
@@ -162,8 +146,7 @@ button (by pressing mouse button 1 with the cursor over the
 button), then the Tcl command specified in the <b>:command</b>
 option is invoked.
 </p>
-<a name="A-Button-Widget_0027s-Arguments"></a>
-<h4 class="unnumberedsubsec">A Button Widget&rsquo;s Arguments</h4>
+<span id="A-Button-Widget_0027s-Arguments"></span><h4 class="unnumberedsubsec">A Button Widget&rsquo;s Arguments</h4>
 
 <p>The <b>button</b> command creates a new Tcl command whose
 name is <i>pathName</i>.  This
@@ -223,8 +206,7 @@ This command is ignored if the button&rsquo;s state is <b>disabled</b>.
 </p>
 </dd>
 </dl>
-<a name="g_t_0022Default-Bindings_0022"></a>
-<h4 class="unnumberedsubsec">&quot;Default Bindings&quot;</h4>
+<span id="g_t_0022Default-Bindings_0022"></span><h4 class="unnumberedsubsec">&quot;Default Bindings&quot;</h4>
 
 <p>Tk automatically creates class bindings for buttons that give them
 the following default behavior:
@@ -248,13 +230,12 @@ actions occur:  the button is completely non-responsive.
 <p>The behavior of buttons can be changed by defining new bindings for
 individual widgets or by redefining the class bindings.
 </p>
-<a name="Keywords"></a>
-<h4 class="unnumberedsubsec">Keywords</h4>
+<span id="Keywords"></span><h4 class="unnumberedsubsec">Keywords</h4>
 <p>button, widget
 </p><hr>
 <div class="header">
 <p>
-Next: <a href="listbox.html#listbox" accesskey="n" rel="next">listbox</a>, Previous: <a href="Widgets.html#Widgets" accesskey="p" rel="prev">Widgets</a>, Up: <a href="Widgets.html#Widgets" accesskey="u" rel="up">Widgets</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
+Next: <a href="listbox.html" accesskey="n" rel="next">listbox</a>, Previous: <a href="Widgets.html" accesskey="p" rel="prev">Widgets</a>, Up: <a href="Widgets.html" accesskey="u" rel="up">Widgets</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
 </div>
 
 

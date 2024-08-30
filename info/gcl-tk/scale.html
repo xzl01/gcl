@@ -1,45 +1,35 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<!-- Created by GNU Texinfo 5.2, http://www.gnu.org/software/texinfo/ -->
+<!-- Created by GNU Texinfo 6.7, http://www.gnu.org/software/texinfo/ -->
 <head>
-<title>GCL TK Manual: scale</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>scale (GCL TK Manual)</title>
 
-<meta name="description" content="GCL TK Manual: scale">
-<meta name="keywords" content="GCL TK Manual: scale">
+<meta name="description" content="scale (GCL TK Manual)">
+<meta name="keywords" content="scale (GCL TK Manual)">
 <meta name="resource-type" content="document">
 <meta name="distribution" content="global">
 <meta name="Generator" content="makeinfo">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link href="index.html#Top" rel="start" title="Top">
+<link href="index.html" rel="start" title="Top">
 <link href="wm.html#SEC_Contents" rel="contents" title="Table of Contents">
-<link href="Widgets.html#Widgets" rel="up" title="Widgets">
-<link href="canvas.html#canvas" rel="next" title="canvas">
-<link href="listbox.html#listbox" rel="prev" title="listbox">
+<link href="Widgets.html" rel="up" title="Widgets">
+<link href="canvas.html" rel="next" title="canvas">
+<link href="listbox.html" rel="prev" title="listbox">
 <style type="text/css">
 <!--
 a.summary-letter {text-decoration: none}
-blockquote.smallquotation {font-size: smaller}
+blockquote.indentedblock {margin-right: 0em}
 div.display {margin-left: 3.2em}
 div.example {margin-left: 3.2em}
-div.indentedblock {margin-left: 3.2em}
 div.lisp {margin-left: 3.2em}
-div.smalldisplay {margin-left: 3.2em}
-div.smallexample {margin-left: 3.2em}
-div.smallindentedblock {margin-left: 3.2em; font-size: smaller}
-div.smalllisp {margin-left: 3.2em}
-kbd {font-style:oblique}
+kbd {font-style: oblique}
 pre.display {font-family: inherit}
 pre.format {font-family: inherit}
 pre.menu-comment {font-family: serif}
 pre.menu-preformatted {font-family: serif}
-pre.smalldisplay {font-family: inherit; font-size: smaller}
-pre.smallexample {font-size: smaller}
-pre.smallformat {font-family: inherit; font-size: smaller}
-pre.smalllisp {font-size: smaller}
-span.nocodebreak {white-space:nowrap}
-span.nolinebreak {white-space:nowrap}
-span.roman {font-family:serif; font-weight:normal}
-span.sansserif {font-family:sans-serif; font-weight:normal}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
 ul.no-bullet {list-style: none}
 -->
 </style>
@@ -47,22 +37,18 @@ ul.no-bullet {list-style: none}
 
 </head>
 
-<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
-<a name="scale"></a>
-<div class="header">
+<body lang="en">
+<span id="scale"></span><div class="header">
 <p>
-Next: <a href="canvas.html#canvas" accesskey="n" rel="next">canvas</a>, Previous: <a href="listbox.html#listbox" accesskey="p" rel="prev">listbox</a>, Up: <a href="Widgets.html#Widgets" accesskey="u" rel="up">Widgets</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
+Next: <a href="canvas.html" accesskey="n" rel="next">canvas</a>, Previous: <a href="listbox.html" accesskey="p" rel="prev">listbox</a>, Up: <a href="Widgets.html" accesskey="u" rel="up">Widgets</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
 </div>
 <hr>
-<a name="scale-1"></a>
-<h3 class="section">2.3 scale</h3>
+<span id="scale-1"></span><h3 class="section">2.3 scale</h3>
 
 <p>scale \- Create and manipulate scale widgets
-</p><a name="Synopsis-2"></a>
-<h4 class="unnumberedsubsec">Synopsis</h4>
+</p><span id="Synopsis-2"></span><h4 class="unnumberedsubsec">Synopsis</h4>
 <p><b>scale</b><i> </i><i>pathName </i><span class="roman">?</span><i>options</i>?
-</p><a name="Standard-Options-2"></a>
-<h4 class="unnumberedsubsec">Standard Options</h4>
+</p><span id="Standard-Options-2"></span><h4 class="unnumberedsubsec">Standard Options</h4>
 
 
 <div class="example">
@@ -71,9 +57,8 @@ background           cursor          foreground     relief
 </pre></div>
 
 
-<p>See <a href="options.html#options">options</a>, for more information.
-</p><a name="Arguments-for-Scale"></a>
-<h4 class="unnumberedsubsec">Arguments for Scale</h4>
+<p>See <a href="options.html">options</a>, for more information.
+</p><span id="Arguments-for-Scale"></span><h4 class="unnumberedsubsec">Arguments for Scale</h4>
 
 
 <dl compact="compact">
@@ -210,8 +195,7 @@ this is the scale&rsquo;s height.
 </p></dd>
 </dl>
 
-<a name="Description-2"></a>
-<h4 class="unnumberedsubsec">Description</h4>
+<span id="Description-2"></span><h4 class="unnumberedsubsec">Description</h4>
 
 <p>The <b>scale</b> command creates a new window (given by the
 <i>pathName</i> argument) and makes it into a scale widget.
@@ -243,8 +227,7 @@ the current value for vertical scales).  Each of these three
 annotations may be selectively enabled or disabled using the
 configuration options.
 </p>
-<a name="A-Scale_0027s_0022Argumentsommand_0022"></a>
-<h4 class="unnumberedsubsec">A Scale&rsquo;s&quot;Argumentsommand&quot;</h4>
+<span id="A-Scale_0027s_0022Argumentsommand_0022"></span><h4 class="unnumberedsubsec">A Scale&rsquo;s&quot;Argumentsommand&quot;</h4>
 
 <p>The <b>scale</b> command creates a new Tcl command whose
 name is <i>pathName</i>.  This
@@ -284,8 +267,7 @@ gives the new value for the scale.
 </p>
 </dd>
 </dl>
-<a name="Bindings"></a>
-<h4 class="unnumberedsubsec">Bindings</h4>
+<span id="Bindings"></span><h4 class="unnumberedsubsec">Bindings</h4>
 
 <p>When a new scale is created, it is given the following initial
 behavior by default:
@@ -313,13 +295,12 @@ the current mouse position.
 </p>
 </dd>
 </dl>
-<a name="Keywords-2"></a>
-<h4 class="unnumberedsubsec">Keywords</h4>
+<span id="Keywords-2"></span><h4 class="unnumberedsubsec">Keywords</h4>
 <p>scale, widget
 </p><hr>
 <div class="header">
 <p>
-Next: <a href="canvas.html#canvas" accesskey="n" rel="next">canvas</a>, Previous: <a href="listbox.html#listbox" accesskey="p" rel="prev">listbox</a>, Up: <a href="Widgets.html#Widgets" accesskey="u" rel="up">Widgets</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
+Next: <a href="canvas.html" accesskey="n" rel="next">canvas</a>, Previous: <a href="listbox.html" accesskey="p" rel="prev">listbox</a>, Up: <a href="Widgets.html" accesskey="u" rel="up">Widgets</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
 </div>
 
 

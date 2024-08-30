@@ -47,29 +47,32 @@ DEFUN_NEW("PROFILE",object,fSprofile,SI
   
   object ar=sSAprofile_arrayA->s.s_dbind;
   void *x;
+  fixnum a,s;
 
   if (type_of(ar)!=t_string)
     FEerror("si:*Profile-array* not a string",0);
   if( type_of(start_address)!=t_fixnum ||   type_of(scale)!=t_fixnum)
     FEerror("Needs start address and scale as args",0);
 
-  x=!(fix(start_address)*fix(scale)) ? NULL : (void *) (ar->ust.ust_self);
+  massert((a=fix(start_address))>=0);
+  massert((s=fix(scale))>=0);
+
+  x=a&&s ? (void *) (ar->ust.ust_self) : NULL;
   profil(x, (ar->ust.ust_dim),fix(start_address),fix(scale) << 8);
   RETURN1(start_address);
 }
 
 #endif
-DEFUN_NEW("FUNCTION-START",object,fSfunction_start,SI
-       ,1,1,NONE,OO,OO,OO,OO,(object funobj),"")
-{/* 1 args */
- if(type_of(funobj)!=t_cfun
-    && type_of(funobj)!=t_sfun
-    && type_of(funobj)!=t_vfun
-    && type_of(funobj)!=t_afun
-    && type_of(funobj)!=t_gfun)
-    FEerror("not compiled function",0);
- funobj=make_fixnum((long) (funobj->cf.cf_self));
- RETURN1(funobj);
+DEFUN_NEW("FUNCTION-START",object,fSfunction_start,SI,1,1,NONE,OO,OO,OO,OO,(object funobj),"") {
+
+  switch (type_of(funobj)) {
+  case t_cfun:case t_sfun:case t_vfun:case t_afun:case t_gfun:case t_closure:case t_cclosure:
+    return make_fixnum((long) (funobj->cf.cf_self));
+  default:
+    TYPE_ERROR(funobj,sLcompiled_function);
+    return Cnil;
+  }
+
 }
 
 /* begin fasl stuff*/
@@ -271,11 +274,13 @@ endar=aar+dim;
 
 
 DEFUN_NEW("DISPLAY-PROFILE",object,fSdisplay_profile,SI
-       ,2,2,NONE,OO,OO,OO,OO,(object start_addr,object scal),"")
-{if (!combined_table.ptable)
-   FEerror("must symbols first",0);
-   /* 2 args */
-   {unsigned int prev,next,upto,dim,total;
+       ,2,2,NONE,OO,OO,OO,OO,(object start_addr,object scal),"") {
+
+  if (!combined_table.ptable)
+    FEerror("must symbols first",0);
+  /* 2 args */
+  {
+    unsigned int prev,next,upto,dim,total;
     int j,scale,count;
     unsigned char *ar;
     object obj_ar;
@@ -289,35 +294,42 @@ DEFUN_NEW("DISPLAY-PROFILE",object,fSdisplay_profile,SI
     dim= (obj_ar->ust.ust_dim);
 
     total=string_sum(ar,dim);
-  
+
     j=0;
-    {int i, finish = combined_table.length-1;
-     for(i =0,prev=SYM_ADDRESS(combined_table,i); i< finish;
-	 prev=next)
-       { ++i;
-	 next=SYM_ADDRESS(combined_table,i);
-	 if ( prev < prof_start) continue;
-	 upto=prof_ind(next,scale);
-	 if (upto >= dim) upto=dim;
-	 {const char *name; unsigned long uname;
+    {
+      int i, finish = combined_table.length-1;
+      for(i =0,prev=SYM_ADDRESS(combined_table,i); i< finish;prev=next)	{
+	++i;
+	next=SYM_ADDRESS(combined_table,i);
+	if (prev<prof_start)
+	  continue;
+	upto=prof_ind(next,scale);
+	if (upto >= dim)
+	  upto=dim;
+	{
+	  const char *name; unsigned long uname;
 	  count=0;
-	  for( ; j<upto;j++)
+	  for(;j<upto;j++)
 	    count += ar[j];
 	  if (count > 0) {
 	    name=SYM_STRING(combined_table,i-1);
 	    uname = (unsigned long) name;
 	    printf("\n%6.2f%% (%5d): ",(100.0*count)/total, count);
 	    fflush(stdout);
-	    if (CF_FLAG & uname)
-	      {if (~CF_FLAG & uname) prin1( ((object) (~CF_FLAG & uname))->cf.cf_name,Cnil);}
-	     else if (name ) printf("%s",name);};
+	    if (CF_FLAG & uname) {
+	      if (~CF_FLAG & uname)
+		prin1( ((object) (~CF_FLAG & uname))->cf.cf_name,Cnil);
+	    } else if (name )
+	      printf("%s",name);};
 	  if (upto==dim) goto TOTALS ;
-	  
-	}}}
- TOTALS:
-  printf("\nTotal ticks %d",total);fflush(stdout);
+
+	}
+      }
+    }
+  TOTALS:
+    printf("\nTotal ticks %d",total);fflush(stdout);
   }
- RETURN1(start_addr);
+  RETURN1(start_addr);
 }
 
 

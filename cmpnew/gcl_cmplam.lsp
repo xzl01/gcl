@@ -19,7 +19,7 @@
 ;; Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 
 
-(in-package 'compiler)
+(in-package :compiler)
 
 ;;; During Pass1, a lambda-list
 ;;;
@@ -407,6 +407,12 @@
            (c2lambda-expr-without-key lambda-list body)))
   ))
 
+(defun decl-body-safety (body)
+  (case (car body)
+    (decl-body (or (cadr (assoc 'safety (caddr body))) 0))
+    ((let let*) (decl-body-safety (car (last body))))
+    (otherwise 0)))
+
 (defun c2lambda-expr-without-key
        (lambda-list body
         &aux (requireds (car lambda-list))
@@ -439,7 +445,7 @@
         (when rest (do-decl rest))
         )
   ;;; check arguments
-  (when (or *safe-compile* *compiler-check-args*)
+  (when (or *safe-compile* *compiler-check-args* (plusp (decl-body-safety body)));FIXME
     (cond ((or rest optionals)
            (when requireds
              (wt-nl "if(vs_top-vs_base<" (length requireds)
@@ -448,7 +454,7 @@
              (wt-nl "if(vs_top-vs_base>"
                     (+ (length requireds) (length optionals))
                     ") too_many_arguments();")))
-          (t (wt-nl "check_arg(" (length requireds) ");"))))
+          (t (when requireds (wt-nl "check_arg(" (length requireds) ");")))))
 
   ;;; Allocate the parameters.
   (dolist** (var requireds) (setf (var-ref var) (vs-push)))
@@ -469,9 +475,9 @@
                (*unwind-exit* *unwind-exit*)
                (*ccb-vs* *ccb-vs*))
            (when rest
-             (wt-nl "vs_top[0]=Cnil;")
-             (wt-nl "{object *p=vs_top, *q=vs_base+" (length optionals) ";")
-             (wt-nl " for(;p>q;p--)p[-1]=MMcons(p[-1],p[0]);}"))
+             (wt-nl "{object *q=vs_base+" (length optionals) ",*l;")
+	     (wt-nl " for (l=q;q<vs_top;q++,l=&(*l)->c.c_cdr) *l=MMcons(*q,Cnil);")
+	     (wt-nl " *l=Cnil;}"))
            (do ((opts optionals (cdr opts)))
                ((endp opts))
                (declare (object opts))
@@ -504,11 +510,11 @@
 
              (wt-label label)))
         (rest
-         (wt-nl "vs_top[0]=Cnil;")
-         (wt-nl "{object *p=vs_top;")
-         (wt-nl " for(;p>vs_base;p--)p[-1]="
+	 (wt-nl "{object *q=vs_base,*l;")
+	 (wt-nl " for (l=q;q<vs_top;q++,l=&(*l)->c.c_cdr) *l="
 		(if *rest-on-stack* "ON_STACK_CONS" "MMcons")
-		"(p[-1],p[0]);}")
+		"(*q,Cnil);")
+	 (wt-nl " *l=Cnil;}")
          (c2bind rest)
          (wt-nl)
          (reset-top))
@@ -562,7 +568,7 @@
                   (when (cadddr kwd) (do-decl (cadddr kwd))))
         )
   ;;; Check arguments.
-  (when (and (or *safe-compile* *compiler-check-args*) requireds)
+  (when (and (or *safe-compile* *compiler-check-args* (plusp (decl-body-safety body))) requireds);FIXME
         (when requireds
               (wt-nl "if(vs_top-vs_base<" (length requireds)
                      ") too_few_arguments();")))

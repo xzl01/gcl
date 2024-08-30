@@ -130,26 +130,13 @@ do { int c = 0; \
 
 #define SET_SESSION_ID() (setpgrp() ? -1 : 0)
 
-#define CLEANUP_CODE \
-  setbuf(stdin,0); \
-   setbuf(stdout,0);
-
 #include <limits.h>
 #include <sys/stat.h>
-#define GET_FULL_PATH_SELF(a_) do {\
- char b[20];\
- static char q[PATH_MAX];\
- struct stat ss;\
- if (snprintf(b,sizeof(b),"/proc/%d/exe",getpid())<=0)\
-   error("Cannot write proc exe pathname");\
- if (stat(b,&ss)) \
-   (a_)=argv[0];\
- else {\
-   if (!realpath(b,q)) \
-     error("realpath error");\
-   (a_)=q;\
- }\
-} while(0)
+#define GET_FULL_PATH_SELF(a_) do {				\
+    static char q[PATH_MAX];					\
+    massert(which("/proc/self/exe",q) || which(argv[0],q));	\
+    (a_)=q;							\
+  } while(0)
 
 
 #define UC(a_) ((ucontext_t *)a_)
@@ -159,10 +146,10 @@ do { int c = 0; \
 
 /* #define FPE_CODE(i_) make_fixnum((fixnum)SF(i_)->si_code) */
 #ifdef __i386__
-#define FPE_CODE(i_,v_) make_fixnum(FFN(fSfpe_code)(UC(v_)->uc_mcontext.fpregs->sw,((struct _fpstate *)UC(v_)->uc_mcontext.fpregs)->mxcsr))
+#define FPE_CODE(i_,v_) make_fixnum((long)FFN(fSfpe_code)(UC(v_)->uc_mcontext.fpregs->sw,((struct _fpstate *)UC(v_)->uc_mcontext.fpregs)->mxcsr))
 #define FPE_ADDR(i_,v_) make_fixnum((UC(v_)->uc_mcontext.fpregs->tag!=-1) ? UC(v_)->uc_mcontext.fpregs->ipoff : (fixnum)SF(i_)->si_addr)
 #else
-#define FPE_CODE(i_,v_) make_fixnum(FFN(fSfpe_code)(UC(v_)->uc_mcontext.fpregs->swd,((struct _fpstate *)UC(v_)->uc_mcontext.fpregs)->mxcsr))
+#define FPE_CODE(i_,v_) make_fixnum((long)FFN(fSfpe_code)(UC(v_)->uc_mcontext.fpregs->swd,((struct _fpstate *)UC(v_)->uc_mcontext.fpregs)->mxcsr))
 #define FPE_ADDR(i_,v_) make_fixnum(UC(v_)->uc_mcontext.fpregs->fop ? UC(v_)->uc_mcontext.fpregs->rip : (fixnum)SF(i_)->si_addr)
 #endif
 #define FPE_CTXT(v_) list(3,make_fixnum((fixnum)&UC(v_)->uc_mcontext.gregs),	\

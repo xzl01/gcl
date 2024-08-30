@@ -2,11 +2,11 @@
 (in-package :si)
 
 (macrolet 
- ((make-conditionp (condition &aux (n (intern (concatenate 'string (string condition) "P"))))
+ ((make-conditionp (condition &aux (n (intern (string-concatenate (string condition) "P"))))
 		   `(defun ,n (x &aux (z (si-find-class ',condition)))
 		      (when z
 			(funcall (setf (symbol-function ',n) (lambda (x) (typep x z))) x))))
-  (make-condition-classp (class &aux (n (intern (concatenate 'string (string class) "-CLASS-P"))))
+  (make-condition-classp (class &aux (n (intern (string-concatenate (string class) "-CLASS-P"))))
 			 `(defun ,n (x &aux (s (si-find-class 'standard-class)) (z (si-find-class ',class)))
 			    (when (and s z)
 			      (funcall (setf (symbol-function ',n)
@@ -100,6 +100,8 @@
 	     args))))
 	("unknown error")))
 
+(defvar *break-on-warnings* nil)
+
 (defun warn (datum &rest arguments)
   (declare (optimize (safety 2)))
   (let ((c (process-error datum arguments 'simple-warning)))
@@ -122,9 +124,9 @@
 
 (defun process-error (datum args &optional (default-type 'simple-error))
   (let ((internal (cond ((simple-condition-class-p datum)
-			 (find-symbol (concatenate 'string "INTERNAL-" (string datum)) :conditions))
+			 (find-symbol (string-concatenate "INTERNAL-" (string datum)) :conditions))
 			((condition-class-p datum)
-			 (find-symbol (concatenate 'string "INTERNAL-SIMPLE-" (string datum)) :conditions)))))
+			 (find-symbol (string-concatenate "INTERNAL-SIMPLE-" (string datum)) :conditions)))))
     (coerce-to-condition (or internal datum) (if internal (list* :function-name *sig-fn-name* args) args) default-type 'process-error)))
 
 (defun universal-error-handler (n cp fn cs es &rest args &aux (*sig-fn-name* fn))
@@ -172,7 +174,7 @@
       (format *error-output* "~&If continued: ")
       (funcall (restart-report-function correctable) *error-output*))
     (force-output *error-output*)
-    (break-level condition)))
+    (when *break-enable* (break-level condition))))
 
 
 (defun dbl-eval (- &aux (break-command t))
@@ -184,54 +186,51 @@
 		    (t (setq break-command nil) (evalhook - nil nil *break-env*))))))
     (cons break-command val-list)))
 
-(defun do-break-level (at env p-e-p debug-level break-level &aux (first t))
+(defun dbl-rpl-loop (p-e-p)
 
-  (do nil (nil) 
-   
-   (unless
-       (with-simple-restart 
-	(abort "Return to debug level ~D." debug-level)
-	(not
-	 (catch 'step-continue
-	   (let* ((*break-level* break-level)
-		  (*break-enable* (unless p-e-p *break-enable*))
-		  (*readtable* (or *break-readtable* *readtable*))
-		  *break-env* *read-suppress*); *error-stack*)
+  (setq +++ ++ ++ + + -)
 
-	     (setq +++ ++ ++ + + -)
+  (if *no-prompt*
+      (setq *no-prompt* nil)
+    (format *debug-io* "~&~a~a>~{~*>~}"
+	    (if p-e-p "" "dbl:")
+	    (if (eq *package* (find-package 'user)) "" (package-name *package*))
+	    *break-level*))
+  (force-output *error-output*)
 
-	     (when first
-	       (catch-fatal 1)
-	       (setq *interrupt-enable* t first nil)
-	       (cond (p-e-p 
-		      (format *debug-io* "~&~A~2%" at)
-		      (set-current)
-		      (setq *no-prompt* nil)
-		      (show-restarts))
-		     ((set-back at env))))
+  (setq - (dbl-read *debug-io* nil *top-eof*))
+  (when (eq - *top-eof*) (bye -1))
+  (let* ((ev (dbl-eval -))
+	 (break-command (car ev))
+	 (values (cdr ev)))
+    (unless (and break-command (eq (car values) :resume))
+      (setq /// // // / / values *** ** ** * * (car /))
+      (fresh-line *debug-io*)
+      (dolist (val /)
+	(prin1 val *debug-io*)
+	(terpri *debug-io*))
+      (dbl-rpl-loop p-e-p))))
 
-	     (if *no-prompt* 
-		 (setq *no-prompt* nil)
-	       (format *debug-io* "~&~a~a>~{~*>~}"
-		       (if p-e-p "" "dbl:")
-		       (if (eq *package* (find-package 'user)) "" (package-name *package*))
-		       break-level))
-	     (force-output *error-output*)
+(defun do-break-level (at env p-e-p debug-level); break-level
 
-	     (setq - (dbl-read *debug-io* nil *top-eof*))
-	     (when (eq - *top-eof*) (bye -1))
-	     (let* ((ev (dbl-eval -))
-		    (break-command (car ev))
-		    (values (cdr ev)))
-	       (and break-command (eq (car values) :resume)(return))
-	       (setq /// // // / / values *** ** ** * * (car /))
-	       (fresh-line *debug-io*)
-	       (dolist (val /)
-		 (prin1 val *debug-io*)
-		 (terpri *debug-io*)))
-	     nil))))
-     (terpri *debug-io*)
-     (break-current))))
+  (unless
+      (with-simple-restart
+       (abort "Return to debug level ~D." debug-level)
+
+       (catch-fatal 1)
+       (setq *interrupt-enable* t)
+       (cond (p-e-p
+	      (format *debug-io* "~&~A~2%" at)
+	      (set-current)
+	      (setq *no-prompt* nil)
+	      (show-restarts))
+	     ((set-back at env)))
+
+       (not (catch 'step-continue (dbl-rpl-loop p-e-p))))
+
+    (terpri *debug-io*)
+    (break-current)
+    (do-break-level at env p-e-p debug-level)))
 
 
 (defun break-level (at &optional env)
@@ -240,10 +239,10 @@
          (- -)
          (* *) (** **) (*** ***)
          (/ /) (// //) (/// ///)
-	 (break-level (if p-e-p (cons t *break-level*) *break-level*))
 	 (debug-level *debug-level*)
 	 (*quit-tags* (cons (cons *break-level* *quit-tag*) *quit-tags*))
 	 *quit-tag*
+	 (*break-level* (if p-e-p (cons t *break-level*) *break-level*))
 	 (*ihs-base* (1+ *ihs-top*))
 	 (*ihs-top* (ihs-top))
 	 (*frs-base* (or (sch-frs-base *frs-top* *ihs-base*) (1+ (frs-top))))
@@ -253,9 +252,11 @@
 	 (*debug-restarts* (compute-restarts))
 	 (*debug-abort* (find-restart 'abort))
 	 (*debug-continue* (find-restart 'continue))
-	 (*abort-restarts* (remove-if-not (lambda (x) (eq 'abort (restart-name x))) *debug-restarts*)))
+	 (*abort-restarts* (remove-if-not (lambda (x) (eq 'abort (restart-name x))) *debug-restarts*))
+	 (*readtable* (or *break-readtable* *readtable*))
+	 *break-env* *read-suppress*)
     
-      (do-break-level at env p-e-p debug-level break-level)))
+      (do-break-level at env p-e-p debug-level)))
 
 (putprop 'break-level t 'compiler::cmp-notinline)
 
@@ -276,6 +277,6 @@
 	     (setq message ""))))
   (with-simple-restart 
    (continue "Return from break.")
-   (let ((*break-enable* t)) (break-level message)))
+   (break-level message))
   nil)
 (putprop 'break t 'compiler::cmp-notinline)

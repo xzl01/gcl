@@ -21,8 +21,9 @@
 ;;;;    AUTOLOAD
 
 
-;;; Go into LISP.
-(in-package 'lisp)
+(in-package :si)
+
+(export '(clines defentry defcfun object void int double))
 
 ;(defvar *features*)
 
@@ -127,13 +128,13 @@
 
 ;;; Allocator.
 
-(import 'si::allocate)
-(export '(allocate
+;(import 'si::allocate)
+;(export '(allocate
 	  ;allocated-pages maximum-allocatable-pages
           ;allocate-contiguous-pages
           ;allocated-contiguous-pages maximum-contiguous-pages
           ;allocate-relocatable-pages allocated-relocatable-pages 
-          sfun gfun cfun cclosure spice structure))
+;          sfun gfun cfun cclosure spice structure))
 
 ;(defvar type-character-alist
 ;             '((cons . #\.)
@@ -266,7 +267,7 @@
                      (push (list (nth nfree *type-list*) typename)
                            link-alist))))))
     (terpri)
-    (dolist (info (reverse info-list))
+    (dolist (info (nreverse info-list))
       (apply #'format t "~8D/~D~19T~6,1F%~@[~8D~]~35T~{~A~^ ~}"
              (append (cdr info)
                      (if  (assoc (car info) link-alist)
@@ -279,12 +280,12 @@
             ncbpage maxcbpage (if (zerop cbgbccount) nil cbgbccount) ncb)
     (format t "~9T~D~35Thole~%" holepage)
     (format t "~8D/~D~19T~6,1F%~@[~8D~]~35Trelocatable~%~%"
-            nrbpage maxrbpage (/ rbused 0.01 (+ rbused rbfree))
+            nrbpage maxrbpage (if (zerop (+ rbused rbfree)) 0.0 (/ rbused 0.01 (+ rbused rbfree)))
             (if (zerop rbgbccount) nil rbgbccount))
     (format t "~10D pages for cells~%~%" npage)
     (format t "~10D total pages in core~%" (+ npage ncbpage nrbpage))
     (format t "~10D current core maximum pages~%" (+ maxnpage maxcbpage maxrbpage))
-    (format t "~10D pages reserved for gc~%" maxrbpage)
+    (format t "~10D pages reserved for gc~%" nrbpage)
     (format t "~10D pages available for adding to core~%" leftpage)
     (format t "~10D pages reserved for core exhaustion~%~%" (- maxpage (+ maxnpage maxcbpage (ash maxrbpage 1) leftpage)))
     (format t "~10D maximum pages~%" maxpage)
@@ -409,10 +410,3 @@ Good luck!				 The GCL Development Team")
 (setf (get 'with-open-file 'si:pretty-print-format) 1)
 (setf (get 'with-open-stream 'si:pretty-print-format) 1)
 (setf (get 'with-output-to-string 'si:pretty-print-format) 1)
-
-
-(in-package 'si)
-
-(defvar *lib-directory* (namestring (truename "../")))
-
-(import '(*lib-directory* *load-path* *system-directory*) 'si::user) 

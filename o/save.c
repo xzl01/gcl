@@ -16,24 +16,17 @@ memory_save(char *original_file, char *save_file)
 extern void _cleanup();
 #endif
 
-LFD(Lsave)(void) {
+LFD(siLsave)(void) {
 
   char filename[256];
   extern char *kcl_self;
-
+  
   check_arg(1);
   check_type_or_pathname_string_symbol_stream(&vs_base[0]);
   coerce_to_filename(vs_base[0], filename);
 
-#ifdef CLEANUP_CODE
-  CLEANUP_CODE
-#elif defined(USE_CLEANUP)
-    _cleanup();
-#endif
+  gcl_cleanup(1);
   
-  raw_image=FALSE;
-  cs_org=0;
-
 #ifdef MEMORY_SAVE
   MEMORY_SAVE(kcl_self,filename);
 #else	  

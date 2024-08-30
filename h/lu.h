@@ -13,6 +13,7 @@ typedef float shortfloat;
 typedef double longfloat;
 
 typedef union lispunion *object;
+typedef union typeunion *hobj;
 
 #ifndef WORDS_BIGENDIAN
 
@@ -94,12 +95,12 @@ struct symbol {
   object s_dbind;
   void (*s_sfdef) ();
   char *s_self;
+  short s_stype;
+  short s_mflag;
   int s_fillp;
   object s_gfdef;
   object s_plist;
   object s_hpack;
-  short s_stype;
-  short s_mflag;
   SPAD;
 
 };
@@ -142,7 +143,8 @@ struct hashtable {
   int ht_nent;
   int ht_size;
   short ht_test;
-  SPAD;
+  short ht_static;
+  struct htent *ht_cache;
 
 };
 
@@ -152,10 +154,10 @@ struct array {
   short a_rank;
   short a_elttype;
   object *a_self;
-  short a_adjustable;
-  short a_offset;
   int a_dim;
   int *a_dims;
+  short a_adjustable;
+  short a_offset;
   SPAD;
 
 };
@@ -168,8 +170,8 @@ struct vector {
   short v_hasfillp;
   short v_elttype;
   object *v_self;
-  int v_fillp;
   int v_dim;
+  int v_fillp;
   short v_adjustable;
   short v_offset;
   SPAD;
@@ -181,8 +183,8 @@ struct string {
   short st_hasfillp;
   short st_adjustable;
   char *st_self;
-  int st_fillp;
   int st_dim;
+  int st_fillp;
 };
 
 struct ustring {
@@ -191,8 +193,8 @@ struct ustring {
   short ust_hasfillp;
   short ust_adjustable;
   unsigned char *ust_self;
-  int ust_fillp;
   int ust_dim;
+  int ust_fillp;
 };
 
 struct bitvector {
@@ -201,8 +203,8 @@ struct bitvector {
   short bv_hasfillp;
   short bv_elttype;
   char *bv_self;
-  int bv_fillp;
   int bv_dim;
+  int bv_fillp;
   short bv_adjustable;
   short bv_offset;
   SPAD;
@@ -214,10 +216,10 @@ struct fixarray {
   short fixa_rank;
   short fixa_elttype;
   fixnum *fixa_self;
-  short fixa_adjustable;
-  short fixa_offset;
   int fixa_dim;
   int *fixa_dims;
+  short fixa_adjustable;
+  short fixa_offset;
   SPAD;
 };
 
@@ -227,10 +229,10 @@ struct sfarray {
   short sfa_rank;
   short sfa_elttype;
   shortfloat *sfa_self;
-  short sfa_adjustable;
-  short sfa_offset;
   int sfa_dim;
   int *sfa_dims;
+  short sfa_adjustable;
+  short sfa_offset;
   SPAD;
 };
 
@@ -240,10 +242,10 @@ struct lfarray {
   short lfa_rank;
   short lfa_elttype;
   longfloat *lfa_self;
-  short lfa_adjustable;
-  short lfa_offset;
   int lfa_dim;
   int *lfa_dims;
+  short lfa_adjustable;
+  short lfa_offset;
   SPAD;
 };
 
@@ -270,15 +272,14 @@ struct structure {
 
 struct stream {
   FIRSTWORD;
-  void *sm_fp;
-  object sm_object0;
-  object sm_object1;
-  int sm_int0;
-  int sm_int1;
-  char *sm_buffer;
-  char sm_mode;
-  unsigned char sm_flags;
-  short sm_fd;
+  void   *sm_fp;
+  object  sm_object0;
+  object  sm_object1;
+  char   *sm_buffer;
+  ufixnum sm_mode:4;
+  ufixnum sm_flags:6;
+  ufixnum sm_fd:6;
+  ufixnum sm_int:LM(16);
 };
 
 struct random {
@@ -290,6 +291,8 @@ struct random {
 struct readtable {
   FIRSTWORD;
   struct rtent *rt_self;
+  object rt_case;
+  SPAD;
 };
 
 struct pathname {
@@ -300,7 +303,7 @@ struct pathname {
   object pn_name;
   object pn_type;
   object pn_version;
-  SPAD;
+  object pn_namestring;
 };
 
 struct cfun {
@@ -353,7 +356,8 @@ struct cfdata {
   FIRSTWORD;
   char *cfd_start;
   int cfd_size;
-  int cfd_fillp;
+  int cfd_fillp:31;
+  int cfd_prof:1;
   object *cfd_self;
   SPAD;
 };
@@ -427,4 +431,9 @@ union lispunion {
   struct fixarray fixa;
   struct sfarray sfa;
   struct lfarray lfa;
+};
+
+union typeunion {
+  struct dummy d;
+  fixnum fw;
 };

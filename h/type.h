@@ -7,6 +7,7 @@ enum type {
   t_shortfloat,
   t_longfloat,
   t_complex,
+  t_stream,
   t_pathname,
   t_string,
   t_bitvector,
@@ -17,7 +18,6 @@ enum type {
   t_character,
   t_symbol,
   t_package,
-  t_stream,
   t_random,
   t_readtable,
   t_cfun,
@@ -35,6 +35,22 @@ enum type {
   t_other
 };
 
+
+enum smmode {			/*  stream mode  */
+	smm_input,		/*  input  */
+	smm_output,		/*  output  */
+	smm_io,			/*  input-output  */
+	smm_probe,		/*  probe  */
+	smm_synonym,		/*  synonym  */
+	smm_broadcast,		/*  broadcast  */
+	smm_concatenated,	/*  concatenated  */
+	smm_two_way,		/*  two way  */
+	smm_echo,		/*  echo  */
+	smm_string_input,	/*  string input  */
+	smm_string_output,	/*  string output  */
+	smm_user_defined,        /*  for user defined */
+	smm_socket		/*  Socket stream  */
+};
 
 #define Zcdr(a_)                 (*(object *)(a_))/* ((a_)->c.c_cdr) */ /*FIXME*/
 
@@ -82,9 +98,9 @@ enum type {
 #else
 #define TYPEWORD_TYPE_P(y_) (y_!=t_cons)
 #endif
-  
+
 /*Note preserve sgc flag here                                         VVV*/
-#define set_type_of(x,y) ({object _x=(object)(x);enum type _y=(y);_x->d.f=0;\
+#define set_type_of(x,y) ({hobj _x=(hobj)(x);enum type _y=(y);_x->d.f=0; \
     if (TYPEWORD_TYPE_P(_y)) {_x->d.e=1;_x->d.t=_y;_x->fw|=(fixnum)OBJNULL;}})
 
 #ifndef WIDE_CONS
@@ -113,11 +129,12 @@ enum type {
 #define randomp(a_)    SPP(a_,random)
 #define characterp(a_) SPP(a_,character)
 #define symbolp(a_)    SPP(a_,symbol)
+#define pathnamep(a_)  SPP(a_,pathname)
 #define stringp(a_)    SPP(a_,string)
 #define fixnump(a_)    SPP(a_,fixnum)
 #define readtablep(a_) SPP(a_,readtable)
 #define functionp(a_)  ({enum type _t=type_of(a_);_t>=t_cfun && _t<=t_closure;})
-#define compiled_functionp(a_)  functionp(a_)
+#define compiled_function_p(a_)  functionp(a_)
 
 #define integerp(a_) ({enum type _tp=type_of(a_); _tp >= t_fixnum     && _tp <= t_bignum;})
 #define non_negative_integerp(a_) ({enum type _tp=type_of(a_); (_tp == t_fixnum && fix(a_)>=0) || (_tp==t_bignum && big_sign(a_)>=0);})
@@ -133,3 +150,5 @@ enum type {
                                                                      || _tp == t_symbol;})
 #define pathname_string_symbol_streamp(a_) ({enum type _tp=type_of(a_); _tp==t_pathname || _tp == t_string\
                                                                      || _tp == t_symbol || _tp==t_stream;})
+
+#define pathname_designatorp(a_) ({object _a=(a_);enum type _tp=type_of(a_);_tp==t_pathname||_tp==t_string||file_stream(_a)!=Cnil;})

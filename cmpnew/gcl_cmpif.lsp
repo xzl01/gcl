@@ -19,7 +19,7 @@
 ;; Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 
 
-(in-package 'compiler)
+(in-package :compiler)
 
 (si:putprop 'if 'c1if 'c1special)
 (si:putprop 'if 'c2if 'c2)
@@ -428,9 +428,8 @@
 	(wt-label label))))
 
   (if (eq default 't)
-      (progn (wt-nl "FEerror(\"The ECASE key value ~s is illegal.\",1,V" cvar ");")
-	     (unwind-exit nil 'jump))
-      (c2expr default))
+      (wt-nl "FEerror(\"The ECASE key value ~s is illegal.\",1,V" cvar ");")
+    (c2expr default))
 
   (wt "}")
   (close-inline-blocks))

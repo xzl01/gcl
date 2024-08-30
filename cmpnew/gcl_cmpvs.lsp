@@ -19,7 +19,7 @@
 ;; Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 
 
-(in-package 'compiler)
+(in-package :compiler)
 
 (si:putprop 'vs 'set-vs 'set-loc)
 (si:putprop 'vs 'wt-vs 'wt-loc)
@@ -75,8 +75,8 @@
 (defun wt-vs* (vs)
   (wt "(" )(wt-vs vs) (wt "->c.c_car)"))
 
-(defun wt-ccb-vs (ccb-vs)
-  (wt "(fun->cc.cc_turbo[" (- *initial-ccb-vs* ccb-vs) "]->c.c_car)"))
+(defun wt-ccb-vs (ccb-vs);;FIXME harmonize *closure-p* with *clink*
+  (wt "(" (if *closure-p* "fun->cc.cc_turbo" "base0") "[" (- *initial-ccb-vs* ccb-vs) "]->c.c_car)"))
 
 (defun clink (vs) (setq *clink* vs))
 

@@ -59,7 +59,9 @@ which is usually 60 maybe 100 or something else. */
 #    include <sys/timeb.h>
 
 static struct timeb t0;
-int usleep ( unsigned int microseconds );
+int usleep1 ( unsigned int microseconds );
+#undef usleep
+#define usleep(x) usleep1(x)
 
 #  endif
 
@@ -252,7 +254,7 @@ gcl_init_unixtime(void) {
 }
 
 #ifdef __MINGW32__
-int usleep ( unsigned int microseconds )
+int usleep1 ( unsigned int microseconds )
 {
     unsigned int milliseconds = microseconds / 1000;
     return ( SleepEx ( milliseconds, TRUE ) );
@@ -280,9 +282,9 @@ DEFUN_NEW("CURRENT-TIMEZONE",object,fScurrent_timezone,SI,0,0,NONE,IO,OO,OO,OO,(
   fixnum _t=time(0);
   gmtime_r(&_t, &gt);
   localtime_r(&_t, &lt);
-  return (object)(gt.tm_hour-lt.tm_hour+24*(gt.tm_yday!=lt.tm_yday ? (gt.tm_year>lt.tm_year||gt.tm_yday>lt.tm_yday ? 1 : -1) : 0));
+  return (object)(long)(gt.tm_hour-lt.tm_hour+24*(gt.tm_yday!=lt.tm_yday ? (gt.tm_year>lt.tm_year||gt.tm_yday>lt.tm_yday ? 1 : -1) : 0));
 #else
-  fixnum _t=time(0);
+  time_t _t=time(0);
   return (object)(-localtime(&_t)->tm_gmtoff/3600);
 #endif
 }
@@ -296,7 +298,146 @@ DEFUN_NEW("CURRENT-DSTP",object,fScurrent_dstp,SI,0,0,NONE,OO,OO,OO,OO,(void),""
 #elif defined NO_SYSTEM_TIME_ZONE /*solaris*/
   return Cnil;
 #else
-  fixnum _t=time(0);
+  time_t _t=time(0);
   return localtime(&_t)->tm_isdst > 0 ? Ct : Cnil;
 #endif
 }
+
+#if defined(__MINGW32__) /*FIXME range too small for maxima testsuite*/
+#undef gmtime
+#define gmtime _gmtime64
+#undef localtime
+#define localtime _localtime64
+#undef mktime
+#define mktime _mktime64
+#undef time_t
+#define time_t long long
+#endif
+
+static object
+time_t_to_object(time_t l) {
+  object x=new_bignum();
+
+  mpz_set_si(MP(x),l>>32);
+  mpz_mul_2exp(MP(x),MP(x),32);
+  mpz_add_ui(MP(x),MP(x),l&((1ULL<<32)-1));
+  return normalize_big(x);
+
+}
+
+static time_t
+object_to_time_t(object x) {
+
+  switch(type_of(x)) {
+  case t_fixnum:
+    return fix(x);
+  case t_bignum:
+    {
+      time_t h;
+      mpz_set_si(MP(big_fixnum3),1);
+      mpz_mul_2exp(MP(big_fixnum3),MP(big_fixnum3),31);
+      mpz_fdiv_qr(MP(big_fixnum1),MP(big_fixnum2),MP(x),MP(big_fixnum3));
+      massert(mpz_fits_slong_p(MP(big_fixnum1)));
+      massert(mpz_fits_slong_p(MP(big_fixnum2)));
+      h=mpz_get_si(MP(big_fixnum1));
+      h<<=31;
+      h+=mpz_get_si(MP(big_fixnum2));
+      return h;
+    }
+  default:
+    TYPE_ERROR(x,sLinteger);
+  }
+
+}
+
+DEFUNM_NEW("LOCALTIME",object,fSlocaltime,SI,1,1,NONE,OO,OO,OO,OO,(object t),"") {
+
+
+#if defined NO_SYSTEM_TIME_ZONE /*solaris*/
+  return Cnil;
+#else
+
+  time_t i=object_to_time_t(t);
+  struct tm *lt;
+#if defined(__MINGW32__)
+  struct tm *gt;
+  fixnum gmt_hour;
+  massert(gt=gmtime(&i));
+  gmt_hour=gt->tm_hour;
+#endif
+  massert(lt=localtime(&i));
+
+  RETURN(11,object,
+	 make_fixnum(lt->tm_sec),
+	 (
+	  RV(make_fixnum(lt->tm_min)),
+	  RV(make_fixnum(lt->tm_hour)),
+	  RV(make_fixnum(lt->tm_mday)),
+	  RV(make_fixnum(lt->tm_mon)),
+	  RV(make_fixnum(lt->tm_year)),
+	  RV(make_fixnum(lt->tm_wday)),
+	  RV(make_fixnum(lt->tm_yday)),
+	  RV(make_fixnum(lt->tm_isdst)),
+#if defined(__MINGW32__)
+	  RV(make_fixnum((lt->tm_hour-gmt_hour)*3600)),
+	  RV(Cnil)
+#else
+	  RV(make_fixnum(lt->tm_gmtoff)),
+	  RV(make_simple_string(lt->tm_zone))
+#endif
+	  ));
+#endif
+}
+
+
+DEFUNM_NEW("GMTIME",object,fSgmtime,SI,1,1,NONE,OO,OO,OO,OO,(object t),"") {
+
+#if defined NO_SYSTEM_TIME_ZONE /*solaris*/
+  return Cnil;
+#else
+
+  time_t i=object_to_time_t(t);
+  struct tm *gt;
+  massert(gt=gmtime(&i));
+
+  RETURN(11,object,
+	 make_fixnum(gt->tm_sec),
+	 (
+	  RV(make_fixnum(gt->tm_min)),
+	  RV(make_fixnum(gt->tm_hour)),
+	  RV(make_fixnum(gt->tm_mday)),
+	  RV(make_fixnum(gt->tm_mon)),
+	  RV(make_fixnum(gt->tm_year)),
+	  RV(make_fixnum(gt->tm_wday)),
+	  RV(make_fixnum(gt->tm_yday)),
+	  RV(make_fixnum(gt->tm_isdst)),
+#if defined(__MINGW32__)
+	  RV(make_fixnum(0)),
+	  RV(Cnil)
+#else
+	  RV(make_fixnum(gt->tm_gmtoff)),
+	  RV(make_simple_string(gt->tm_zone))
+#endif
+	  ));
+#endif
+}
+
+
+DEFUNM_NEW("MKTIME",object,fSmktime,SI,6,6,NONE,OI,II,II,IO,(fixnum s,fixnum n,fixnum h,fixnum d,fixnum m,fixnum y),"") {
+
+  struct tm lt;
+  time_t t;
+
+  lt.tm_sec=s;
+  lt.tm_min=n;
+  lt.tm_hour=h;
+  lt.tm_mday=d;
+  lt.tm_mon=m;
+  lt.tm_year=y;
+  lt.tm_isdst=-1;
+
+  massert((t=mktime(&lt))!=-1);
+  RETURN(2,object,time_t_to_object(t),(RV(make_fixnum(lt.tm_isdst))));
+
+}
+

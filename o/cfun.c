@@ -217,20 +217,21 @@ DEFUN_NEW("MF",object,fSmf,SI
 static object
 MM(object sym, void (*self)(), char *start, int size, object data)
 {
-	object cf;
+	object sfn;
 
 	if (type_of(sym) != t_symbol)
 		not_a_symbol(sym);
 	if (sym->s.s_sfdef != NOT_SPECIAL && sym->s.s_mflag)
 		sym->s.s_sfdef = NOT_SPECIAL;
-	cf = alloc_object(t_cfun);
-	cf->cf.cf_self = self;
-	cf->cf.cf_name = sym;
-	cf->cf.cf_data = data;
+	sfn = alloc_object(t_sfun);
+	sfn->sfn.sfn_self = (void *)self;/*FIXME*/
+	sfn->sfn.sfn_name = sym;
+	sfn->sfn.sfn_data = data;
+	sfn->sfn.sfn_argd=2;
 	data->cfd.cfd_start=start; 
 	data->cfd.cfd_size=size;
-	sym = 	clear_compiler_properties(sym,cf);
-	sym->s.s_gfdef = cf;
+	sym = 	clear_compiler_properties(sym,sfn);
+	sym->s.s_gfdef = sfn;
 	sym->s.s_mflag = TRUE;
 	return sym;
 }
@@ -306,6 +307,25 @@ make_special_form_internal(char *s, void (*f)())
 	return(x);
 }
 
+object
+make_si_special_form_internal(char *s, void (*f)())
+{
+	object x;
+	x = make_si_ordinary(s);
+	x->s.s_sfdef = f;
+	return(x);
+}
+
+object
+make_macro_internal(char *s, void (*f)())
+{
+	object x;
+	x = make_ordinary(s);
+	x->s.s_gfdef = make_cfun(f, x, Cnil, NULL, 0);
+	x->s.s_mflag=TRUE;
+	return(x);
+}
+
 DEFUN_NEW("COMPILED-FUNCTION-NAME",object,fScompiled_function_name,SI
    ,1,1,NONE,OO,OO,OO,OO,(object fun),"")
 
@@ -334,7 +354,8 @@ turbo_closure(object fun)
 
   if(1)/*(fun->cc.cc_turbo==NULL)*/
     {BEGIN_NO_INTERRUPT;
-     for (n = 0, l = fun->cc.cc_env;  !endp(l);  n++, l = l->c.c_cdr);
+     for (n = 0, l = fun->cc.cc_env;  !endp(l);  n++, l = l->c.c_cdr)
+       ;
     {
      block= AR_ALLOC(alloc_relblock,(1+n),object);
      *block=make_fixnum(n);

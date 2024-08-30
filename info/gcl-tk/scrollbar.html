@@ -1,45 +1,35 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<!-- Created by GNU Texinfo 5.2, http://www.gnu.org/software/texinfo/ -->
+<!-- Created by GNU Texinfo 6.7, http://www.gnu.org/software/texinfo/ -->
 <head>
-<title>GCL TK Manual: scrollbar</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>scrollbar (GCL TK Manual)</title>
 
-<meta name="description" content="GCL TK Manual: scrollbar">
-<meta name="keywords" content="GCL TK Manual: scrollbar">
+<meta name="description" content="scrollbar (GCL TK Manual)">
+<meta name="keywords" content="scrollbar (GCL TK Manual)">
 <meta name="resource-type" content="document">
 <meta name="distribution" content="global">
 <meta name="Generator" content="makeinfo">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link href="index.html#Top" rel="start" title="Top">
+<link href="index.html" rel="start" title="Top">
 <link href="wm.html#SEC_Contents" rel="contents" title="Table of Contents">
-<link href="Widgets.html#Widgets" rel="up" title="Widgets">
-<link href="checkbutton.html#checkbutton" rel="next" title="checkbutton">
-<link href="menu.html#menu" rel="prev" title="menu">
+<link href="Widgets.html" rel="up" title="Widgets">
+<link href="checkbutton.html" rel="next" title="checkbutton">
+<link href="menu.html" rel="prev" title="menu">
 <style type="text/css">
 <!--
 a.summary-letter {text-decoration: none}
-blockquote.smallquotation {font-size: smaller}
+blockquote.indentedblock {margin-right: 0em}
 div.display {margin-left: 3.2em}
 div.example {margin-left: 3.2em}
-div.indentedblock {margin-left: 3.2em}
 div.lisp {margin-left: 3.2em}
-div.smalldisplay {margin-left: 3.2em}
-div.smallexample {margin-left: 3.2em}
-div.smallindentedblock {margin-left: 3.2em; font-size: smaller}
-div.smalllisp {margin-left: 3.2em}
-kbd {font-style:oblique}
+kbd {font-style: oblique}
 pre.display {font-family: inherit}
 pre.format {font-family: inherit}
 pre.menu-comment {font-family: serif}
 pre.menu-preformatted {font-family: serif}
-pre.smalldisplay {font-family: inherit; font-size: smaller}
-pre.smallexample {font-size: smaller}
-pre.smallformat {font-family: inherit; font-size: smaller}
-pre.smalllisp {font-size: smaller}
-span.nocodebreak {white-space:nowrap}
-span.nolinebreak {white-space:nowrap}
-span.roman {font-family:serif; font-weight:normal}
-span.sansserif {font-family:sans-serif; font-weight:normal}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
 ul.no-bullet {list-style: none}
 -->
 </style>
@@ -47,22 +37,18 @@ ul.no-bullet {list-style: none}
 
 </head>
 
-<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
-<a name="scrollbar"></a>
-<div class="header">
+<body lang="en">
+<span id="scrollbar"></span><div class="header">
 <p>
-Next: <a href="checkbutton.html#checkbutton" accesskey="n" rel="next">checkbutton</a>, Previous: <a href="menu.html#menu" accesskey="p" rel="prev">menu</a>, Up: <a href="Widgets.html#Widgets" accesskey="u" rel="up">Widgets</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
+Next: <a href="checkbutton.html" accesskey="n" rel="next">checkbutton</a>, Previous: <a href="menu.html" accesskey="p" rel="prev">menu</a>, Up: <a href="Widgets.html" accesskey="u" rel="up">Widgets</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
 </div>
 <hr>
-<a name="scrollbar-1"></a>
-<h3 class="section">2.6 scrollbar</h3>
+<span id="scrollbar-1"></span><h3 class="section">2.6 scrollbar</h3>
 
 <p>scrollbar \- Create and manipulate scrollbar widgets
-</p><a name="Synopsis-5"></a>
-<h4 class="unnumberedsubsec">Synopsis</h4>
+</p><span id="Synopsis-5"></span><h4 class="unnumberedsubsec">Synopsis</h4>
 <p><b>scrollbar</b><i> pathName </i><span class="roman">?</span><i>options</i>?
-</p><a name="Standard-Options-5"></a>
-<h4 class="unnumberedsubsec">Standard Options</h4>
+</p><span id="Standard-Options-5"></span><h4 class="unnumberedsubsec">Standard Options</h4>
 
 
 <div class="example">
@@ -72,9 +58,8 @@ borderWidth            orient           repeatInterval
 </pre></div>
 
 
-<p>See <a href="options.html#options">options</a>, for more information.
-</p><a name="Arguments-for-Scrollbar"></a>
-<h4 class="unnumberedsubsec">Arguments for Scrollbar</h4>
+<p>See <a href="options.html">options</a>, for more information.
+</p><span id="Arguments-for-Scrollbar"></span><h4 class="unnumberedsubsec">Arguments for Scrollbar</h4>
 
 
 <dl compact="compact">
@@ -105,8 +90,7 @@ The value may have any of the forms acceptable to <b>Tk_GetPixels</b>.
 </p></dd>
 </dl>
 
-<a name="Description-3"></a>
-<h4 class="unnumberedsubsec">Description</h4>
+<span id="Description-3"></span><h4 class="unnumberedsubsec">Description</h4>
 
 <p>The <b>scrollbar</b> command creates a new window (given by the
 <i>pathName</i> argument) and makes it into a scrollbar widget.
@@ -134,8 +118,7 @@ the top third of its object.
 by clicking or dragging with the mouse.  See the BINDINGS section
 below for details.
 </p>
-<a name="A-Scrollbar-Widget_0027s-Arguments"></a>
-<h4 class="unnumberedsubsec">A Scrollbar Widget&rsquo;s Arguments</h4>
+<span id="A-Scrollbar-Widget_0027s-Arguments"></span><h4 class="unnumberedsubsec">A Scrollbar Widget&rsquo;s Arguments</h4>
 
 <p>The <b>scrollbar</b> command creates a new Tcl command whose
 name is <i>pathName</i>.  This
@@ -188,8 +171,7 @@ changes size and whenever it changes the view in its window.
 </p>
 </dd>
 </dl>
-<a name="Bindings-2"></a>
-<h4 class="unnumberedsubsec">Bindings</h4>
+<span id="Bindings-2"></span><h4 class="unnumberedsubsec">Bindings</h4>
 
 <p>The description below assumes a vertically-oriented scrollbar.
 For a horizontally-oriented scrollbar replace the words &ldquo;up&rdquo;, &ldquo;down&rdquo;,
@@ -243,13 +225,12 @@ the scrollbar.
 </p>
 </dd>
 </dl>
-<a name="Keywords-5"></a>
-<h4 class="unnumberedsubsec">Keywords</h4>
+<span id="Keywords-5"></span><h4 class="unnumberedsubsec">Keywords</h4>
 <p>scrollbar, widget
 </p><hr>
 <div class="header">
 <p>
-Next: <a href="checkbutton.html#checkbutton" accesskey="n" rel="next">checkbutton</a>, Previous: <a href="menu.html#menu" accesskey="p" rel="prev">menu</a>, Up: <a href="Widgets.html#Widgets" accesskey="u" rel="up">Widgets</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
+Next: <a href="checkbutton.html" accesskey="n" rel="next">checkbutton</a>, Previous: <a href="menu.html" accesskey="p" rel="prev">menu</a>, Up: <a href="Widgets.html" accesskey="u" rel="up">Widgets</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
 </div>
 
 

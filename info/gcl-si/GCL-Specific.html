@@ -1,46 +1,36 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<!-- Created by GNU Texinfo 5.2, http://www.gnu.org/software/texinfo/ -->
+<!-- Created by GNU Texinfo 6.7, http://www.gnu.org/software/texinfo/ -->
 <head>
-<title>GCL SI Manual: GCL Specific</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>GCL Specific (GCL SI Manual)</title>
 
-<meta name="description" content="GCL SI Manual: GCL Specific">
-<meta name="keywords" content="GCL SI Manual: GCL Specific">
+<meta name="description" content="GCL Specific (GCL SI Manual)">
+<meta name="keywords" content="GCL Specific (GCL SI Manual)">
 <meta name="resource-type" content="document">
 <meta name="distribution" content="global">
 <meta name="Generator" content="makeinfo">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link href="index.html#Top" rel="start" title="Top">
-<link href="Function-and-Variable-Index.html#Function-and-Variable-Index" rel="index" title="Function and Variable Index">
+<link href="index.html" rel="start" title="Top">
+<link href="Function-and-Variable-Index.html" rel="index" title="Function and Variable Index">
 <link href="Function-and-Variable-Index.html#SEC_Contents" rel="contents" title="Table of Contents">
-<link href="index.html#Top" rel="up" title="Top">
-<link href="Bignums.html#Bignums" rel="next" title="Bignums">
-<link href="Type.html#Type" rel="prev" title="Type">
+<link href="index.html" rel="up" title="Top">
+<link href="Bignums.html" rel="next" title="Bignums">
+<link href="Type.html" rel="prev" title="Type">
 <style type="text/css">
 <!--
 a.summary-letter {text-decoration: none}
-blockquote.smallquotation {font-size: smaller}
+blockquote.indentedblock {margin-right: 0em}
 div.display {margin-left: 3.2em}
 div.example {margin-left: 3.2em}
-div.indentedblock {margin-left: 3.2em}
 div.lisp {margin-left: 3.2em}
-div.smalldisplay {margin-left: 3.2em}
-div.smallexample {margin-left: 3.2em}
-div.smallindentedblock {margin-left: 3.2em; font-size: smaller}
-div.smalllisp {margin-left: 3.2em}
-kbd {font-style:oblique}
+kbd {font-style: oblique}
 pre.display {font-family: inherit}
 pre.format {font-family: inherit}
 pre.menu-comment {font-family: serif}
 pre.menu-preformatted {font-family: serif}
-pre.smalldisplay {font-family: inherit; font-size: smaller}
-pre.smallexample {font-size: smaller}
-pre.smallformat {font-family: inherit; font-size: smaller}
-pre.smalllisp {font-size: smaller}
-span.nocodebreak {white-space:nowrap}
-span.nolinebreak {white-space:nowrap}
-span.roman {font-family:serif; font-weight:normal}
-span.sansserif {font-family:sans-serif; font-weight:normal}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
 ul.no-bullet {list-style: none}
 -->
 </style>
@@ -48,18 +38,16 @@ ul.no-bullet {list-style: none}
 
 </head>
 
-<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
-<a name="GCL-Specific"></a>
-<div class="header">
+<body lang="en">
+<span id="GCL-Specific"></span><div class="header">
 <p>
-Next: <a href="C-Interface.html#C-Interface" accesskey="n" rel="next">C Interface</a>, Previous: <a href="Type.html#Type" accesskey="p" rel="prev">Type</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Function-and-Variable-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Function-and-Variable-Index.html#Function-and-Variable-Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="C-Interface.html" accesskey="n" rel="next">C Interface</a>, Previous: <a href="Type.html" accesskey="p" rel="prev">Type</a>, Up: <a href="index.html" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Function-and-Variable-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Function-and-Variable-Index.html" title="Index" rel="index">Index</a>]</p>
 </div>
 <hr>
-<a name="GCL-Specific-1"></a>
-<h2 class="chapter">15 GCL Specific</h2>
+<span id="GCL-Specific-1"></span><h2 class="chapter">15 GCL Specific</h2>
 
 <dl>
-<dt><a name="index-SYSTEM"></a>Function: <strong>SYSTEM</strong> <em>(string)</em></dt>
+<dt id="index-SYSTEM">Function: <strong>SYSTEM</strong> <em>(string)</em></dt>
 <dd><p>Package:LISP
 </p>
 <p>GCL specific: Executes a Shell command as if STRING is an input to the
@@ -71,7 +59,7 @@ exit status and any possible terminating signal respectively.
 </dd></dl>
 
 <dl>
-<dt><a name="index-_002aTMP_002dDIR_002a"></a>Variable: <strong>*TMP-DIR*</strong></dt>
+<dt id="index-_002aTMP_002dDIR_002a">Variable: <strong>*TMP-DIR*</strong></dt>
 <dd><p>Package:COMPILER
 GCL specific: Directory in which temporary &ldquo;gazonk&rdquo; files used by the
 compiler are to be created.
@@ -80,7 +68,7 @@ compiler are to be created.
 </dd></dl>
 
 <dl>
-<dt><a name="index-_002aIGNORE_002dMAXIMUM_002dPAGES_002a"></a>Variable: <strong>*IGNORE-MAXIMUM-PAGES*</strong></dt>
+<dt id="index-_002aIGNORE_002dMAXIMUM_002dPAGES_002a">Variable: <strong>*IGNORE-MAXIMUM-PAGES*</strong></dt>
 <dd><p>Package:SI
 GCL specific: Tells the GCL memory manager whether (non-NIL) or not (NIL) it
 should expand memory whenever the maximum allocatable pages have been used
@@ -90,7 +78,7 @@ up.
 </dd></dl>
 
 <dl>
-<dt><a name="index-_002aOPTIMIZE_002dMAXIMUM_002dPAGES_002a"></a>Variable: <strong>*OPTIMIZE-MAXIMUM-PAGES*</strong></dt>
+<dt id="index-_002aOPTIMIZE_002dMAXIMUM_002dPAGES_002a">Variable: <strong>*OPTIMIZE-MAXIMUM-PAGES*</strong></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL specific: Tells the GCL memory manager whether to attempt to
@@ -102,7 +90,7 @@ to T.  Set to NIL if you care more about memory usage than runtime.
 </dd></dl>
 
 <dl>
-<dt><a name="index-MACHINE_002dVERSION"></a>Function: <strong>MACHINE-VERSION</strong> <em>()</em></dt>
+<dt id="index-MACHINE_002dVERSION">Function: <strong>MACHINE-VERSION</strong> <em>()</em></dt>
 <dd><p>Package:LISP
 </p>
 <p>Returns a string that identifies the machine version of the machine
@@ -112,7 +100,7 @@ on which GCL is currently running.
 </dd></dl>
 
 <dl>
-<dt><a name="index-BY"></a>Function: <strong>BY</strong> <em>()</em></dt>
+<dt id="index-BY">Function: <strong>BY</strong> <em>()</em></dt>
 <dd><p>Package:LISP
 </p>
 <p>GCL specific: Exits from GCL.
@@ -121,7 +109,7 @@ on which GCL is currently running.
 </dd></dl>
 
 <dl>
-<dt><a name="index-DEFCFUN"></a>Macro: <strong>DEFCFUN</strong></dt>
+<dt id="index-DEFCFUN">Macro: <strong>DEFCFUN</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -165,6 +153,7 @@ Note to be loaded by <code>load</code> the function should be static.
 <p>Syntax:
 </p><div class="example">
 <pre class="example">
+
         (defCfun header non-negative-integer
                 { string
                   | ( function-symbol { value }* )
@@ -190,7 +179,7 @@ C-type:
 </dd></dl>
 
 <dl>
-<dt><a name="index-CLINES"></a>Macro: <strong>CLINES</strong></dt>
+<dt id="index-CLINES">Macro: <strong>CLINES</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -205,7 +194,7 @@ language code.  The interpreter ignores this form.
 </dd></dl>
 
 <dl>
-<dt><a name="index-ALLOCATE"></a>Function: <strong>ALLOCATE</strong> <em>(type number &amp;optional (really-allocate nil))</em></dt>
+<dt id="index-ALLOCATE">Function: <strong>ALLOCATE</strong> <em>(type number &amp;optional (really-allocate nil))</em></dt>
 <dd><p>Package:LISP
 </p>
 <p>GCL specific: Sets the maximum number of pages for the type class of the
@@ -217,7 +206,7 @@ immediately.
 </dd></dl>
 
 <dl>
-<dt><a name="index-GBC"></a>Function: <strong>GBC</strong> <em>(x)</em></dt>
+<dt id="index-GBC">Function: <strong>GBC</strong> <em>(x)</em></dt>
 <dd><p>Package:LISP
 </p>
 <p>GCL specific: Invokes the garbage collector (GC) with the collection level
@@ -228,7 +217,7 @@ the argument causes GC to collect everything.
 </dd></dl>
 
 <dl>
-<dt><a name="index-SAVE"></a>Function: <strong>SAVE</strong> <em>(pathname)</em></dt>
+<dt id="index-SAVE">Function: <strong>SAVE</strong> <em>(pathname)</em></dt>
 <dd><p>Package:LISP
 </p>
 <p>GCL specific: Saves the current GCL core image into a program file specified
@@ -240,7 +229,7 @@ currently loaded .o files.
 </dd></dl>
 
 <dl>
-<dt><a name="index-HELP_002a"></a>Function: <strong>HELP*</strong> <em>(string &amp;optional (package 'lisp))</em></dt>
+<dt id="index-HELP_002a">Function: <strong>HELP*</strong> <em>(string &amp;optional (package 'lisp))</em></dt>
 <dd><p>Package:LISP
 </p>
 <p>GCL specific: Prints the documentation associated with those symbols in the
@@ -252,7 +241,7 @@ is NIL, then all packages are searched.
 </dd></dl>
 
 <dl>
-<dt><a name="index-DEFLA"></a>Macro: <strong>DEFLA</strong></dt>
+<dt id="index-DEFLA">Macro: <strong>DEFLA</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -267,7 +256,7 @@ equivalent to DEFUN, but the compiler ignores this form.
 </dd></dl>
 
 <dl>
-<dt><a name="index-PROCLAMATION"></a>Function: <strong>PROCLAMATION</strong> <em>(decl-spec)</em></dt>
+<dt id="index-PROCLAMATION">Function: <strong>PROCLAMATION</strong> <em>(decl-spec)</em></dt>
 <dd><p>Package:LISP
 </p>
 <p>GCL specific: Returns T if the specified declaration is globally in effect;
@@ -277,7 +266,7 @@ NIL otherwise.  See the doc of DECLARE for possible DECL-SPECs.
 </dd></dl>
 
 <dl>
-<dt><a name="index-DEFENTRY"></a>Macro: <strong>DEFENTRY</strong></dt>
+<dt id="index-DEFENTRY">Macro: <strong>DEFENTRY</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -338,7 +327,7 @@ If the C function may allocate storage, then you should pass a copy:
 
 </dd></dl>
 <dl>
-<dt><a name="index-COPY_002dARRAY_002dPORTION"></a>Function: <strong>COPY-ARRAY-PORTION</strong> <em>(x,y,i1,i2,n1)</em></dt>
+<dt id="index-COPY_002dARRAY_002dPORTION">Function: <strong>COPY-ARRAY-PORTION</strong> <em>(x,y,i1,i2,n1)</em></dt>
 <dd><p>Package:SI
 Copy elements from X to Y starting at X[i1] to Y[i2] and doing N1
 elements if N1 is supplied otherwise, doing the length of X - I1
@@ -347,7 +336,7 @@ implementation dependent results.
 </p></dd></dl>
 
 <dl>
-<dt><a name="index-BYE"></a>Function: <strong>BYE</strong> <em>( &amp;optional (exit-status 0))</em></dt>
+<dt id="index-BYE">Function: <strong>BYE</strong> <em>( &amp;optional (exit-status 0))</em></dt>
 <dd><p>Package:LISP
 </p>
 <p>GCL specific: Exits from GCL with exit-status.
@@ -356,7 +345,7 @@ implementation dependent results.
 </dd></dl>
 
 <dl>
-<dt><a name="index-USE_002dFAST_002dLINKS"></a>Function: <strong>USE-FAST-LINKS</strong> <em>(turn-on)</em></dt>
+<dt id="index-USE_002dFAST_002dLINKS">Function: <strong>USE-FAST-LINKS</strong> <em>(turn-on)</em></dt>
 <dd><p>Package:LISP
 </p>
 <p>GCL specific: If TURN-ON is not nil, the fast link mechanism is enabled,
@@ -369,14 +358,14 @@ off.
 </dd></dl>
 
 <table class="menu" border="0" cellspacing="0">
-<tr><td align="left" valign="top">&bull; <a href="Bignums.html#Bignums" accesskey="1">Bignums</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="Bignums.html" accesskey="1">Bignums</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 </table>
 
 <hr>
 <div class="header">
 <p>
-Next: <a href="C-Interface.html#C-Interface" accesskey="n" rel="next">C Interface</a>, Previous: <a href="Type.html#Type" accesskey="p" rel="prev">Type</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Function-and-Variable-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Function-and-Variable-Index.html#Function-and-Variable-Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="C-Interface.html" accesskey="n" rel="next">C Interface</a>, Previous: <a href="Type.html" accesskey="p" rel="prev">Type</a>, Up: <a href="index.html" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Function-and-Variable-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Function-and-Variable-Index.html" title="Index" rel="index">Index</a>]</p>
 </div>
 
 

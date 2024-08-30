@@ -69,9 +69,7 @@ Ifuncall_n(object fun,int n,...) {
   va_list ap;
   object *new;
   va_start(ap,n);
-  {
-    COERCE_VA_LIST(new,ap,n);
-  }
+  COERCE_VA_LIST(new,ap,n);
   va_end(ap);
   return IapplyVector(fun,n,new);
 }
@@ -168,20 +166,6 @@ Ifuncall_n(object fun,int n,...) {
 /*   vs_top=p; */
 /*   return res; */
 /* } */
-
-object
-Icheck_one_type(object x, enum type t)
-{ if (x->d.t != t)
-    { return CEerror("Expected a ~a ","Supply right type",1,type_name(t),Cnil,Cnil,Cnil);
-    }
-  return x;
-}
-
-
-object
-fSincorrect_type(object val, object type)
-{ return CEerror("Got ~a,Expected a ~a","Supply a new one",1,val,type,Cnil,Cnil);
-}
 
 /* static void */
 /* Ineed_in_image(object (*foo) (/\* ??? *\/)) */

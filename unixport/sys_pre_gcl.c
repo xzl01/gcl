@@ -4,6 +4,10 @@ void
 gcl_init_init()
 {
 
+  object features;
+  features=find_symbol(make_simple_string("*FEATURES*"),system_package);
+  features->s.s_dbind=make_cons(make_keyword("PRE-GCL"),features->s.s_dbind);
+
   build_symbol_table();
 
   lsp_init("../lsp/gcl_export.lsp");
@@ -35,7 +39,6 @@ gcl_init_system(object no_init)
 #ifdef HAVE_JAPI_H
   lsp_init("../lsp/gcl_japi.lsp");
 #endif
-  lsp_init("../lsp/gcl_iolib.lsp");
 /*   lsp_init("../lsp/gcl_listlib.lsp"); */
   lsp_init("../lsp/gcl_mislib.lsp");
   lsp_init("../lsp/gcl_numlib.lsp");
@@ -50,6 +53,21 @@ gcl_init_system(object no_init)
   lsp_init("../lsp/gcl_defpackage.lsp");
   lsp_init("../lsp/gcl_make_defpackage.lsp");
   lsp_init("../lsp/gcl_sharp.lsp");
+
+  lsp_init("../lsp/gcl_sharp_uv.lsp");
+  lsp_init("../lsp/gcl_logical_pathname_translations.lsp");
+  lsp_init("../lsp/gcl_make_pathname.lsp");
+  lsp_init("../lsp/gcl_parse_namestring.lsp");
+  lsp_init("../lsp/gcl_namestring.lsp");
+  lsp_init("../lsp/gcl_translate_pathname.lsp");
+  lsp_init("../lsp/gcl_directory.lsp");
+  lsp_init("../lsp/gcl_merge_pathnames.lsp");
+  lsp_init("../lsp/gcl_truename.lsp");
+  lsp_init("../lsp/gcl_rename_file.lsp");
+  lsp_init("../lsp/gcl_wild_pathname_p.lsp");
+  lsp_init("../lsp/gcl_pathname_match_p.lsp");
+
+  lsp_init("../lsp/gcl_iolib.lsp");
   lsp_init("../lsp/gcl_fpe.lsp");
 
   lsp_init("../cmpnew/gcl_cmpinline.lsp");
@@ -80,6 +98,7 @@ gcl_init_system(object no_init)
   lsp_init("../cmpnew/gcl_cmpvar.lsp");
   lsp_init("../cmpnew/gcl_cmpvs.lsp");
   lsp_init("../cmpnew/gcl_cmpwt.lsp");
+  lsp_init("../cmpnew/gcl_cmpmain.lsp");
 
   
 }

@@ -31,7 +31,7 @@
       (_fl<=S_SYMBOL_STUBS || _fl==S_16BYTE_LITERALS) && _fl!=S_ZEROFILL;})
 
 
-#define MASK(n) (~(~0L << (n)))
+#define MASK(n) (~(~0ULL << (n)))
 
 
 
@@ -144,7 +144,7 @@ relocate_symbols(struct nlist *n1,struct nlist *ne,char *st1,ul start) {
     else if ((nd=find_sym_ptable(st1+n->n_un.n_strx)))
       n->n_value=nd->address; 
     else if (n->n_type&(N_PEXT|N_EXT))
-      massert(!fprintf(stderr,"Unrelocated non-local symbol: %s\n",st1+n->n_un.n_strx));
+      massert(!emsg("Unrelocated non-local symbol: %s\n",st1+n->n_un.n_strx));
 
   return 0;
   
@@ -203,13 +203,9 @@ load_memory(struct section *sec1,struct section *sece,void *v1,
     sz+=gsz;
   }
   
-  memory=alloc_object(t_cfdata); 
+  memory=new_cfdata();
   memory->cfd.cfd_size=sz; 
-  memory->cfd.cfd_self=0; 
-  memory->cfd.cfd_start=0; 
-  prefer_low_mem_contblock=TRUE;
-  memory->cfd.cfd_start=alloc_contblock(sz);
-  prefer_low_mem_contblock=FALSE;
+  memory->cfd.cfd_start=alloc_code_space(sz,-1UL);
 
   a=(ul)memory->cfd.cfd_start;
   a=(a+ma)&~ma;
@@ -413,23 +409,19 @@ load_self_symbols() {
     
     if (sym->n_type & N_STAB)
       continue;
-    if (!(sym->n_type & N_EXT))
-      continue;
 
     ns++;
     sl+=strlen(sym->n_un.n_strx+strtab)+1;
 
   }
   
-  c_table.alloc_length=c_table.length=ns;
+  c_table.alloc_length=ns;
   assert(c_table.ptable=malloc(sizeof(*c_table.ptable)*c_table.alloc_length));
   assert(s=malloc(sl));
 
   for (a=c_table.ptable,sym=sym1;sym<syme;sym++) {
     
-    if (sym->n_type & N_STAB)
-      continue;
-    if (!(sym->n_type & N_EXT))
+    if ((sym->n_type & N_STAB) || !(sym->n_type & N_EXT))
       continue;
 
     a->address=sym->n_value;
@@ -440,8 +432,26 @@ load_self_symbols() {
     s+=strlen(s)+1;
 
   }
-  
+  c_table.length=a-c_table.ptable;
   qsort(c_table.ptable,c_table.length,sizeof(*c_table.ptable),node_compare);
+
+  for (c_table.local_ptable=a,sym=sym1;sym<syme;sym++) {
+
+    if ((sym->n_type & N_STAB) || sym->n_type & N_EXT)
+      continue;
+
+    a->address=sym->n_value;
+    a->string=s;
+    strcpy(s,sym->n_un.n_strx+strtab);
+
+    a++;
+    s+=strlen(s)+1;
+
+  }
+  c_table.local_length=a-c_table.local_ptable;
+  qsort(c_table.local_ptable,c_table.local_length,sizeof(*c_table.local_ptable),node_compare);
+
+  massert(c_table.alloc_length==c_table.length+c_table.local_length);
 
   massert(!un_mmap(addr,addre));
   massert(!fclose(f));
@@ -525,8 +535,6 @@ int
 fasload(object faslfile) {
 
   FILE *fp;
-  object data;
-  char filename[256];
   ul init_address=-1;
   object memory;
   void *v1,*ve,*p;
@@ -535,8 +543,6 @@ fasload(object faslfile) {
   char *st1=NULL,*ste=NULL;
   ul gs,*got=&gs,*gote,*io1=NULL,rls,start;
 
-  coerce_to_filename(faslfile, filename);
-  faslfile = open_stream(faslfile, smm_input, Cnil, sKerror);
   fp = faslfile->sm.sm_fp;
 
   massert(v1=get_mmap(fp,&ve));
@@ -556,7 +562,6 @@ fasload(object faslfile) {
   relocate_code(v1,sec1,sece,&p,io1,n1,got,gote,start);
 
   fseek(fp,(void *)ste-v1,SEEK_SET);
-  data = feof(fp) ? 0 : read_fasl_vector(faslfile);
   
   massert(!clear_protect_memory(memory));
 
@@ -565,10 +570,9 @@ fasload(object faslfile) {
 #endif
   
   massert(!un_mmap(v1,ve));
-  close_stream(faslfile);
   
   init_address-=(ul)memory->cfd.cfd_start;
-  call_init(init_address,memory,data,0);
+  call_init(init_address,memory,faslfile);
   
   if(symbol_value(sLAload_verboseA)!=Cnil)
     printf("start address -T %p ",memory->cfd.cfd_start);

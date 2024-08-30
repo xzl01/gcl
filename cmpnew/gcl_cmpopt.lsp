@@ -1,4 +1,4 @@
-(in-package 'compiler)
+(in-package :compiler)
 
 ;; The optimizers have been redone to allow more flags
 ;; The old style optimizations  correspond to the first 2
@@ -65,6 +65,10 @@
 ;;LONG-FLOAT-P
  (push '((t) boolean #.(flags)"type_of(#0)==t_longfloat")
    (get 'long-float-p 'inline-always))
+
+;;COMPLEX-P
+ (push '((t) boolean #.(flags)"type_of(#0)==t_complex")
+   (get 'si::complexp 'inline-always))
 
 ;;SFEOF
  (push '((object) boolean #.(flags set)"(gcl_feof((#0)->sm.sm_fp))")
@@ -136,8 +140,11 @@
    (get 'system:aset 'inline-unsafe))
 (push '(((array t) fixnum t) t #.(flags set)"(#0)->v.v_self[#1]= (#2)")
    (get 'system:aset 'inline-unsafe))
-(push '(((array string-char) fixnum character) character #.(flags rfa set)"(#0)->ust.ust_self[#1]= (#2)")
+(push '(((array character) fixnum character) character #.(flags rfa set)"(#0)->ust.ust_self[#1]= (#2)")
    (get 'system:aset 'inline-unsafe))
+(push '(((array bit) fixnum fixnum) fixnum #.(flags rfa)
+	"({object _o=(#0);fixnum _i=(#1)+_o->bv.bv_offset;char _c=1<<BIT_ENDIAN(_i&0x7),*_d=_o->bv.bv_self+(_i>>3);bool _b=(#2);if (_b) *_d|=_c; else *_d&=~_c;_b;})")
+   (get 'si::aset 'inline-unsafe))
 (push '(((array fixnum) fixnum fixnum) fixnum #.(flags set rfa)"(#0)->fixa.fixa_self[#1]= (#2)")
    (get 'system:aset 'inline-unsafe))
 (push '(((array signed-short) fixnum fixnum) fixnum #.(flags rfa set)"((short *)(#0)->ust.ust_self)[#1]=(#2)")
@@ -159,7 +166,7 @@
 (push '(((array t) fixnum fixnum t) t #.(flags set)
   "@0;(#0)->a.a_self[(#1)*(#0)->a.a_dims[1]+#2]= (#3)")
    (get 'system:aset 'inline-unsafe))
-(push '(((array string-char) fixnum fixnum character) character
+(push '(((array character) fixnum fixnum character) character
 	#.(flags rfa set)
   "@0;(#0)->ust.ust_self[(#1)*(#0)->a.a_dims[1]+#2]= (#3)")
    (get 'system:aset 'inline-unsafe))
@@ -433,7 +440,9 @@
    (get 'aref 'inline-unsafe))
 (push '(((array t) fixnum) t #.(flags)"(#0)->v.v_self[#1]")
    (get 'aref 'inline-unsafe))
-(push '(((array string-char) fixnum) character #.(flags rfa)"(#0)->ust.ust_self[#1]")
+(push '(((array character) fixnum) character #.(flags rfa)"(#0)->ust.ust_self[#1]")
+   (get 'aref 'inline-unsafe))
+(push '(((array bit) fixnum) fixnum #.(flags rfa)"({object _o=(#0);fixnum _i=(#1)+(_o)->bv.bv_offset;(_o->bv.bv_self[_i>>3]>>BIT_ENDIAN(_i&0x7))&0x1;})")
    (get 'aref 'inline-unsafe))
 (push '(((array fixnum) fixnum) fixnum #.(flags rfa)"(#0)->fixa.fixa_self[#1]")
    (get 'aref 'inline-unsafe))
@@ -456,7 +465,7 @@
 (push '(((array t) fixnum fixnum) t #.(flags )
   "@0;(#0)->a.a_self[(#1)*(#0)->a.a_dims[1]+#2]")
    (get 'aref 'inline-unsafe))
-(push '(((array string-char) fixnum fixnum) character #.(flags rfa)
+(push '(((array character) fixnum fixnum) character #.(flags rfa)
   "@0;(#0)->ust.ust_self[(#1)*(#0)->a.a_dims[1]+#2]")
    (get 'aref 'inline-unsafe))
 (push '(((array fixnum) fixnum fixnum) fixnum #.(flags rfa)
@@ -474,20 +483,55 @@
    (get 'array-total-size 'inline-unsafe))
 
 ;;ARRAYP
- (push '((t) boolean #.(flags)
-  "@0;type_of(#0)==t_array||
-type_of(#0)==t_vector||
-type_of(#0)==t_string||
-type_of(#0)==t_bitvector")
-   (get 'arrayp 'inline-always))
+;;  (push '((t) boolean #.(flags)
+;;   "@0;type_of(#0)==t_array||
+;; type_of(#0)==t_vector||
+;; type_of(#0)==t_string||
+;; type_of(#0)==t_bitvector")
+;;    (get 'arrayp 'inline-always))
 
 ;;ATOM
- (push '((t) boolean #.(flags)"type_of(#0)!=t_cons")
+ (push '((t) boolean #.(flags)"atom(#0)")
    (get 'atom 'inline-always))
 
 ;;BIT-VECTOR-P
  (push '((t) boolean #.(flags)"(type_of(#0)==t_bitvector)")
    (get 'bit-vector-p 'inline-always))
+
+;;BIT-VECTOR-P
+ (push '((t) boolean #.(flags)"(type_of(#0)==t_bitvector)")
+   (get 'bit-vector-p 'inline-always))
+
+;;HASH-TABLE-P
+ (push '((t) boolean #.(flags)"(type_of(#0)==t_hashtable)")
+   (get 'hash-table-p 'inline-always))
+
+;;RANDOM-STATE-P
+ (push '((t) boolean #.(flags)"(type_of(#0)==t_random)")
+   (get 'random-state-p 'inline-always))
+
+;;RANDOM-STATE-P
+ (push '((t) boolean #.(flags)"(type_of(#0)==t_random)")
+   (get 'random-state-p 'inline-always))
+
+;;PACKAGEP
+ (push '((t) boolean #.(flags)"(type_of(#0)==t_package)")
+   (get 'packagep 'inline-always))
+
+;;STREAMP
+ (push '((t) boolean #.(flags)"(type_of(#0)==t_stream)")
+   (get 'streamp 'inline-always))
+
+;;READTABLEP
+ (push '((t) boolean #.(flags)"(type_of(#0)==t_readtable)")
+   (get 'readtablep 'inline-always))
+
+;;COMPOUND PREDICATES
+(dolist (l '(integerp rationalp floatp realp numberp vectorp arrayp compiled-function-p))
+  (push 
+   `((t) boolean #.(flags) ,(substitute #\_ #\- (concatenate 'string (string-downcase l) "(#0)")))
+   (get l 'inline-always)))
+
 
 ;;BOUNDP
  (push '((t) boolean #.(flags)"(#0)->s.s_dbind!=OBJNULL")
@@ -734,7 +778,7 @@ type_of(#0)==t_bitvector")
    (get 'cons 'inline-always))
 
 ;;CONSP
- (push '((t) boolean #.(flags)"type_of(#0)==t_cons")
+ (push '((t) boolean #.(flags)"consp(#0)")
    (get 'consp 'inline-always))
 
 ;;COS
@@ -827,9 +871,9 @@ type_of(#0)==t_bitvector")
    (get 'float 'inline-always))
 
 ;;FLOATP
- (push '((t) boolean #.(flags)
-  "@0;type_of(#0)==t_shortfloat||type_of(#0)==t_longfloat")
-   (get 'floatp 'inline-always))
+ ;; (push '((t) boolean #.(flags)
+ ;;  "@0;type_of(#0)==t_shortfloat||type_of(#0)==t_longfloat")
+ ;;   (get 'floatp 'inline-always))
 
 ;;CEILING
 (push '((t t) t #.(compiler::flags) "immnum_ceiling(#0,#1)") (get 'ceiling 'compiler::inline-always))
@@ -856,9 +900,9 @@ type_of(#0)==t_bitvector")
    (get 'get 'inline-always))
 
 ;;INTEGERP
- (push '((t) boolean #.(flags)
-  "@0;type_of(#0)==t_fixnum||type_of(#0)==t_bignum")
-   (get 'integerp 'inline-always))
+ ;; (push '((t) boolean #.(flags)
+ ;;  "@0;type_of(#0)==t_fixnum||type_of(#0)==t_bignum")
+ ;;   (get 'integerp 'inline-always))
 (push '((fixnum) boolean #.(flags)
   "1")
    (get 'integerp 'inline-always))
@@ -935,7 +979,7 @@ type_of(#0)==t_bitvector")
    (get 'list* 'inline-always))
 
 ;;LISTP
- (push '((t) boolean #.(flags)"@0;type_of(#0)==t_cons||(#0)==Cnil")
+ (push '((t) boolean #.(flags)"listp(#0)")
    (get 'listp 'inline-always))
 
 ;;si::spice-p
@@ -1077,14 +1121,14 @@ type_of(#0)==t_bitvector")
    (get 'null 'inline-always))
 
 ;;NUMBERP
- (push '((t) boolean #.(flags)
-  "@0;type_of(#0)==t_fixnum||
-type_of(#0)==t_bignum||
-type_of(#0)==t_ratio||
-type_of(#0)==t_shortfloat||
-type_of(#0)==t_longfloat||
-type_of(#0)==t_complex")
-   (get 'numberp 'inline-always))
+;;  (push '((t) boolean #.(flags)
+;;   "@0;type_of(#0)==t_fixnum||
+;; type_of(#0)==t_bignum||
+;; type_of(#0)==t_ratio||
+;; type_of(#0)==t_shortfloat||
+;; type_of(#0)==t_longfloat||
+;; type_of(#0)==t_complex")
+;;    (get 'numberp 'inline-always))
 
 ;;PLUSP
  (push '((t) boolean #.(flags) "immnum_plusp(#0)");"number_compare(small_fixnum(0),#0)<0"
@@ -1165,6 +1209,14 @@ type_of(#0)==t_complex")
  (push '((t) t #.(flags ans)"coerce_to_string(#0)")
    (get 'string 'inline-always))
 
+;;PATHNAME-DESIGNATORP
+(push '((t) boolean #.(flags)"pathname_designatorp(#0)")
+      (get 'si::pathname-designatorp 'inline-always))
+
+;;PATHNAMEP
+(push '((t) boolean #.(flags)"type_of(#0)==t_pathname")
+      (get 'pathnamep 'inline-always))
+
 ;;STRINGP
  (push '((t) boolean #.(flags)"type_of(#0)==t_string")
    (get 'stringp 'inline-always))
@@ -1222,11 +1274,11 @@ type_of(#0)==t_complex")
 
 
 ;;VECTORP
- (push '((t) boolean #.(flags)
-  "@0;type_of(#0)==t_vector||
-type_of(#0)==t_string||
-type_of(#0)==t_bitvector")
-   (get 'vectorp 'inline-always))
+;;  (push '((t) boolean #.(flags)
+;;   "@0;type_of(#0)==t_vector||
+;; type_of(#0)==t_string||
+;; type_of(#0)==t_bitvector")
+;;    (get 'vectorp 'inline-always))
 
 ;;WRITE-CHAR
  (push '((t) t #.(flags set)

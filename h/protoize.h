@@ -1,13 +1,12 @@
 /* alloc.c:89:OF */ extern void *alloc_page (long n); /* (n) int n; */
-/* alloc.c:149:OF */ inline void add_page_to_freelist (char *p, struct typemanager *tm); /* (p, tm) char *p; struct typemanager *tm; */
 /* alloc.c:196:OF */ extern object type_name (int t); /* (t) int t; */
-/* alloc.c:213:OF */ inline object alloc_object (enum type t); /* (t) enum type t; */
-/* alloc.c:213:OF */ inline void add_pages(struct typemanager *,fixnum);
-/* alloc.c:296:OF */ extern inline object make_cons (object a, object d); /* (a, d) object a; object d; */
+/* alloc.c:213:OF */ object alloc_object (enum type t); /* (t) enum type t; */
+/* alloc.c:213:OF */ void add_pages(struct typemanager *,fixnum);
+/* alloc.c:296:OF */ extern object make_cons (object a, object d); /* (a, d) object a; object d; */
 /* alloc.c:364:OF */ extern object on_stack_cons (object x, object y); /* (x, y) object x; object y; */
 /* alloc.c:376:OF */ extern object fSallocated (object typ); /* (typ) object typ; */
 /* alloc.c:401:OF */ extern object fSreset_number_used (object typ); /* (typ) object typ; */
-/* alloc.c:480:OF */ extern void insert_contblock (char *p, int s); /* (p, s) char *p; int s; */
+/* alloc.c:480:OF */ extern void insert_contblock (void *p, ufixnum s); /* (p, s) char *p; int s; */
 /* alloc.c:480:OF */ extern void insert_maybe_sgc_contblock (char *p, int s); /* (p, s) char *p; int s; */
 /* alloc.c:611:OF */ extern void set_maxpage (void); /* () */
 /* alloc.c:635:OF */ extern void gcl_init_alloc (void *); /* () */
@@ -89,7 +88,7 @@
 /* big.c:85:OF */ extern void zero_big (object x); /* (x) object x; */
 /* bind.c:74:OF */ extern void lambda_bind (object *arg_top); /* (arg_top) object *arg_top; */
 /* bind.c:564:OF */ extern void bind_var (object var, object val, object spp); /* (var, val, spp) object var; object val; object spp; */
-/* bind.c:610:OF */ extern object find_special (object body, struct bind_temp *start, struct bind_temp *end); /* (body, start, end) object body; struct bind_temp *start; struct bind_temp *end; */
+/* bind.c:610:OF */ extern object find_special (object body, struct bind_temp *start, struct bind_temp *end,object *s); /* (body, start, end) object body; struct bind_temp *start; struct bind_temp *end; */
 /* bind.c:670:OF */ extern object let_bind (object body, struct bind_temp *start, struct bind_temp *end); /* (body, start, end) object body; struct bind_temp *start; struct bind_temp *end; */
 /* bind.c:688:OF */ extern object letA_bind (object body, struct bind_temp *start, struct bind_temp *end); /* (body, start, end) object body; struct bind_temp *start; struct bind_temp *end; */
 /* bind.c:712:OF */ extern void parse_key (object *base, bool rest, bool allow_other_keys, register int n, ... ); 
@@ -121,9 +120,11 @@ struct key {short n,allow_other_keys;
 /* cfun.c:221:OF */ extern object fSmf (object name, object addr); /* (name, addr) object name; object addr; */
 /* cfun.c:269:OF */ extern object fSmm (object name, object addr); /* (name, addr) object name; object addr; */
 /* cfun.c:283:OF */ extern object make_function_internal (char *s, void(*f)()); /* (s, f) char *s; int (*f)(); */
+/* cfun.c:283:OF */ extern object make_macro_internal (char *s, void(*f)()); /* (s, f) char *s; int (*f)(); */
 /* cfun.c:299:OF */ extern object make_si_sfun_internal (char *s, object (*f)(), int argd); /* (s, f, argd) char *s; int (*f)(); int argd; */
 /* cfun.c:322:OF */ extern object make_si_function_internal (char *s, void (*f) ()); /* (s, f) char *s; int (*f)(); */
 /* cfun.c:341:OF */ extern object make_special_form_internal (char *s, void (*f)()); /* (s, f) char *s; int (*f)(); */
+/* cfun.c:341:OF */ extern object make_si_special_form_internal (char *s, void (*f)()); /* (s, f) char *s; int (*f)(); */
 /* cfun.c:352:OF */ extern object fScompiled_function_name (object fun); /* (fun) object fun; */
 /* cfun.c:371:OF */ extern void turbo_closure (object fun); /* (fun) object fun; */
 /* cfun.c:392:OF */ extern object fSturbo_closure (object funobj); /* (funobj) object funobj; */
@@ -144,7 +145,7 @@ struct key {short n,allow_other_keys;
 /* cmpaux.c:185:OF */ extern fixnum object_to_fixnum (object x); /* (x) object x; */
 /* cmpaux.c:263:OF */ extern char *object_to_string (object x); /* (x) object x; */
 typedef int (*FUNC)();
-/* cmpaux.c:294:OF */ extern void call_init (int init_address, object memory, object fasl_vec, FUNC fptr); /* (init_address, memory, fasl_vec, fptr) int init_address; object memory; object fasl_vec; FUNC fptr; */
+/* cmpaux.c:294:OF */ extern void call_init (int init_address,object memory,object faslfile); /* (init_address, memory, fasl_vec, fptr) int init_address; object memory; object fasl_vec; FUNC fptr; */
 /* cmpaux.c:339:OF */ extern void do_init (object *statVV); /* (statVV) object *statVV; */
 /* cmpaux.c:416:OF */ extern void gcl_init_or_load1 (void (*fn) (void), const char *file); /* (fn, file) int (*fn)(); char *file; */
 /* conditional.c:200:OF */ extern void gcl_init_conditional (void); /* () */
@@ -203,6 +204,7 @@ typedef int (*FUNC)();
 /* eval.c:739:OF */ extern void super_funcall (object fun); /* (fun) object fun; */
 /* eval.c:752:OF */ extern void super_funcall_no_event (object fun); /* (fun) object fun; */
 /* eval.c:936:OF */ extern object Ieval (object form); /* (form) object form; */
+#define Ieval1(x) Ieval(x) /*FIXME*/
 /* eval.c:944:OF */ extern void eval (object form); /* (form) object form; */
 /* eval.c:1189:OF */ extern void Leval (void); /* () */
 /* eval.c:1191:OF */ extern object fLeval (object x0); /* (x0) object x0; */
@@ -467,7 +469,7 @@ typedef void (*funcvoid)(void);
 /* regexp.c:1588:OF */ extern void regerror (char *s); /* (s) char *s; */
 /* regexpr.c:48:OF */ extern object fSmatch_beginning (fixnum i); /* (i) int i; */
 /* regexpr.c:57:OF */ extern object fSmatch_end (fixnum i); /* (i) int i; */
-/* save.c:17:OF */ extern void Lsave (void); /* () */
+/* save.c:17:OF */ extern void siLsave (void); /* () */
 #include <unistd.h>
 /* sbrk.c:9:OF */ /*  extern void * sbrk (int n); */ /* (n) int n; */
 /* strcspn.c:3:OF */ /*  extern size_t strcspn (const char *s1, const char *s2); */ /* (s1, s2) char *s1; char *s2; */
@@ -508,7 +510,7 @@ typedef void (*funcvoid)(void);
 /* unexlin.c:808:OF */ extern int write_segment (int new, register char *ptr, register char *end); /* (new, ptr, end) int new; register char *ptr; register char *end; */
 /* unixfasl.c:409:OF */ extern void gcl_init_unixfasl (void); /* () */
 /* unixfsys.c:145:OF */ extern char *getwd (char *buffer); /* (buffer) char *buffer; */
-/* unixfsys.c:209:OF */ extern void coerce_to_filename (object pathname, char *p); /* (pathname, p) object pathname; char *p; */
+/* unixfsys.c:209:OF */ extern void coerce_to_filename1 (object pathname, char *p,unsigned sz); /* (pathname, p) object pathname; char *p; */
 /* unixfsys.c:329:OF */ extern bool file_exists (object file); /* (file) object file; */
 /* unixfsys.c:359:OF */ extern FILE *backup_fopen (char *filename, char *option); /* (filename, option) char *filename; char *option; */
 /* unixfsys.c:359:OF */ extern FILE *fopen_not_dir (char *filename, char *option); /* (filename, option) char *filename; char *option; */
@@ -733,7 +735,7 @@ void
 write_string(object,object);
 
 void
-edit_double(int, double, int *, char *, int *);
+edit_double(int, double, int *, char *, int *,int);
 
 void
 sethash(object,object,object);
@@ -862,9 +864,6 @@ void
 Lstandard_char_p(void);
 
 void
-Lstring_char_p(void);
-
-void
 Lchar_code(void);
 
 void
@@ -953,9 +952,6 @@ Lreconc(void);
 
 void
 Lstandard_char_p(void);
-
-void
-Lstring_char_p(void);
 
 void
 Lcharacter(void);
@@ -1405,7 +1401,6 @@ void Lforce_output(void);
 void Lnthcdr(void);
 void Llogior(void);
 void Lchar_downcase(void);
-void Lstring_char_p(void);
 void Lstream_element_type(void);
 void Lpackage_used_by_list(void);
 void Ldivide(void);
@@ -1639,7 +1634,6 @@ void LlistA(void);
 void Lvalues_list(void);
 void Lequal(void);
 void Ldigit_char_p(void);
-void ERROR(void);
 void Lchar_neq(void);
 void Lpathname_directory(void);
 void Lcdaaar(void);
@@ -1766,6 +1760,12 @@ gcl_isnormal_double(double);
 int 
 gcl_isnormal_float(float);
 
+int
+gcl_isnan(object);
+
+int
+gcl_is_not_finite(object);
+
 object
 find_init_name1(char *,unsigned);
 
@@ -1784,6 +1784,7 @@ void gcl_init_shared_memory ( void );
 void fix_filename ( object pathname, char *filename1 );
 void alarm ( int n );
 void *sbrk ( ptrdiff_t increment );
+#define sigset_t int
 void sigemptyset( sigset_t *set);
 void sigaddset ( sigset_t *set, int n);
 int sigismember ( sigset_t *set, int n );
@@ -1794,10 +1795,8 @@ int sigprocmask ( int how, const sigset_t *set, sigset_t *oldset );
 void recreate_heap1 ( void );
 #endif
 
-#ifdef GCL_GPROF
 void
 gprof_cleanup(void);
-#endif
 
 int
 msystem(const char *);
@@ -1805,23 +1804,19 @@ msystem(const char *);
 void
 assert_error(const char *,unsigned,const char *,const char *);
 
-#ifdef _WIN32
-void
-detect_wine(void);
-
+#ifdef __MINGW32__
 void
 init_shared_memory(void);
 
-void *
-alloca(size_t);
-
 object
 find_init_string(const char *);
-
 #endif
 
 void *
 get_mmap(FILE *,void **);
+
+void *
+get_mmap_shared(FILE *,void **);
 
 int
 un_mmap(void *,void *);
@@ -1847,14 +1842,11 @@ struct htent *gethash(object,object);
 int
 update_real_maxpage(void);
 
-inline fixnum
+fixnum
 set_tm_maxpage(struct typemanager *,fixnum);
 
 void
 init_gmp_rnd_state(__gmp_randstate_struct *);
-
-inline void
-set_sgc_bit(struct pageinfo *,void *);
 
 void
 reinit_gmp(void);
@@ -1862,28 +1854,28 @@ reinit_gmp(void);
 object
 mod(object,object);
 
-inline void
+void
 intdivrem(object,object,fixnum,object *,object *);
 
-inline object
+object
 integer_count(object);
 
-inline object
+object
 integer_length(object);
 
-inline bool
+bool
 integer_bitp(object,object);
 
-inline object 
+object 
 fixnum_times(fixnum,fixnum);
 
-inline object
+object
 log_op2(fixnum,object,object);
 
-inline object
+object
 fixnum_big_shift(fixnum,fixnum);
 
-inline object
+object
 integer_shift(object,object);
 
 object
@@ -1923,3 +1915,75 @@ rl_stream_p(FILE *f);
 
 void
 sigint(void);
+
+void
+allocate_code_block_reserve(void);
+
+void *
+alloc_contblock_no_gc(size_t,char *);
+
+void
+reset_contblock_freelist(void);
+
+void
+empty_relblock(void);
+
+fixnum
+check_avail_pages(void);
+
+int
+mbrk(void *);
+
+void
+maybe_set_hole_from_maxpages(void);
+
+void *
+alloc_code_space(size_t,ufixnum);
+
+object 
+fSmake_vector1_2(fixnum,fixnum,object,object);
+
+struct pageinfo *
+get_pageinfo(void *);
+
+void
+add_page_to_freelist(char *, struct typemanager *);
+
+ufixnum
+sum_maxpages(void);
+
+void
+resize_hole(ufixnum,enum type,bool);
+
+void
+setup_rb(bool);
+
+void
+close_pool(void);
+
+void
+gcl_cleanup(int);
+
+void
+do_gcl_abort(void);
+
+int
+vsystem(const char *);
+
+object
+n_cons_from_x(fixnum,object);
+
+int
+seek_to_end_ofile(FILE *);
+
+void
+travel_find_sharing(object,object);
+
+object
+new_cfdata(void);
+
+int
+home_namestring1(const char *,int,char *,int);
+
+object
+gcl_make_hash_table(object);

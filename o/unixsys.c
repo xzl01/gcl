@@ -24,14 +24,91 @@ Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-
+#ifndef __MINGW32__
+#include <sys/wait.h>
+#endif
 
 #include "include.h"
 
-#ifdef _WIN32
+#if !defined(__MINGW32__) && !defined(__CYGWIN__)
+
+int
+vsystem(const char *command) {
+
+  unsigned j,n=strlen(command)+1;
+  char *z,*c;
+  const char *x1[]={"/bin/sh","-c",NULL,NULL},*spc=" \n\t",**p1,**pp;
+  int s;
+  pid_t pid;
+
+  if (strpbrk(command,"\"'$<>"))
+
+    (p1=x1)[2]=command;
+
+  else {
+
+    massert(n<sizeof(FN1));
+    memcpy((z=FN1),command,n);
+    for (j=1,c=z;strtok(c,spc);c=NULL,j++);
+
+    memcpy(z,command,n);
+    massert(j*sizeof(*p1)<sizeof(FN2));
+    p1=(void *)FN2;
+    for (pp=p1,c=z;(*pp=strtok(c,spc));c=NULL,pp++);
+
+  }
+
+  if (!(pid=pvfork())) {
+    errno=0;
+    execvp(*p1,(void *)p1);
+    _exit(128|(errno&0x7f));
+  }
+
+  massert(pid>0);
+  massert(pid==waitpid(pid,&s,0));
+
+  if ((s>>8)&128)
+    emsg("execvp failure when executing '%s': %s\n",command,strerror((s>>8)&0x7f));
+
+  return s;
+
+}
+#elif defined(__CYGWIN__)
+
+#include <tchar.h>
+#include <time.h>
 #include <windows.h>
-#define sleep(n) Sleep(1000 * n)
+#include <sys/cygwin.h>
+
+int
+vsystem(const char *command) {
+
+  STARTUPINFO s={0};
+  PROCESS_INFORMATION p={0};
+  unsigned int e;
+  char *cmd=NULL,*r;
+
+  massert((r=strpbrk(command," \n\t"))-command<sizeof(FN2));
+  memcpy(FN2,command,r-command);
+  FN2[r-command]=0;
+  cygwin_conv_path(CCP_POSIX_TO_WIN_A,FN2,FN3,sizeof(FN3));
+  massert(snprintf(FN1,sizeof(FN1),"%s %s",FN3,r)>=0);
+  command=FN1;
+
+
+  s.cb=sizeof(s);
+  massert(CreateProcess(cmd,(void *)command,NULL,NULL,FALSE,0,NULL,NULL,&s,&p));
+  massert(!WaitForSingleObject(p.hProcess,INFINITE));
+  massert(GetExitCodeProcess(p.hProcess,&e));
+  massert(CloseHandle(p.hProcess));
+  massert(CloseHandle(p.hThread));
+
+  return e;
+
+}
+
 #endif
+
 
 #ifdef ATT3B2
 #include <signal.h>
@@ -67,109 +144,15 @@ char *command;
 }
 #endif
 
-#ifdef _WIN32
-
-DEFVAR("*WINE-DETECTED*",sSAwine_detectedA,SI,Cnil,"");
-
-#include "windows.h"
-
-static int mpid;
-
-void
-close_msys() {
-
-  msystem("");
-
-}
-
-void
-detect_wine() {
-
-  char b[4096];
-  struct stat ss;
-  const char *s="/proc/self/status";
-  FILE *f;
-  object o;
-
-  sSAwine_detectedA->s.s_dbind=Cnil;
-
-  if (stat(s,&ss))
-    return;
-
-  massert(f=fopen(s,"r"));
-  massert(fscanf(f,"%s",b)==1);
-  massert(fscanf(f,"%s",b)==1);
-  massert(!fclose(f));
-
-  if (strncmp("wineserver",b,9))
-    return;
-
-  massert(o=sSAsystem_directoryA->s.s_dbind);
-  massert(o!=Cnil);
-  mpid=getpid();
-  
-  massert(snprintf(b,sizeof(b),"%-.*smsys /tmp/ out%0d tmp%0d log%0d",
-		   o->st.st_fillp,o->st.st_self,mpid,mpid,mpid)>0);
-  massert(!psystem(b));
-
-  sSAwine_detectedA->s.s_dbind=Ct;
-  
-  massert(!atexit(close_msys));
-  
-}
-#endif  
-
 int
 msystem(const char *s) {
 
-  int r;
-
-#ifdef _WIN32
-
-  if (sSAwine_detectedA->s.s_dbind==Ct) {
-
-    char b[4096],b1[4096],c;
-    FILE *fp;
-
-    massert(snprintf(b,sizeof(b),"/tmp/out%0d",mpid)>0);
-    massert(snprintf(b1,sizeof(b1),"%s1",b)>0);
-
-    massert(fp=fopen(b1,"w"));
-    massert(fprintf(fp,"%s",s)>=0);
-    massert(!fclose(fp));
-
-    massert(MoveFileEx(b1,b,MOVEFILE_REPLACE_EXISTING));
-    
-    if (!*s)
-      return 0;
-    
-    for (;;Sleep(100)) {
-      
-      massert(fp=fopen(b,"r"));
-      massert((c=fgetc(fp))!=EOF);
-      if (c!=s[0]) {
-	massert(ungetc(c,fp)!=EOF);
-	break;
-      }
-      massert(!fclose(fp));
-      
-    }
-    
-    massert(fscanf(fp,"%d",&r)==1);
-    massert(!fclose(fp));
-
-  } else
-
-#endif
-
-    r=psystem(s);
-
-  return r;
+  return psystem(s);
 
 }
 
 static void
-FFN(Lsystem)(void)
+FFN(siLsystem)(void)
 {
 	char command[32768];
 	int i;
@@ -198,92 +181,9 @@ DEFUN_NEW("GETPID",object,fSgetpid,SI,0,0,NONE,OO,OO,OO,OO,(void),
 }
 
 
-DEFVAR("*LOAD-WITH-FREAD*",sSAload_with_freadA,SI,Cnil,"");
-
-#ifdef _WIN32
-
-void *
-get_mmap(FILE *fp,void **ve) {
-  
-  int n;
-  void *st;
-  size_t sz;
-  HANDLE handle;
-
-  massert((sz=file_len(fp))>0);
-  if (sSAload_with_freadA->s.s_dbind==Cnil) {
-    n=fileno(fp);
-    massert((n=fileno(fp))>2);
-    massert(handle = CreateFileMapping((HANDLE)_get_osfhandle(n), NULL, PAGE_WRITECOPY, 0, 0, NULL));
-    massert(st=MapViewOfFile(handle,FILE_MAP_COPY,0,0,sz));
-    CloseHandle(handle);
-  } else {
-    massert(st=malloc(sz));
-    massert(fread(st,sz,1,fp)==1);
-  }
-
-  *ve=st+sz;
-
-  return st;
-
-}
-
-int
-un_mmap(void *v1,void *ve) {
-
-  if (sSAload_with_freadA->s.s_dbind==Cnil)
-    return UnmapViewOfFile(v1) ? 0 : -1;
-  else {
-    free(v1);
-    return 0;
-  }
-
-}
-
-
-#else
-
-#include <sys/mman.h>
-
-void *
-get_mmap(FILE *fp,void **ve) {
-  
-  int n;
-  void *v1;
-  struct stat ss;
-
-  massert((n=fileno(fp))>2);
-  massert(!fstat(n,&ss));
-  if (sSAload_with_freadA->s.s_dbind==Cnil) {
-    massert((v1=mmap(0,ss.st_size,PROT_READ|PROT_WRITE,MAP_PRIVATE,n,0))!=(void *)-1);
-  } else {
-    massert(v1=malloc(ss.st_size));
-    massert(fread(v1,ss.st_size,1,fp)==1);
-  }
-
-  *ve=v1+ss.st_size;
-  return v1;
-
-}
- 
-
-int
-un_mmap(void *v1,void *ve) {
-
-  if (sSAload_with_freadA->s.s_dbind==Cnil)
-    return munmap(v1,ve-v1);
-  else {
-    free(v1);
-    return 0;
-  }
-
-}
-
-#endif
-
 void
 gcl_init_unixsys(void) {
 
-  make_function("SYSTEM", Lsystem);
+  make_si_function("SYSTEM", siLsystem);
 
 }

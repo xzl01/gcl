@@ -77,7 +77,7 @@ Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 	Definition of the type of LISP objects.
 */
 typedef union int_object iobject;
-union int_object {object o; fixnum i;};
+union int_object {object *o; fixnum i;};
 
 #define	SMALL_FIXNUM_LIMIT	1024
 
@@ -124,7 +124,8 @@ EXTER struct package *pack_pointer;	/*  package pointer  */
 enum httest {			/*  hash table key test function  */
 	htt_eq,			/*  eq  */
 	htt_eql,		/*  eql  */
-	htt_equal		/*  equal  */
+	htt_equal,		/*  equal  */
+	htt_equalp		/*  equalp  */
 };
 
 enum aelttype {			/*  array element type  */
@@ -150,6 +151,12 @@ enum aelttype {			/*  array element type  */
 #define SET_BV_OFFSET(x,val) ((type_of(x)==t_bitvector ? x->bv.bv_offset = val : \
 		       type_of(x)== t_array ? x->a.a_offset=val : (abort(),0)))
 
+#if !defined(DOUBLE_BIGENDIAN)
+#define BIT_ENDIAN(a_) (7-(a_))
+#else
+#define BIT_ENDIAN(a_) (a_)
+#endif
+
 
 #define S_DATA(x) ((struct s_data *)((x)->str.str_self))
 #define SLOT_TYPE(def,i) (((S_DATA(def))->raw->ust.ust_self[i]))
@@ -157,39 +164,21 @@ enum aelttype {			/*  array element type  */
 #define STREF(type,x,i) (*((type *)(((char *)((x)->str.str_self))+(i))))
 #define STSET(type,x,i,val)  do{SGC_TOUCH(x);STREF(type,x,i) = (val);} while(0)
 
-
-
-enum smmode {			/*  stream mode  */
-	smm_input,		/*  input  */
-	smm_output,		/*  output  */
-	smm_io,			/*  input-output  */
-	smm_probe,		/*  probe  */
-	smm_synonym,		/*  synonym  */
-	smm_broadcast,		/*  broadcast  */
-	smm_concatenated,	/*  concatenated  */
-	smm_two_way,		/*  two way  */
-	smm_echo,		/*  echo  */
-	smm_string_input,	/*  string input  */
-	smm_string_output,	/*  string output  */
-	smm_user_defined,        /*  for user defined */
-	smm_socket		/*  Socket stream  */
-};
-
 /* for any stream that takes writec_char, directly (not two_way or echo)
    ie. 	 smm_output,smm_io, smm_string_output, smm_socket
  */
-#define STREAM_FILE_COLUMN(str) ((str)->sm.sm_int1)
+#define STREAM_FILE_COLUMN(str) ((str)->sm.sm_int)
 
 /* for smm_echo */
-#define ECHO_STREAM_N_UNREAD(strm) ((strm)->sm.sm_int0)
+#define ECHO_STREAM_N_UNREAD(strm) ((strm)->sm.sm_int)
 
 /* file fd for socket */
 #define SOCKET_STREAM_FD(strm) ((strm)->sm.sm_fd)
 #define SOCKET_STREAM_BUFFER(strm) ((strm)->sm.sm_object1)
 
 /*  for     smm_string_input  */
-#define STRING_INPUT_STREAM_NEXT(strm) ((strm)->sm.sm_int0)
-#define STRING_INPUT_STREAM_END(strm) ((strm)->sm.sm_int1)
+#define STRING_INPUT_STREAM_NEXT(strm) ((strm)->sm.sm_object0->st.st_fillp)
+#define STRING_INPUT_STREAM_END(strm) ((strm)->sm.sm_object0->st.st_dim)
 
 /* for smm_two_way and smm_echo */
 #define STREAM_OUTPUT_STREAM(strm) ((strm)->sm.sm_object1)
@@ -211,8 +200,8 @@ enum gcl_sm_flags {
   gcl_sm_tcp_async,
   gcl_sm_input,
   gcl_sm_output,
+  gcl_sm_closed,
   gcl_sm_had_error
-  
   
 };
 
@@ -261,8 +250,26 @@ struct freelist {
 #define FL_LINK F_LINK
 #define SET_LINK(x,val) F_LINK(x) = (address_int) (val)
 #define OBJ_LINK(x) ((object) INT_TO_ADDRESS(F_LINK(x)))
+#define PHANTOM_FREELIST(x) ({struct freelist f;(object)((void *)&x+((void *)&f-(void *)&f.f_link));})
+#define FREELIST_TAIL(tm_) ({struct typemanager *_tm=tm_;\
+      _tm->tm_free==OBJNULL ? PHANTOM_FREELIST(_tm->tm_free) : _tm->tm_tail;})
 
 #define	FREE	(-1)		/*  free object  */
+
+struct fasd {
+  object stream;   /* lisp object of type stream */
+  object table;  /* hash table used in dumping or vector on input*/
+  object eof;      /* lisp object to be returned on coming to eof mark */
+  object direction;    /* holds Cnil or sKinput or sKoutput */
+  object package;  /* the package symbols are in by default */
+  object index;     /* integer.  The current_dump index on write  */
+  object filepos;   /* nil or the position of the start */
+  object table_length; /*    On read it is set to the size dump array needed
+		     or 0
+		     */
+  object evald_items;  /* a list of items which have been eval'd and must
+			  not be walked by fasd_patch_sharp */
+};
 
 /*
 	Storage manager for each type.
@@ -272,6 +279,8 @@ struct typemanager {
   long	    tm_size;             /*  element size in bytes  */
   long      tm_nppage;           /*  number per page  */
   object    tm_free;             /*  free list  */
+				 /*  Note that it is of type object.  */
+  object    tm_tail;             /*  free list tail  */
 				 /*  Note that it is of type object.  */
   long	    tm_nfree;            /*  number of free elements  */
   long	    tm_npage;            /*  number of pages  */
@@ -304,9 +313,9 @@ EXTER struct typemanager tm_table[ 32  /* (int) t_relocatable */];
 /*
 	Contiguous block header.
 */
-EXTER bool prefer_low_mem_contblock;
+EXTER ufixnum contblock_lim;
 struct contblock {		/*  contiguous block header  */
-	int	cb_size;	/*  size in bytes  */
+	ufixnum	cb_size;	/*  size in bytes  */
 	struct contblock
 		*cb_link;	/*  contiguous block link  */
 };
@@ -324,7 +333,6 @@ EXTER struct contblock *old_cb_pointer;	/*  old contblock pointer when in SGC  *
 /*
 	Variables for memory management.
 */
-EXTER long ncb;			/*  number of contblocks  */
 #define ncbpage tm_table[t_contiguous].tm_npage
 #define maxcbpage tm_table[t_contiguous].tm_maxpage
 #define cbgbccount tm_table[t_contiguous].tm_gbccount  
@@ -335,17 +343,64 @@ EXTER long holepage;			/*  hole pages  */
 #define maxrbpage tm_table[t_relocatable].tm_maxpage
 #define rbgbccount tm_table[t_relocatable].tm_gbccount
 EXTER long new_holepage,starting_hole_div,starting_relb_heap_mult;
-  
 
-#ifdef SGC
-EXTER char *old_rb_start;			/*  read-only relblock start  */
-#endif
-EXTER char *rb_start;			/*  relblock start  */
+EXTER ufixnum recent_allocation,wait_on_abort;
+EXTER double gc_alloc_min,mem_multiple,gc_page_min,gc_page_max;
+EXTER bool multiprocess_memory_pool;
+
+EXTER char *new_rb_start;		/*  desired relblock start after next gc  */
+EXTER char *rb_start;           	/*  relblock start  */
 EXTER char *rb_end;			/*  relblock end  */
 EXTER char *rb_limit;			/*  relblock limit  */
-EXTER char *rb_pointer;		/*  relblock pointer  */
-EXTER char *rb_start1;		/*  relblock start in copy space  */
-EXTER char *rb_pointer1;		/*  relblock pointer in copy space  */
+EXTER char *rb_pointer;                 /*  relblock pointer  */
+
+INLINE ufixnum
+rb_size(void) {
+  return rb_end-rb_start;
+}
+
+INLINE bool
+rb_high(void) {
+  return rb_pointer>=rb_end&&rb_size();
+}
+
+INLINE char *
+rb_begin(void) {
+  return rb_high() ? rb_end : rb_start;
+}
+
+INLINE bool
+rb_emptyp(void) {
+  return rb_pointer == rb_begin();
+}
+
+INLINE ufixnum
+ufmin(ufixnum a,ufixnum b) {
+  return a<=b ? a : b;
+}
+
+INLINE ufixnum
+ufmax(ufixnum a,ufixnum b) {
+  return a>=b ? a : b;
+}
+
+#include <unistd.h>
+#include <stdio.h>
+#include <stdarg.h>
+INLINE int
+emsg(const char *s,...) {
+  va_list args;
+  ufixnum n=0;
+  void *v=NULL;
+  va_start(args,s);
+  n=vsnprintf(v,n,s,args)+1;
+  va_end(args);
+  v=alloca(n);
+  va_start(args,s);
+  vsnprintf(v,n,s,args);
+  va_end(args);
+  return write(2,v,n-1) ? n : -1;
+}
 
 EXTER char *heap_end;			/*  heap end  */
 EXTER char *core_end;			/*  core end  */
@@ -359,9 +414,9 @@ char *tmp_alloc;
    */
 
 #define ALLOC_ALIGNED(f, size,align) \
-  (align <= sizeof(plong) ? (char *)((f)(size)) : \
-   (tmp_alloc = (char *)((f)(size+(size ?(align)-1 : 0)))+(align)-1 , \
-   (char *)(align * (((unsigned long)tmp_alloc)/align))))
+  ({ufixnum _size=size,_align=align;_align <= sizeof(plong) ? (char *)((f)(_size)) :	\
+    (tmp_alloc = (char *)((f)(_size+(_size ?(_align)-1 : 0)))+(_align)-1 ,	\
+    (char *)(_align * (((unsigned long)tmp_alloc)/_align)));})
 #define AR_ALLOC(f,n,type) (type *) \
   (ALLOC_ALIGNED(f,(n)*sizeof(type),sizeof(type)))
 
@@ -444,8 +499,11 @@ object make_si_sfun();
  Used by the C function to set optionals */
 
 #define  VFUN_NARGS fcall.argd
+#define RETURN4(x,y,z,w) do{/*  object _x = (void *) x;  */   \
+			  fcall.values[1]=y;fcall.values[2]=z;fcall.values[3]=w;fcall.nvalues=4; \
+			  return (x) ;} while(0)
 #define RETURN2(x,y) do{/*  object _x = (void *) x;  */\
-			  fcall.values[2]=y;fcall.nvalues=2; \
+			  fcall.values[1]=y;fcall.nvalues=2; \
 			  return (x) ;} while(0)
 #define RETURN1(x) do{fcall.nvalues=1; return (x) ;} while(0)
 #define RETURN0  do{fcall.nvalues=0; return Cnil ;} while(0)
@@ -516,6 +574,15 @@ EXTER unsigned plong signals_allowed, signals_pending;
 
 #define IMMNIL(x) (is_imm_fixnum(x)||x==Cnil)
 
-#define eql(a_,b_)    ({register object _a=(a_);register object _b=(b_);_a==_b || (!IMMNIL(_a)&&!IMMNIL(_b)&&eql1(_a,_b));})
-#define equal(a_,b_)  ({register object _a=(a_);register object _b=(b_);_a==_b || (!IMMNIL(_a)&&!IMMNIL(_b)&&equal1(_a,_b));})
-#define equalp(a_,b_) ({register object _a=(a_);register object _b=(b_);_a==_b || (_a!=Cnil&&_b!=Cnil&&equalp1(_a,_b));})
+/*gcc boolean expression tail position bug*/
+
+/* #define eql(a_,b_)    ({register object _a=(a_);register object _b=(b_);_a==_b || (!IMMNIL(_a)&&!IMMNIL(_b)&&eql1(_a,_b));}) */
+/* #define equal(a_,b_)  ({register object _a=(a_);register object _b=(b_);_a==_b || (!IMMNIL(_a)&&!IMMNIL(_b)&&equal1(_a,_b));}) */
+/* #define equalp(a_,b_) ({register object _a=(a_);register object _b=(b_);_a==_b || (_a!=Cnil&&_b!=Cnil&&equalp1(_a,_b));}) */
+
+#define eql_is_eq(a_) (is_imm_fixnum(a_)||valid_cdr(a_)||(a_->d.t>t_complex))
+
+#define eql(a_,b_)    ({register object _a=(a_);register object _b=(b_);\
+      _a==_b ? TRUE : (eql_is_eq(_a)||eql_is_eq(_b)||_a->d.t!=_b->d.t ? FALSE : eql1(_a,_b));})
+#define equal(a_,b_)  ({register object _a=(a_);register object _b=(b_);_a==_b ? TRUE : (IMMNIL(_a)||IMMNIL(_b) ? FALSE : equal1(_a,_b));})
+#define equalp(a_,b_) ({register object _a=(a_);register object _b=(b_);_a==_b ? TRUE : (_a==Cnil||_b==Cnil ? FALSE : equalp1(_a,_b));})

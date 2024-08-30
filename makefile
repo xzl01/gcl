@@ -34,15 +34,18 @@ TESTDIR = ansi-tests
 
 VERSION=`cat majvers`.`cat minvers`
 
-all: $(BUILD_BFD) system command cmpnew/gcl_collectfn.o lsp/gcl_info.o do-gcl-tk # do-info
+all: $(BUILD_BFD) system command cmpnew/gcl_collectfn.o lsp/gcl_info.o do-gcl-tk release do-info
 
-ASRC:=$(shell ls -1 o/*.c lsp/*.lsp cmpnew/*.lsp mod/*.lsp pcl/*sp clcs/*sp xgcl-2/*p) #o/*.d o/*.h h/*.h
+ASRC:=$(shell ls -1 o/*.c lsp/*.lsp cmpnew/*.lsp pcl/*sp clcs/*sp xgcl-2/*p) #o/*.d o/*.h h/*.h
 TAGS: $(ASRC)
 	etags --regex='/\#.`(defun[ \n\t]+\([^ \n\t]+\)/' $^
 
 system: $(PORTDIR)/$(FLISP)
 #	[ "$(X_LIBS)" == "" ] || (cd xgcl-2 && make saved_xgcl LISP=../$< && mv saved_xgcl ../$(PORTDIR)/$(FLISP))
 	touch $@
+
+release: majvers minvers
+	date >$@
 
 xgcl: $(PORTDIR)/saved_xgcl
 
@@ -146,7 +149,7 @@ command:
 merge:
 	$(CC) -o merge merge.c
 
-LISP_LIB=cmpnew/gcl_collectfn.o cmpnew/gcl_collectfn.lsp xgcl-2/sysdef.lisp xgcl-2/gcl_dwtest.lsp xgcl-2/gcl_dwtestcases.lsp lsp/gcl_gprof.lsp lsp/gcl_info.o lsp/gcl_profile.lsp lsp/gcl_export.lsp lsp/gcl_autoload.lsp cmpnew/gcl_cmpmain.lsp cmpnew/gcl_cmpopt.lsp cmpnew/gcl_lfun_list.lsp lsp/gcl_auto_new.lsp h/cmpinclude.h unixport/init_$(SYSTEM).lsp unixport/lib$(SYSTEM).a unixport/libgclp.a gcl-tk/tk-package.lsp $(TK_LISP_LIB) $(RL_LIB) $(FIRST_FILE) $(LAST_FILE) $(addsuffix /sys-proclaim.lisp,lsp cmpnew pcl clcs) unixport/gcl.script
+LISP_LIB=cmpnew/gcl_collectfn.o cmpnew/gcl_collectfn.lsp xgcl-2/package.lisp pcl/package.lisp clcs/package.lisp xgcl-2/sysdef.lisp xgcl-2/gcl_dwtest.lsp xgcl-2/gcl_dwtestcases.lsp lsp/gcl_gprof.lsp lsp/gcl_info.o lsp/gcl_profile.lsp lsp/gcl_export.lsp lsp/gcl_autoload.lsp cmpnew/gcl_cmpmain.lsp cmpnew/gcl_cmpopt.lsp cmpnew/gcl_lfun_list.lsp lsp/gcl_auto_new.lsp h/cmpinclude.h unixport/sys_init.lsp unixport/lib$(SYSTEM).a unixport/libgclp.a gcl-tk/tk-package.lsp $(TK_LISP_LIB) $(RL_LIB) $(FIRST_FILE) $(LAST_FILE) $(addsuffix /sys-proclaim.lisp,lsp cmpnew xgcl-2 pcl clcs) unixport/gcl.script
 
 install-command:
 	rm -f $(DESTDIR)$(prefix)/bin/gcl
@@ -195,7 +198,7 @@ install1:
 	if gcc --version | grep -i mingw >/dev/null 2>&1 ; then if grep -i oncrpc makedefs >/dev/null 2>&1 ; then cp /mingw/bin/oncrpc.dll $(DESTDIR)$(INSTALL_LIB_DIR)/$(PORTDIR); fi ; fi
 	cd $(DESTDIR)$(INSTALL_LIB_DIR)/$(PORTDIR) && \
 		mv $(FLISP)$(EXE) temp$(EXE) && \
-		echo '(reset-sys-paths "$(INSTALL_LIB_DIR)/")(si::save-system "$(FLISP)$(EXE)")' | ./temp$(EXE) && \
+		echo '(si::reset-sys-paths "$(INSTALL_LIB_DIR)/")(si::save-system "$(FLISP)$(EXE)")' | ./temp$(EXE) && \
 		rm -f temp$(EXE)
 	if [ -e "unixport/rsym$(EXE)" ] ; then cp unixport/rsym$(EXE) $(DESTDIR)$(INSTALL_LIB_DIR)/unixport/ ; fi
 #	ln $(SYMB) $(INSTALL_LIB_DIR)/$(PORTDIR)/$(FLISP)$(EXE) \
@@ -231,7 +234,7 @@ gclclean:
 	cd $(PCLDIR) && $(MAKE) clean
 	cd xgcl-2 && $(MAKE) clean
 	(cd $(TESTDIR); $(MAKE) clean)
-#	(cd info ; $(MAKE) clean)
+	(cd info ; $(MAKE) clean)
 #	find binutils -name "*.o" -exec rm {} \;
 	rm -rf binutils
 	rm -f foo.tcl config.log makedefs makedefsafter config.cache config.status makedefc
@@ -264,8 +267,9 @@ $(HDIR)new_decl.h:
 	(cd o && $(MAKE) ../$@)
 
 $(HDIR)mcompdefs.h: $(HDIR)compdefs.h $(HDIR)new_decl.h
-	$(AWK) 'BEGIN {print "#include \"include.h\"";print "#include \"cmponly.h\"";print "---"} {a=$$1;gsub("\\.\\.\\.","",a);print "\"#define " $$1 "\" " a}' $< |\
-	$(CC) -E -I./$(HDIR) - |\
+	cat $< |\
+	$(AWK) 'BEGIN {print "#include \"include.h\"";print "#include \"cmponly.h\"";print "---"} {a=$$1;gsub("\\.\\.\\.","",a);print "\"#define " $$1 "\" " a}' |\
+	$(CC) -E -P -I./$(HDIR) - |\
 	$(AWK) '/^\-\-\-$$/ {i=1;next} {if (!i) next} {gsub("\"","");print}' >$@
 
 $(HDIR)cmpinclude.h: $(HDIR)mcompdefs.h $(CMPINCLUDE_FILES) $(HDIR)config.h

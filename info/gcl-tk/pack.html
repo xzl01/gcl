@@ -1,45 +1,35 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<!-- Created by GNU Texinfo 5.2, http://www.gnu.org/software/texinfo/ -->
+<!-- Created by GNU Texinfo 6.7, http://www.gnu.org/software/texinfo/ -->
 <head>
-<title>GCL TK Manual: pack</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>pack (GCL TK Manual)</title>
 
-<meta name="description" content="GCL TK Manual: pack">
-<meta name="keywords" content="GCL TK Manual: pack">
+<meta name="description" content="pack (GCL TK Manual)">
+<meta name="keywords" content="pack (GCL TK Manual)">
 <meta name="resource-type" content="document">
 <meta name="distribution" content="global">
 <meta name="Generator" content="makeinfo">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link href="index.html#Top" rel="start" title="Top">
+<link href="index.html" rel="start" title="Top">
 <link href="wm.html#SEC_Contents" rel="contents" title="Table of Contents">
-<link href="Control.html#Control" rel="up" title="Control">
-<link href="place.html#place" rel="next" title="place">
-<link href="pack_002dold.html#pack_002dold" rel="prev" title="pack-old">
+<link href="Control.html" rel="up" title="Control">
+<link href="place.html" rel="next" title="place">
+<link href="pack_002dold.html" rel="prev" title="pack-old">
 <style type="text/css">
 <!--
 a.summary-letter {text-decoration: none}
-blockquote.smallquotation {font-size: smaller}
+blockquote.indentedblock {margin-right: 0em}
 div.display {margin-left: 3.2em}
 div.example {margin-left: 3.2em}
-div.indentedblock {margin-left: 3.2em}
 div.lisp {margin-left: 3.2em}
-div.smalldisplay {margin-left: 3.2em}
-div.smallexample {margin-left: 3.2em}
-div.smallindentedblock {margin-left: 3.2em; font-size: smaller}
-div.smalllisp {margin-left: 3.2em}
-kbd {font-style:oblique}
+kbd {font-style: oblique}
 pre.display {font-family: inherit}
 pre.format {font-family: inherit}
 pre.menu-comment {font-family: serif}
 pre.menu-preformatted {font-family: serif}
-pre.smalldisplay {font-family: inherit; font-size: smaller}
-pre.smallexample {font-size: smaller}
-pre.smallformat {font-family: inherit; font-size: smaller}
-pre.smalllisp {font-size: smaller}
-span.nocodebreak {white-space:nowrap}
-span.nolinebreak {white-space:nowrap}
-span.roman {font-family:serif; font-weight:normal}
-span.sansserif {font-family:sans-serif; font-weight:normal}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
 ul.no-bullet {list-style: none}
 -->
 </style>
@@ -47,23 +37,19 @@ ul.no-bullet {list-style: none}
 
 </head>
 
-<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
-<a name="pack"></a>
-<div class="header">
+<body lang="en">
+<span id="pack"></span><div class="header">
 <p>
-Next: <a href="place.html#place" accesskey="n" rel="next">place</a>, Previous: <a href="pack_002dold.html#pack_002dold" accesskey="p" rel="prev">pack-old</a>, Up: <a href="Control.html#Control" accesskey="u" rel="up">Control</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
+Next: <a href="place.html" accesskey="n" rel="next">place</a>, Previous: <a href="pack_002dold.html" accesskey="p" rel="prev">pack-old</a>, Up: <a href="Control.html" accesskey="u" rel="up">Control</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
 </div>
 <hr>
-<a name="pack-1"></a>
-<h3 class="section">3.14 pack</h3>
+<span id="pack-1"></span><h3 class="section">3.14 pack</h3>
 
 <p>pack \- Geometry manager that packs around edges of cavity
-</p><a name="Synopsis-27"></a>
-<h4 class="unnumberedsubsec">Synopsis</h4>
+</p><span id="Synopsis-27"></span><h4 class="unnumberedsubsec">Synopsis</h4>
 <p><b>pack </b><i>option arg </i><span class="roman">?</span><i>arg ...</i>?
 </p>
-<a name="Description-25"></a>
-<h4 class="unnumberedsubsec">Description</h4>
+<span id="Description-25"></span><h4 class="unnumberedsubsec">Description</h4>
 
 <p>The <b>pack</b> command is used to communicate with the packer,
 a geometry manager that arranges the children of a parent by
@@ -208,8 +194,7 @@ If <i>master</i> has no slaves then an empty string is returned.
 </p>
 </dd>
 </dl>
-<a name="g_t_0022The-Packer-Algorithm_0022"></a>
-<h4 class="unnumberedsubsec">&quot;The Packer Algorithm&quot;</h4>
+<span id="g_t_0022The-Packer-Algorithm_0022"></span><h4 class="unnumberedsubsec">&quot;The Packer Algorithm&quot;</h4>
 
 <p>For each master the packer maintains an ordered list of slaves
 called the <i>packing list</i>.
@@ -273,8 +258,7 @@ If the cavity shrinks to zero size, then all remaining slaves
 on the packing list will be unmapped from the screen until
 the master window becomes large enough to hold them again.
 </p>
-<a name="g_t_0022Expansion_0022"></a>
-<h4 class="unnumberedsubsec">&quot;Expansion&quot;</h4>
+<span id="g_t_0022Expansion_0022"></span><h4 class="unnumberedsubsec">&quot;Expansion&quot;</h4>
 
 <p>If a master window is so large that there will be extra space
 left over after all of its slaves have been packed, then the
@@ -285,8 +269,7 @@ slaves whose <b>:side</b><span class="roman"> is </span><b>left</b><span class="
 and extra vertical space is distributed among the expandable
 slaves whose <b>:side</b><span class="roman"> is </span><b>top</b><span class="roman"> or </span><b>bottom</b>.
 </p>
-<a name="g_t_0022Geometry-Propagation_0022"></a>
-<h4 class="unnumberedsubsec">&quot;Geometry Propagation&quot;</h4>
+<span id="g_t_0022Geometry-Propagation_0022"></span><h4 class="unnumberedsubsec">&quot;Geometry Propagation&quot;</h4>
 
 <p>The packer normally computes how large a master must be to
 just exactly meet the needs of its slaves, and it sets the
@@ -301,8 +284,7 @@ the requested width and height of the packer.
 This may be useful if, for example, you wish for a master
 window to have a fixed size that you specify.
 </p>
-<a name="g_t_0022Restrictions-On-Master-Windows_0022"></a>
-<h4 class="unnumberedsubsec">&quot;Restrictions On Master Windows&quot;</h4>
+<span id="g_t_0022Restrictions-On-Master-Windows_0022"></span><h4 class="unnumberedsubsec">&quot;Restrictions On Master Windows&quot;</h4>
 
 <p>The master for each slave must either be the slave&rsquo;s parent
 (the default) or a descendant of the slave&rsquo;s parent.
@@ -310,8 +292,7 @@ This restriction is necessary to guarantee that the
 slave can be placed over any part of its master that is
 visible without danger of the slave being clipped by its parent.
 </p>
-<a name="g_t_0022Packing-Order_0022"></a>
-<h4 class="unnumberedsubsec">&quot;Packing Order&quot;</h4>
+<span id="g_t_0022Packing-Order_0022"></span><h4 class="unnumberedsubsec">&quot;Packing Order&quot;</h4>
 
 <p>If the master for a slave is not its parent then you must make sure
 that the slave is higher in the stacking order than the master.
@@ -323,13 +304,12 @@ will be highest in the stacking order.
 Or, you can use the <b>raise</b><span class="roman"> and </span><b>lower</b> commands to change
 the stacking order of either the master or the slave.
 </p>
-<a name="Keywords-28"></a>
-<h4 class="unnumberedsubsec">Keywords</h4>
+<span id="Keywords-28"></span><h4 class="unnumberedsubsec">Keywords</h4>
 <p>geometry manager, location, packer, parcel, propagation, size
 </p><hr>
 <div class="header">
 <p>
-Next: <a href="place.html#place" accesskey="n" rel="next">place</a>, Previous: <a href="pack_002dold.html#pack_002dold" accesskey="p" rel="prev">pack-old</a>, Up: <a href="Control.html#Control" accesskey="u" rel="up">Control</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
+Next: <a href="place.html" accesskey="n" rel="next">place</a>, Previous: <a href="pack_002dold.html" accesskey="p" rel="prev">pack-old</a>, Up: <a href="Control.html" accesskey="u" rel="up">Control</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
 </div>
 
 

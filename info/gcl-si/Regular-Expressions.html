@@ -1,46 +1,36 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<!-- Created by GNU Texinfo 5.2, http://www.gnu.org/software/texinfo/ -->
+<!-- Created by GNU Texinfo 6.7, http://www.gnu.org/software/texinfo/ -->
 <head>
-<title>GCL SI Manual: Regular Expressions</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Regular Expressions (GCL SI Manual)</title>
 
-<meta name="description" content="GCL SI Manual: Regular Expressions">
-<meta name="keywords" content="GCL SI Manual: Regular Expressions">
+<meta name="description" content="Regular Expressions (GCL SI Manual)">
+<meta name="keywords" content="Regular Expressions (GCL SI Manual)">
 <meta name="resource-type" content="document">
 <meta name="distribution" content="global">
 <meta name="Generator" content="makeinfo">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link href="index.html#Top" rel="start" title="Top">
-<link href="Function-and-Variable-Index.html#Function-and-Variable-Index" rel="index" title="Function and Variable Index">
+<link href="index.html" rel="start" title="Top">
+<link href="Function-and-Variable-Index.html" rel="index" title="Function and Variable Index">
 <link href="Function-and-Variable-Index.html#SEC_Contents" rel="contents" title="Table of Contents">
-<link href="System-Definitions.html#System-Definitions" rel="up" title="System Definitions">
-<link href="Debugging.html#Debugging" rel="next" title="Debugging">
-<link href="System-Definitions.html#System-Definitions" rel="prev" title="System Definitions">
+<link href="System-Definitions.html" rel="up" title="System Definitions">
+<link href="Debugging.html" rel="next" title="Debugging">
+<link href="System-Definitions.html" rel="prev" title="System Definitions">
 <style type="text/css">
 <!--
 a.summary-letter {text-decoration: none}
-blockquote.smallquotation {font-size: smaller}
+blockquote.indentedblock {margin-right: 0em}
 div.display {margin-left: 3.2em}
 div.example {margin-left: 3.2em}
-div.indentedblock {margin-left: 3.2em}
 div.lisp {margin-left: 3.2em}
-div.smalldisplay {margin-left: 3.2em}
-div.smallexample {margin-left: 3.2em}
-div.smallindentedblock {margin-left: 3.2em; font-size: smaller}
-div.smalllisp {margin-left: 3.2em}
-kbd {font-style:oblique}
+kbd {font-style: oblique}
 pre.display {font-family: inherit}
 pre.format {font-family: inherit}
 pre.menu-comment {font-family: serif}
 pre.menu-preformatted {font-family: serif}
-pre.smalldisplay {font-family: inherit; font-size: smaller}
-pre.smallexample {font-size: smaller}
-pre.smallformat {font-family: inherit; font-size: smaller}
-pre.smalllisp {font-size: smaller}
-span.nocodebreak {white-space:nowrap}
-span.nolinebreak {white-space:nowrap}
-span.roman {font-family:serif; font-weight:normal}
-span.sansserif {font-family:sans-serif; font-weight:normal}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
 ul.no-bullet {list-style: none}
 -->
 </style>
@@ -48,15 +38,13 @@ ul.no-bullet {list-style: none}
 
 </head>
 
-<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
-<a name="Regular-Expressions"></a>
-<div class="header">
+<body lang="en">
+<span id="Regular-Expressions"></span><div class="header">
 <p>
-Previous: <a href="System-Definitions.html#System-Definitions" accesskey="p" rel="prev">System Definitions</a>, Up: <a href="System-Definitions.html#System-Definitions" accesskey="u" rel="up">System Definitions</a> &nbsp; [<a href="Function-and-Variable-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Function-and-Variable-Index.html#Function-and-Variable-Index" title="Index" rel="index">Index</a>]</p>
+Previous: <a href="System-Definitions.html" accesskey="p" rel="prev">System Definitions</a>, Up: <a href="System-Definitions.html" accesskey="u" rel="up">System Definitions</a> &nbsp; [<a href="Function-and-Variable-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Function-and-Variable-Index.html" title="Index" rel="index">Index</a>]</p>
 </div>
 <hr>
-<a name="Regular-Expressions-1"></a>
-<h3 class="section">17.1 Regular Expressions</h3>
+<span id="Regular-Expressions-1"></span><h3 class="section">17.1 Regular Expressions</h3>
 
 <p>The function <code>string-match</code> (*Index string-match::) is used to
 match a regular expression against a string.  If the variable
@@ -111,8 +99,7 @@ for the full list of ASCII characters between them
 </li></ul>
 </li></ul>
 
-<a name="Ordering-Multiple-Matches"></a>
-<h4 class="unnumberedsubsec">Ordering Multiple Matches</h4>
+<span id="Ordering-Multiple-Matches"></span><h4 class="unnumberedsubsec">Ordering Multiple Matches</h4>
 
 <p>In general there may be more than one way to match a regular expression
 to an input string.  For example, consider the command
@@ -202,7 +189,7 @@ follow an atom if it is interpreted as a regular expression.
 <hr>
 <div class="header">
 <p>
-Previous: <a href="System-Definitions.html#System-Definitions" accesskey="p" rel="prev">System Definitions</a>, Up: <a href="System-Definitions.html#System-Definitions" accesskey="u" rel="up">System Definitions</a> &nbsp; [<a href="Function-and-Variable-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Function-and-Variable-Index.html#Function-and-Variable-Index" title="Index" rel="index">Index</a>]</p>
+Previous: <a href="System-Definitions.html" accesskey="p" rel="prev">System Definitions</a>, Up: <a href="System-Definitions.html" accesskey="u" rel="up">System Definitions</a> &nbsp; [<a href="Function-and-Variable-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Function-and-Variable-Index.html" title="Index" rel="index">Index</a>]</p>
 </div>
 
 

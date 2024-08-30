@@ -22,19 +22,13 @@ void segmentation_catcher();
 EXTER int gc_enabled, saving_system;
 
 EXTER object lisp_package,user_package;
-#ifdef ANSI_COMMON_LISP
-EXTER object common_lisp_package;
-#endif
 EXTER char *core_end;
 EXTER int catch_fatal;
 EXTER long real_maxpage;
 char *getenv();
 EXTER char *this_lisp;
 
-#ifndef IN_MAIN
-EXTER
-char stdin_buf[], stdout_buf[];
-#endif
+EXTER char stdin_buf[],stdout_buf[];
 
 EXTER object user_package;
 
@@ -52,12 +46,6 @@ EXTER object user_package;
   while(_i++ <= max) { if (_i > _nargs) *__p++ = Cnil; \
 			 else *__p++ = va_arg(ap,object);} \
   va_end(ap)
-
-/*  #undef endp */
-
-/*  #define	endp(obje)	((enum type)((endp_temp = (obje))->d.t) == t_cons ? \ */
-/*  			 FALSE : endp_temp == Cnil ? TRUE : \ */
-/*  			 endp1(endp_temp)) */
 
 #ifndef NO_DEFUN
 #undef DEFUN
@@ -95,6 +83,7 @@ void old(void) \
 #undef FFD
 #undef STATD
 #undef make_function
+#undef make_macro_function
 #undef make_si_function
 #undef make_si_sfun
 #undef make_special_form
@@ -103,8 +92,10 @@ void old(void) \
 #define LFD(a_) static void FFN(a_) (); void a_  () { FFN(a_)();} static void FFN(a_)
 #define FFD(a_) static void FFN(a_) (object); void a_  (object x) { FFN(a_)(x);} static void FFN(a_)
 #define make_function(a_,b_) make_function_internal(a_,FFN(b_))
+#define make_macro_function(a_,b_) make_macro_internal(a_,FFN(b_))
 #define make_si_function(a_,b_) make_si_function_internal(a_,FFN(b_))
 #define make_special_form(a_,b_) make_special_form_internal(a_,FFN(b_))
+#define make_si_special_form(a_,b_) make_si_special_form_internal(a_,FFN(b_))
 #define make_si_sfun(a_,b_,c_) make_si_sfun_internal(a_,FFN(b_),c_)
 #define STATD static
 #else
@@ -112,8 +103,10 @@ void old(void) \
 #define LFD(a_) void a_
 #define FFD(a_) void a_
 #define make_function(a_,b_) make_function_internal(a_,b_)
+#define make_macro_function(a_,b_) make_macro_internal(a_,b_)
 #define make_si_function(a_,b_) make_si_function_internal(a_,b_)
 #define make_special_form(a_,b_) make_special_form_internal(a_,b_)
+#define make_si_special_form(a_,b_) make_si_special_form_internal(a_,b_)
 #define make_si_sfun(a_,b_,c_) make_si_sfun_internal(a_,b_,c_)
 #define STATD
 #endif
@@ -185,7 +178,7 @@ TS_MEMBER(t0,TS(t1)|TS(t2)|TS(t3)...)
 #define TS(s) (1<<s)
 #define TS_MEMBER(t1,ts) ((TS(t1)) & (ts))
 
-#define ASSURE_TYPE(val,t) if(type_of(val)!=t) val= Icheck_one_type(val,t)
+#define ASSURE_TYPE(val,t) if (type_of(val)!=t) TYPE_ERROR(val,type_name(t))
 
 object IisArray();
 
@@ -238,7 +231,7 @@ EXTER  bool left_trim;
 EXTER bool right_trim;
 int  (*casefun)();
 
-#define	Q_SIZE		128
+#define	Q_SIZE		256
 #define IS_SIZE		256
 
 struct printStruct {
@@ -293,10 +286,12 @@ gcl_init_cmp_anon(void);
 #ifdef SGC
 #define SAFE_READ(a_,b_,c_) \
    ({int _a=(a_),_c=(c_);char *_b=(b_);extern int sgc_enabled;\
-     if (sgc_enabled) memset(_b,0,_c);read(_a,_b,_c);})
+     if (sgc_enabled) memset(_b,0,_c); \
+     read(_a,_b,_c);})
 #define SAFE_FREAD(a_,b_,c_,d_) \
    ({int _b=(b_),_c=(c_);char *_a=(a_);FILE *_d=(d_);extern int sgc_enabled; \
-     if (sgc_enabled) memset(_a,0,_b*_c);fread(_a,_b,_c,_d);})
+     if (sgc_enabled) memset(_a,0,_b*_c); \
+     fread(_a,_b,_c,_d);})
 #else
 #define SAFE_READ(a_,b_,c_) read((a_),(b_),(c_))
 #define SAFE_FREAD(a_,b_,c_,d_) fread((a_),(b_),(c_),(d_))
@@ -304,7 +299,12 @@ gcl_init_cmp_anon(void);
 
 #include "gmp_wrappers.h"
 
-#define massert(a_) if (!(a_)) assert_error(#a_,__LINE__,__FILE__,__FUNCTION__)
+char FN1[PATH_MAX],FN2[PATH_MAX],FN3[PATH_MAX],FN4[PATH_MAX],FN5[PATH_MAX];
+
+#define coerce_to_filename(a_,b_) coerce_to_filename1(a_,b_,sizeof(b_))
+
+#include <errno.h>
+#define massert(a_) ({errno=0;if (!(a_)) assert_error(#a_,__LINE__,__FILE__,__FUNCTION__);})
 
 extern bool writable_malloc;
 #define writable_malloc_wrap(f_,rt_,a_...) ({rt_ v;bool w=writable_malloc;writable_malloc=1;v=f_(a_);writable_malloc=w;v;})
@@ -364,7 +364,21 @@ extern bool writable_malloc;
 #define prof_block(x) x
 #endif
 
-#define psystem(x) prof_block(system(x))
+#define psystem(x) prof_block(vsystem(x))
 #define pfork() prof_block(fork())
+#define pvfork() prof_block(vfork())
 
 #include "error.h"
+
+#if __GNU_MP_VERSION > 4 || (__GNU_MP_VERSION == 4 && __GNU_MP_VERSION_MINOR >= 2)
+extern void __gmp_randget_mt ();
+extern void __gmp_randclear_mt ();
+extern void __gmp_randiset_mt ();
+
+typedef struct {void *a,*b,*c,*d;} gmp_randfnptr_t;
+EXTER gmp_randfnptr_t Mersenne_Twister_Generator_Noseed;
+#endif
+
+#define collect(p_,f_) (p_)=&(*(p_)=(f_))->c.c_cdr
+#define READ_STREAM_OR_FASD(strm_) \
+  type_of(strm_)==t_stream ? read_object_non_recursive(strm_) : fSread_fasd_top(strm_)

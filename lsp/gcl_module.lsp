@@ -22,13 +22,7 @@
 ;;;;                            module routines
 
 
-(in-package 'lisp)
-
-(export '(*modules* provide require))
-(export 'documentation)
-(export '(variable function structure type setf))
-
-(in-package 'system)
+(in-package :si)
 
 
 (eval-when (compile) (proclaim '(optimize (safety 2) (space 3))))
@@ -46,13 +40,13 @@
 
 (defun require (module-name
                 &optional (pathname (string-downcase (string module-name))))
-  (let ((*default-pathname-defaults* #""))
+  (let ((*default-pathname-defaults* (make-pathname)))
     (unless (member (string module-name)
                     *modules*
                     :test #'string=)
             (if (atom pathname)
                 (load pathname)
-                (do ((p pathname (cdr p)))
+	      (do ((p pathname (cdr p)))
                     ((endp p))
                   (load (car p)))))))
           

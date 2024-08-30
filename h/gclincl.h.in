@@ -9,7 +9,7 @@
 /* punt guess for no randomize value */
 #undef ADDR_NO_RANDOMIZE
 
-/* compile ansi compliant image */
+/* ANSI compliant image */
 #undef ANSI_COMMON_LISP
 
 /* binding stack size */
@@ -21,10 +21,11 @@
 /* can prevent sbrk from returning random values */
 #undef CAN_UNRANDOMIZE_SBRK
 
-/* Define to one of `_getb67', `GETB67', `getb67' for Cray-2 and Cray-YMP
-   systems. This function is required for `alloca.c' support on those systems.
-   */
-#undef CRAY_STACKSEG_END
+/* running clang compiler */
+#undef CLANG
+
+/* cstack max */
+#undef CSTACKMAX
 
 /* starting C stack address */
 #undef CSTACK_ADDRESS
@@ -38,7 +39,7 @@
 /* whether C stack grows up or down */
 #undef CSTACK_DIRECTION
 
-/* Define to 1 if using `alloca.c'. */
+/* Define to 1 if using 'alloca.c'. */
 #undef C_ALLOCA
 
 /* debug safecdr code */
@@ -53,20 +54,16 @@
 /* use gprof profiling */
 #undef GCL_GPROF
 
-/* starting address for gprof */
-#undef GCL_GPROF_START
-
 /* No gettimeofday call -- fixme */
 #undef GETTOD_NOT_DECLARED
 
 /* using gmp */
 #undef GMP
 
-/* Define to 1 if you have `alloca', as a function or macro. */
+/* Define to 1 if you have 'alloca', as a function or macro. */
 #undef HAVE_ALLOCA
 
-/* Define to 1 if you have <alloca.h> and it should be used (not on Ultrix).
-   */
+/* Define to 1 if <alloca.h> works. */
 #undef HAVE_ALLOCA_H
 
 /* Define to 1 if you have the <asm/sigcontext.h> header file. */
@@ -153,6 +150,9 @@
 /* use libbfd */
 #undef HAVE_LIBBFD
 
+/* Define to 1 if you have the `dl' library (-ldl). */
+#undef HAVE_LIBDL
+
 /* Define to 1 if you have the `opcodes' library (-lopcodes). */
 #undef HAVE_LIBOPCODES
 
@@ -168,9 +168,6 @@
 /* Define to 1 if you have the <math.h> header file. */
 #undef HAVE_MATH_H
 
-/* Define to 1 if you have the <memory.h> header file. */
-#undef HAVE_MEMORY_H
-
 /* Define to 1 if you have the `mprotect' function. */
 #undef HAVE_MPROTECT
 
@@ -180,14 +177,8 @@
 /* output_bfd element present */
 #undef HAVE_OUTPUT_BFD
 
-/* Define to 1 if you have the `print_insn_i386' function. */
-#undef HAVE_PRINT_INSN_I386
-
 /* have putenv call */
 #undef HAVE_PUTENV
-
-/* have readline library */
-#undef HAVE_READLINE
 
 /* Define to 1 if you have the <readline/readline.h> header file. */
 #undef HAVE_READLINE_READLINE_H
@@ -216,6 +207,9 @@
 /* Define to 1 if you have the <stdint.h> header file. */
 #undef HAVE_STDINT_H
 
+/* Define to 1 if you have the <stdio.h> header file. */
+#undef HAVE_STDIO_H
+
 /* Define to 1 if you have the <stdlib.h> header file. */
 #undef HAVE_STDLIB_H
 
@@ -240,8 +234,14 @@
 /* Define to 1 if you have the <sys/stat.h> header file. */
 #undef HAVE_SYS_STAT_H
 
+/* Define to 1 if you have the <sys/time.h> header file. */
+#undef HAVE_SYS_TIME_H
+
 /* Define to 1 if you have the <sys/types.h> header file. */
 #undef HAVE_SYS_TYPES_H
+
+/* Define to 1 if you have the <time.h> header file. */
+#undef HAVE_TIME_H
 
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
@@ -255,9 +255,6 @@
 /* using xgcl */
 #undef HAVE_XGCL
 
-/* number of pages to use for hole */
-#undef HOLEPAGE
-
 /* Host cpu */
 #undef HOST_CPU
 
@@ -266,9 +263,6 @@
 
 /* Host system */
 #undef HOST_SYSTEM
-
-/* time system constant */
-#undef HZ
 
 /* invocation history stack size */
 #undef IHSSIZE
@@ -321,8 +315,14 @@
 /* can use C extension for object alignment */
 #undef OBJ_ALIGN
 
-/* needed object alignment in bytes */
+/* needed object alignment bytes */
 #undef OBJ_ALIGNMENT
+
+/* extern inline semantics */
+#undef OLD_INLINE
+
+/* bfd output arch */
+#undef OUTPUT_ARCH
 
 /* Define to the address where bug reports for this package should be sent. */
 #undef PACKAGE_BUGREPORT
@@ -345,7 +345,25 @@
 /* system pagewidth */
 #undef PAGEWIDTH
 
-/* have sigcontext in signal.h */
+/* readline is editline */
+#undef READLINE_IS_EDITLINE
+
+/* rl_completion_entry_function returns type Function */
+#undef RL_COMPLETION_ENTRY_FUNCTION_TYPE_FUNCTION
+
+/* rl_completion_entry_function returns type rl_compentry_func_t */
+#undef RL_COMPLETION_ENTRY_FUNCTION_TYPE_RL_COMPENTRY_FUNC_T
+
+/* rl_readline_name returns type char */
+#undef RL_READLINE_NAME_TYPE_CHAR
+
+/* rl_readline_name returns type const char */
+#undef RL_READLINE_NAME_TYPE_CONST_CHAR
+
+/* asm string to set the stack pointer */
+#undef SET_STACK_POINTER
+
+/* have sigcontext of signal.h */
 #undef SIGNAL_H_HAS_SIGCONTEXT
 
 /* sizeof linked list for contiguous pages */
@@ -356,6 +374,9 @@
 
 /* The size of `long', as computed by sizeof. */
 #undef SIZEOF_LONG
+
+/* The size of `time_t', as computed by sizeof. */
+#undef SIZEOF_TIME_T
 
 /* If using the C implementation of alloca, define if you know the
    direction of stack growth for your system; otherwise it will be
@@ -368,7 +389,9 @@
 /* staticly linked images */
 #undef STATIC_LINKING
 
-/* Define to 1 if you have the ANSI C header files. */
+/* Define to 1 if all of the C90 standard headers exist (not just the ones
+   required in a freestanding environment). This macro is provided for
+   backward compatibility; new code need not use it. */
 #undef STDC_HEADERS
 
 /* have _cleanup function */
@@ -379,6 +402,9 @@
 
 /* use fionbio for non-blocking io */
 #undef USE_FIONBIO
+
+/* use readline library */
+#undef USE_READLINE
 
 /* protect cdr from immfix and speed up type processing */
 #undef USE_SAFE_CDR

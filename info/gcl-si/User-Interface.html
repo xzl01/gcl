@@ -1,46 +1,36 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<!-- Created by GNU Texinfo 5.2, http://www.gnu.org/software/texinfo/ -->
+<!-- Created by GNU Texinfo 6.7, http://www.gnu.org/software/texinfo/ -->
 <head>
-<title>GCL SI Manual: User Interface</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>User Interface (GCL SI Manual)</title>
 
-<meta name="description" content="GCL SI Manual: User Interface">
-<meta name="keywords" content="GCL SI Manual: User Interface">
+<meta name="description" content="User Interface (GCL SI Manual)">
+<meta name="keywords" content="User Interface (GCL SI Manual)">
 <meta name="resource-type" content="document">
 <meta name="distribution" content="global">
 <meta name="Generator" content="makeinfo">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link href="index.html#Top" rel="start" title="Top">
-<link href="Function-and-Variable-Index.html#Function-and-Variable-Index" rel="index" title="Function and Variable Index">
+<link href="index.html" rel="start" title="Top">
+<link href="Function-and-Variable-Index.html" rel="index" title="Function and Variable Index">
 <link href="Function-and-Variable-Index.html#SEC_Contents" rel="contents" title="Table of Contents">
-<link href="index.html#Top" rel="up" title="Top">
-<link href="Doc.html#Doc" rel="next" title="Doc">
-<link href="Iteration-and-Tests.html#Iteration-and-Tests" rel="prev" title="Iteration and Tests">
+<link href="index.html" rel="up" title="Top">
+<link href="Doc.html" rel="next" title="Doc">
+<link href="Iteration-and-Tests.html" rel="prev" title="Iteration and Tests">
 <style type="text/css">
 <!--
 a.summary-letter {text-decoration: none}
-blockquote.smallquotation {font-size: smaller}
+blockquote.indentedblock {margin-right: 0em}
 div.display {margin-left: 3.2em}
 div.example {margin-left: 3.2em}
-div.indentedblock {margin-left: 3.2em}
 div.lisp {margin-left: 3.2em}
-div.smalldisplay {margin-left: 3.2em}
-div.smallexample {margin-left: 3.2em}
-div.smallindentedblock {margin-left: 3.2em; font-size: smaller}
-div.smalllisp {margin-left: 3.2em}
-kbd {font-style:oblique}
+kbd {font-style: oblique}
 pre.display {font-family: inherit}
 pre.format {font-family: inherit}
 pre.menu-comment {font-family: serif}
 pre.menu-preformatted {font-family: serif}
-pre.smalldisplay {font-family: inherit; font-size: smaller}
-pre.smallexample {font-size: smaller}
-pre.smallformat {font-family: inherit; font-size: smaller}
-pre.smalllisp {font-size: smaller}
-span.nocodebreak {white-space:nowrap}
-span.nolinebreak {white-space:nowrap}
-span.roman {font-family:serif; font-weight:normal}
-span.sansserif {font-family:sans-serif; font-weight:normal}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
 ul.no-bullet {list-style: none}
 -->
 </style>
@@ -48,18 +38,16 @@ ul.no-bullet {list-style: none}
 
 </head>
 
-<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
-<a name="User-Interface"></a>
-<div class="header">
+<body lang="en">
+<span id="User-Interface"></span><div class="header">
 <p>
-Next: <a href="Doc.html#Doc" accesskey="n" rel="next">Doc</a>, Previous: <a href="Iteration-and-Tests.html#Iteration-and-Tests" accesskey="p" rel="prev">Iteration and Tests</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Function-and-Variable-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Function-and-Variable-Index.html#Function-and-Variable-Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="Doc.html" accesskey="n" rel="next">Doc</a>, Previous: <a href="Iteration-and-Tests.html" accesskey="p" rel="prev">Iteration and Tests</a>, Up: <a href="index.html" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Function-and-Variable-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Function-and-Variable-Index.html" title="Index" rel="index">Index</a>]</p>
 </div>
 <hr>
-<a name="User-Interface-1"></a>
-<h2 class="chapter">12 User Interface</h2>
+<span id="User-Interface-1"></span><h2 class="chapter">12 User Interface</h2>
 
 <dl>
-<dt><a name="index-_002d-1"></a>Special Variable: <strong>-</strong></dt>
+<dt id="index-_002d-1">Special Variable: <strong>-</strong></dt>
 <dd><p>Package:LISP
 Holds the top-level form that GCL is currently evaluating.
 </p>
@@ -67,7 +55,7 @@ Holds the top-level form that GCL is currently evaluating.
 </dd></dl>
 
 <dl>
-<dt><a name="index-_002d"></a>Function: <strong>-</strong> <em>(number &amp;rest more-numbers)</em></dt>
+<dt id="index-_002d">Function: <strong>-</strong> <em>(number &amp;rest more-numbers)</em></dt>
 <dd><p>Package:LISP
 </p>
 <p>Subtracts the second and all subsequent NUMBERs from the first NUMBER.
@@ -77,7 +65,7 @@ With one arg, negates it.
 </dd></dl>
 
 <dl>
-<dt><a name="index-UNTRACE"></a>Macro: <strong>UNTRACE</strong></dt>
+<dt id="index-UNTRACE">Macro: <strong>UNTRACE</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -92,7 +80,7 @@ untraces all functions.
 </dd></dl>
 
 <dl>
-<dt><a name="index-_002a_002a_002a"></a>Variable: <strong>***</strong></dt>
+<dt id="index-_002a_002a_002a">Variable: <strong>***</strong></dt>
 <dd><p>Package:LISP
 Gets the previous value of ** when GCL evaluates a top-level form.
 </p>
@@ -100,7 +88,7 @@ Gets the previous value of ** when GCL evaluates a top-level form.
 </dd></dl>
 
 <dl>
-<dt><a name="index-MAKE_002dSTRING_002dINPUT_002dSTREAM-1"></a>Function: <strong>MAKE-STRING-INPUT-STREAM</strong> <em>(string &amp;optional (start 0) (end (length string)))</em></dt>
+<dt id="index-MAKE_002dSTRING_002dINPUT_002dSTREAM-1">Function: <strong>MAKE-STRING-INPUT-STREAM</strong> <em>(string &amp;optional (start 0) (end (length string)))</em></dt>
 <dd><p>Package:LISP
 </p>
 <p>Returns an input stream which will supply the characters of String between
@@ -110,7 +98,7 @@ Start and End in order.
 </dd></dl>
 
 <dl>
-<dt><a name="index-STEP"></a>Macro: <strong>STEP</strong></dt>
+<dt id="index-STEP">Macro: <strong>STEP</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -124,7 +112,7 @@ Start and End in order.
 </dd></dl>
 
 <dl>
-<dt><a name="index-_002aBREAK_002dENABLE_002a"></a>Variable: <strong>*BREAK-ENABLE*</strong></dt>
+<dt id="index-_002aBREAK_002dENABLE_002a">Variable: <strong>*BREAK-ENABLE*</strong></dt>
 <dd><p>Package:LISP
 GCL specific:  When an error occurrs, control enters to the break loop only
 if the value of this variable is non-NIL.
@@ -133,7 +121,7 @@ if the value of this variable is non-NIL.
 </dd></dl>
 
 <dl>
-<dt><a name="index-_002f-1"></a>Special Variable: <strong>/</strong></dt>
+<dt id="index-_002f-1">Special Variable: <strong>/</strong></dt>
 <dd><p>Package:LISP
 Holds a list of the values of the last top-level form.
 </p>
@@ -141,7 +129,7 @@ Holds a list of the values of the last top-level form.
 </dd></dl>
 
 <dl>
-<dt><a name="index-DESCRIBE"></a>Function: <strong>DESCRIBE</strong> <em>(x)</em></dt>
+<dt id="index-DESCRIBE">Function: <strong>DESCRIBE</strong> <em>(x)</em></dt>
 <dd><p>Package:LISP
 </p>
 <p>Prints a description of the object X.
@@ -150,7 +138,7 @@ Holds a list of the values of the last top-level form.
 </dd></dl>
 
 <dl>
-<dt><a name="index-ED"></a>Function: <strong>ED</strong> <em>(&amp;optional x)</em></dt>
+<dt id="index-ED">Function: <strong>ED</strong> <em>(&amp;optional x)</em></dt>
 <dd><p>Package:LISP
 </p>
 <p>Invokes the editor.  The action depends on the version of GCL.  
@@ -159,7 +147,7 @@ Holds a list of the values of the last top-level form.
 </dd></dl>
 
 <dl>
-<dt><a name="index-_002aDEBUG_002dIO_002a"></a>Variable: <strong>*DEBUG-IO*</strong></dt>
+<dt id="index-_002aDEBUG_002dIO_002a">Variable: <strong>*DEBUG-IO*</strong></dt>
 <dd><p>Package:LISP
 Holds the I/O stream used by the GCL debugger.
 </p>
@@ -167,7 +155,7 @@ Holds the I/O stream used by the GCL debugger.
 </dd></dl>
 
 <dl>
-<dt><a name="index-_002aBREAK_002dON_002dWARNINGS_002a"></a>Variable: <strong>*BREAK-ON-WARNINGS*</strong></dt>
+<dt id="index-_002aBREAK_002dON_002dWARNINGS_002a">Variable: <strong>*BREAK-ON-WARNINGS*</strong></dt>
 <dd><p>Package:LISP
 When the function WARN is called, control enters to the break loop only
 if the value of this varialbe is non-NIL.
@@ -176,7 +164,7 @@ if the value of this varialbe is non-NIL.
 </dd></dl>
 
 <dl>
-<dt><a name="index-CERROR"></a>Function: <strong>CERROR</strong> <em>(continue-format-string error-format-string &amp;rest args)</em></dt>
+<dt id="index-CERROR">Function: <strong>CERROR</strong> <em>(continue-format-string error-format-string &amp;rest args)</em></dt>
 <dd><p>Package:LISP
 </p>
 <p>Signals a correctable error.
@@ -185,7 +173,7 @@ if the value of this varialbe is non-NIL.
 </dd></dl>
 
 <dl>
-<dt><a name="index-_002a_002a"></a>Variable: <strong>**</strong></dt>
+<dt id="index-_002a_002a">Variable: <strong>**</strong></dt>
 <dd><p>Package:LISP
 Gets the previous value of * when GCL evaluates a top-level form.
 </p>
@@ -193,7 +181,7 @@ Gets the previous value of * when GCL evaluates a top-level form.
 </dd></dl>
 
 <dl>
-<dt><a name="index-_002b_002b_002b"></a>Special Variable: <strong>+++</strong></dt>
+<dt id="index-_002b_002b_002b">Special Variable: <strong>+++</strong></dt>
 <dd><p>Package:LISP
 Gets the previous value of ++ when GCL evaluates a top-level form.
 </p>
@@ -201,7 +189,7 @@ Gets the previous value of ++ when GCL evaluates a top-level form.
 </dd></dl>
 
 <dl>
-<dt><a name="index-INSPECT"></a>Function: <strong>INSPECT</strong> <em>(x)</em></dt>
+<dt id="index-INSPECT">Function: <strong>INSPECT</strong> <em>(x)</em></dt>
 <dd><p>Package:LISP
 </p>
 <p>Shows the information about the object X in an interactive manner
@@ -210,7 +198,7 @@ Gets the previous value of ++ when GCL evaluates a top-level form.
 </dd></dl>
 
 <dl>
-<dt><a name="index-_002f_002f"></a>Special Variable: <strong>//</strong></dt>
+<dt id="index-_002f_002f">Special Variable: <strong>//</strong></dt>
 <dd><p>Package:LISP
 Gets the previous value of / when GCL evaluates a top-level form.
 </p>
@@ -218,7 +206,7 @@ Gets the previous value of / when GCL evaluates a top-level form.
 </dd></dl>
 
 <dl>
-<dt><a name="index-_002aTRACE_002dOUTPUT_002a"></a>Variable: <strong>*TRACE-OUTPUT*</strong></dt>
+<dt id="index-_002aTRACE_002dOUTPUT_002a">Variable: <strong>*TRACE-OUTPUT*</strong></dt>
 <dd><p>Package:LISP
 The trace output stream.
 </p>
@@ -226,7 +214,7 @@ The trace output stream.
 </dd></dl>
 
 <dl>
-<dt><a name="index-_002b_002b"></a>Special Variable: <strong>++</strong></dt>
+<dt id="index-_002b_002b">Special Variable: <strong>++</strong></dt>
 <dd><p>Package:LISP
 Gets the previous value of + when GCL evaluates a top-level form.
 </p>
@@ -234,7 +222,7 @@ Gets the previous value of + when GCL evaluates a top-level form.
 </dd></dl>
 
 <dl>
-<dt><a name="index-_002aERROR_002dOUTPUT_002a"></a>Variable: <strong>*ERROR-OUTPUT*</strong></dt>
+<dt id="index-_002aERROR_002dOUTPUT_002a">Variable: <strong>*ERROR-OUTPUT*</strong></dt>
 <dd><p>Package:LISP
 Holds the output stream for error messages.
 </p>
@@ -242,7 +230,7 @@ Holds the output stream for error messages.
 </dd></dl>
 
 <dl>
-<dt><a name="index-DRIBBLE"></a>Function: <strong>DRIBBLE</strong> <em>(&amp;optional pathname)</em></dt>
+<dt id="index-DRIBBLE">Function: <strong>DRIBBLE</strong> <em>(&amp;optional pathname)</em></dt>
 <dd><p>Package:LISP
 </p>
 <p>If PATHNAME is given, begins to record the interaction to the specified file.
@@ -252,7 +240,7 @@ If PATHNAME is not given, ends the recording.
 </dd></dl>
 
 <dl>
-<dt><a name="index-_002a-1"></a>Variable: <strong>*</strong></dt>
+<dt id="index-_002a-1">Variable: <strong>*</strong></dt>
 <dd><p>Package:LISP
 Holds the value of the last top-level form.
 </p>
@@ -260,7 +248,7 @@ Holds the value of the last top-level form.
 </dd></dl>
 
 <dl>
-<dt><a name="index-_002f_002f_002f"></a>Special Variable: <strong>///</strong></dt>
+<dt id="index-_002f_002f_002f">Special Variable: <strong>///</strong></dt>
 <dd><p>Package:LISP
 Gets the previous value of // when GCL evaluates a top-level form.
 </p>
@@ -268,7 +256,7 @@ Gets the previous value of // when GCL evaluates a top-level form.
 </dd></dl>
 
 <dl>
-<dt><a name="index-WARN"></a>Function: <strong>WARN</strong> <em>(format-string &amp;rest args)</em></dt>
+<dt id="index-WARN">Function: <strong>WARN</strong> <em>(format-string &amp;rest args)</em></dt>
 <dd><p>Package:LISP
 </p>
 <p>Formats FORMAT-STRING and ARGs to *ERROR-OUTPUT* as a warning message.
@@ -277,7 +265,7 @@ Gets the previous value of // when GCL evaluates a top-level form.
 </dd></dl>
 
 <dl>
-<dt><a name="index-BREAK"></a>Function: <strong>BREAK</strong> <em>(&amp;optional (format-string nil) &amp;rest args)</em></dt>
+<dt id="index-BREAK">Function: <strong>BREAK</strong> <em>(&amp;optional (format-string nil) &amp;rest args)</em></dt>
 <dd><p>Package:LISP
 </p>
 <p>Enters a break loop.  If FORMAT-STRING is non-NIL, formats FORMAT-STRING
@@ -288,7 +276,7 @@ Typing :HELP at the break loop will list the break-loop commands.
 </dd></dl>
 
 <dl>
-<dt><a name="index-_002b-1"></a>Special Variable: <strong>+</strong></dt>
+<dt id="index-_002b-1">Special Variable: <strong>+</strong></dt>
 <dd><p>Package:LISP
 Holds the last top-level form.
 </p>
@@ -296,7 +284,7 @@ Holds the last top-level form.
 </dd></dl>
 
 <dl>
-<dt><a name="index-TRACE"></a>Macro: <strong>TRACE</strong></dt>
+<dt id="index-TRACE">Macro: <strong>TRACE</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -476,7 +464,7 @@ evaluated, and the call is not traced.
 <hr>
 <div class="header">
 <p>
-Next: <a href="Doc.html#Doc" accesskey="n" rel="next">Doc</a>, Previous: <a href="Iteration-and-Tests.html#Iteration-and-Tests" accesskey="p" rel="prev">Iteration and Tests</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Function-and-Variable-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Function-and-Variable-Index.html#Function-and-Variable-Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="Doc.html" accesskey="n" rel="next">Doc</a>, Previous: <a href="Iteration-and-Tests.html" accesskey="p" rel="prev">Iteration and Tests</a>, Up: <a href="index.html" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Function-and-Variable-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Function-and-Variable-Index.html" title="Index" rel="index">Index</a>]</p>
 </div>
 
 

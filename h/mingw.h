@@ -26,33 +26,11 @@
 #define f_nsyms NumberOfSymbols
 #define NO_PWD_H
 
-#define MAXPATHLEN 512
-
-/* alter pathToAlter to fit in with the Clibrary of the system.
-   and report error using name 'x' if you cant do it.
-   The result in pathToAlter should be less
-*/   
-#define FIX_FILENAME(x,pathToAlter) fix_filename(x,pathToAlter)
-
-#define MEMORY_SAVE(self,filename) \
-  do { char buf[MAXPATHLEN]; \
-       strcpy(buf,self); \
-       fix_filename(Cnil,buf); \
-       memory_save(buf,filename); \
-       } while (0)
-
 #define signals_pending *signalsPendingPtr
 
 #undef DBEGIN_TY
 #define DBEGIN_TY unsigned int
 extern DBEGIN_TY _stacktop, _stackbottom, _dbegin;
-
-/* define if there is no _cleanup,   do here what needs
-   to be done before calling unexec
-   */   
-#define CLEANUP_CODE \
-  setbuf(stdin,0); \
-  setbuf(stdout,0);
 
 #define NO_SYS_PARAM_H
 #define NO_SYS_TIMES_H
@@ -220,7 +198,7 @@ extern int mingwlisten(FILE *);
 
 #define NOFREE_ERR
 
-#define FPE_CODE(i_,v_) make_fixnum(fSfpe_code(FFN(fSfnstsw)(),FFN(fSstmxcsr)()))
+#define FPE_CODE(i_,v_) make_fixnum((long)fSfpe_code((long)FFN(fSfnstsw)(),(long)FFN(fSstmxcsr)()))
 #define FPE_ADDR(i_,v_) make_fixnum(0)
 #define FPE_CTXT(v_) Cnil
 
@@ -243,3 +221,4 @@ extern int mingwlisten(FILE *);
 #include <limits.h>
 
 
+#define NO_FILE_LOCKING /*FIXME*/

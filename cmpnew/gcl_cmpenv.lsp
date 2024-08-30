@@ -19,7 +19,7 @@
 ;; Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 
 
-(in-package 'compiler)
+(in-package :compiler)
 
 (defvar *safe-compile* nil)
 (defvar *compiler-check-args* nil)
@@ -49,7 +49,6 @@
   (setq *reservations* nil)
   (setq *closures* nil)
   (setq *top-level-forms* nil)
-  (setq *non-package-operation* nil)
   (setq *function-declarations* nil)
   (setq *inline-functions* nil)
   (setq *inline-blocks* 0)
@@ -71,12 +70,10 @@
 (defun add-symbol (symbol) (add-object symbol))
 
 (defun add-object2 (object)
-  (let* ((init (when (si::contains-sharp-comma object)
-		 (if (when (consp object) (eq (car object) 'si::|#,|))
-		     (cdr object) (si::string-to-object (wt-to-string object)))))
+  (let* ((init (if (when (consp object) (eq (car object) '|#,|)) (cdr object) `',object))
 	 (object (if (when (consp init) (eq (car init) 'si::nani)) (si::nani (cadr init)) object)))
     (cond ((gethash object *objects*))
-	  ((push-data-incf (unless init object))
+	  ((push-data-incf nil)
 	   (when init (add-init `(si::setvv ,*next-vv* ,init)))
 	   (setf (gethash object *objects*) *next-vv*)))))
 
@@ -337,7 +334,7 @@
       readtable sequence short-float simple-array simple-bit-vector
       simple-string simple-vector single-float standard-char stream string
       dynamic-extent :dynamic-extent
-      string-char symbol t vector signed-byte unsigned-byte)
+      symbol t vector signed-byte unsigned-byte)
      (proclaim-var (car decl) (cdr decl)))
     (otherwise
      (unless (member (car decl) *alien-declarations*)
@@ -366,13 +363,17 @@
           (t
            (warn "The variable name ~s is not a symbol." var)))))
 
+(defun mexpand-deftype (tp &aux (l (listp tp))(i (when l (cdr tp)))(tp (if l (car tp) tp)))
+  (when (symbolp tp)
+    (let ((fn (get tp 'si::deftype-definition)))
+      (when fn
+	(apply fn i)))))
+
 (defun c1body (body doc-p &aux (ss nil) (is nil) (ts nil) (others nil)
                     doc form)
   (loop
     (when (endp body) (return))
-    (setq form (cmp-macroexpand (car body)))
-    (when (and (consp form) (eq (car form) 'load-time-value))
-      (setq form (cmp-eval form)))
+    (setq form (car body))
     (cond
      ((stringp form)
       (when (or (null doc-p) (endp (cdr body)) doc) (return))
@@ -383,10 +384,8 @@
 ;;; 20040320 CM		
 		(cmpck (not (consp decl))
 		       "The declaration ~s is illegal." decl)
-		(let* ((dtype (car decl)))
-;; Can process user deftypes here in the future -- 20040318 CM
-;;		       (dft (and (symbolp dtype) (get dtype 'si::deftype-definition)))
-;;		       (dtype (or (and dft (funcall dft)) dtype)))
+		(let* ((dtype (car decl))
+		       (dtype (or (mexpand-deftype dtype) dtype)))
 		  (if (consp dtype)
 		    (let ((stype (car dtype)))
 		      (cmpck (or (not (symbolp stype)) (cdddr dtype)) "The declaration ~s is illegal." decl)
@@ -449,7 +448,7 @@
 				 integer keyword list long-float nil null number package pathname
 				 random-state ratio rational readtable sequence simple-array
 				 simple-bit-vector simple-string simple-base-string simple-vector single-float
-				 standard-char stream string string-char symbol t vector
+				 standard-char stream string symbol t vector
 				 signed-byte unsigned-byte)
 			 (let ((type (type-filter stype)))
 			   (when type
@@ -667,7 +666,7 @@
       readtable sequence short-float simple-array simple-bit-vector
       simple-string simple-vector single-float standard-char stream string
       dynamic-extent :dynamic-extent
-      string-char symbol t vector signed-byte unsigned-byte)
+      symbol t vector signed-byte unsigned-byte)
      (let ((type (type-filter (car decl))))
           (dolist** (var (cdr decl) t)
             (if (symbolp var)

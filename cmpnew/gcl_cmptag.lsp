@@ -19,7 +19,7 @@
 ;; Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 
 
-(in-package 'compiler)
+(in-package :compiler)
 (import 'si::switch)
 (import 'si::switch-finish)
 
@@ -62,6 +62,7 @@
 	((and (eq (car clause) 'go)
 	      (tag-p (setq tem (cadddr (cdr clause))))
 	      (eq (tag-name tem) tag-name)))
+	((eq (car clause) 'location) nil)
 	(t (or (jumps-to-p (car clause) tag-name)
 	       (jumps-to-p (cdr clause) tag-name)))))
 
@@ -177,7 +178,7 @@
                        (*value-to-go* 'trash))
                   (c2expr (car l))
                   (wt-label *exit*))
-                (unless (eq (caar l) 'go) (unwind-exit nil)))))
+                (unless (member (caar l) '(go return-from)) (unwind-exit nil)))))
       (declare (object l written))
     (cond (written (setq written nil))
           ((typep (car l) 'tag)

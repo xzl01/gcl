@@ -1,4 +1,4 @@
-This is gcl-tk.info, produced by makeinfo version 5.2 from gcl-tk.texi.
+This is gcl-tk.info, produced by makeinfo version 6.7 from gcl-tk.texi.
 
 INFO-DIR-SECTION GNU Common Lisp
 START-INFO-DIR-ENTRY
@@ -14,68 +14,68 @@ File: gcl-tk.info,  Node: Top,  Next: General,  Prev: (dir),  Up: (dir)
 
 * Menu:
 
-* General::                     
-* Widgets::                     
-* Control::                     
+* General::
+* Widgets::
+* Control::
 
  -- The Detailed Node Listing --
 
 General
 
-* Introduction::		
-* Getting Started::		
-* Common Features of Widgets::	
-* Return Values::		
-* Argument Lists::		
-* Lisp Functions Invoked from Graphics::  
-* Linked Variables::		
-* tkconnect::			
+* Introduction::
+* Getting Started::
+* Common Features of Widgets::
+* Return Values::
+* Argument Lists::
+* Lisp Functions Invoked from Graphics::
+* Linked Variables::
+* tkconnect::
 
 Widgets
 
-* button::			
-* listbox::			
-* scale::			
-* canvas::			
-* menu::			
-* scrollbar::			
-* checkbutton::			
-* menubutton::			
-* text::			
-* entry::			
-* message::			
-* frame::			
-* label::			
-* radiobutton::			
-* toplevel::			
+* button::
+* listbox::
+* scale::
+* canvas::
+* menu::
+* scrollbar::
+* checkbutton::
+* menubutton::
+* text::
+* entry::
+* message::
+* frame::
+* label::
+* radiobutton::
+* toplevel::
 
 Control
 
-* after::			
-* bind::			
-* destroy::			
-* tk-dialog::			
-* exit::			
-* focus::			
-* grab::			
-* tk-listbox-single-select::	
-* lower::			
-* tk-menu-bar::			
-* option::			
-* options::			
-* pack-old::			
-* pack::			
-* place::			
-* raise::			
-* selection::			
-* send::			
-* tk::				
-* tkerror::			
-* tkvars::			
-* tkwait::			
-* update::			
-* winfo::			
-* wm::				
+* after::
+* bind::
+* destroy::
+* tk-dialog::
+* exit::
+* focus::
+* grab::
+* tk-listbox-single-select::
+* lower::
+* tk-menu-bar::
+* option::
+* options::
+* pack-old::
+* pack::
+* place::
+* raise::
+* selection::
+* send::
+* tk::
+* tkerror::
+* tkvars::
+* tkwait::
+* update::
+* winfo::
+* wm::
 
 
 File: gcl-tk.info,  Node: General,  Next: Widgets,  Prev: Top,  Up: Top
@@ -85,14 +85,14 @@ File: gcl-tk.info,  Node: General,  Next: Widgets,  Prev: Top,  Up: Top
 
 * Menu:
 
-* Introduction::		
-* Getting Started::		
-* Common Features of Widgets::	
-* Return Values::		
-* Argument Lists::		
-* Lisp Functions Invoked from Graphics::  
-* Linked Variables::		
-* tkconnect::			
+* Introduction::
+* Getting Started::
+* Common Features of Widgets::
+* Return Values::
+* Argument Lists::
+* Lisp Functions Invoked from Graphics::
+* Linked Variables::
+* tkconnect::
 
 
 File: gcl-tk.info,  Node: Introduction,  Next: Getting Started,  Prev: General,  Up: General
@@ -330,7 +330,7 @@ of the other up to equal.
 1.4.3 Control Function Return Values
 ------------------------------------
 
-The control funcions (*note Control::) do not return a value or wait
+The control functions (*note Control::) do not return a value or wait
 unless requested to do so, using the ':return' keyword.  The types and
 method of specification are the same as for the Widget Functions in the
 previous section.
@@ -680,21 +680,21 @@ File: gcl-tk.info,  Node: Widgets,  Next: Control,  Prev: General,  Up: Top
 
 * Menu:
 
-* button::			
-* listbox::			
-* scale::			
-* canvas::			
-* menu::			
-* scrollbar::			
-* checkbutton::			
-* menubutton::			
-* text::			
-* entry::			
-* message::			
-* frame::			
-* label::			
-* radiobutton::			
-* toplevel::			
+* button::
+* listbox::
+* scale::
+* canvas::
+* menu::
+* scrollbar::
+* checkbutton::
+* menubutton::
+* text::
+* entry::
+* message::
+* frame::
+* label::
+* radiobutton::
+* toplevel::
 
 
 File: gcl-tk.info,  Node: button,  Next: listbox,  Prev: Widgets,  Up: Widgets
@@ -4877,31 +4877,31 @@ File: gcl-tk.info,  Node: Control,  Prev: Widgets,  Up: Top
 
 * Menu:
 
-* after::			
-* bind::			
-* destroy::			
-* tk-dialog::			
-* exit::			
-* focus::			
-* grab::			
-* tk-listbox-single-select::	
-* lower::			
-* tk-menu-bar::			
-* option::			
-* options::			
-* pack-old::			
-* pack::			
-* place::			
-* raise::			
-* selection::			
-* send::			
-* tk::				
-* tkerror::			
-* tkvars::			
-* tkwait::			
-* update::			
-* winfo::			
-* wm::				
+* after::
+* bind::
+* destroy::
+* tk-dialog::
+* exit::
+* focus::
+* grab::
+* tk-listbox-single-select::
+* lower::
+* tk-menu-bar::
+* option::
+* options::
+* pack-old::
+* pack::
+* place::
+* raise::
+* selection::
+* send::
+* tk::
+* tkerror::
+* tkvars::
+* tkwait::
+* update::
+* winfo::
+* wm::
 
 
 File: gcl-tk.info,  Node: after,  Next: bind,  Prev: Control,  Up: Control

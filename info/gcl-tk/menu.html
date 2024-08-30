@@ -1,45 +1,35 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<!-- Created by GNU Texinfo 5.2, http://www.gnu.org/software/texinfo/ -->
+<!-- Created by GNU Texinfo 6.7, http://www.gnu.org/software/texinfo/ -->
 <head>
-<title>GCL TK Manual: menu</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>menu (GCL TK Manual)</title>
 
-<meta name="description" content="GCL TK Manual: menu">
-<meta name="keywords" content="GCL TK Manual: menu">
+<meta name="description" content="menu (GCL TK Manual)">
+<meta name="keywords" content="menu (GCL TK Manual)">
 <meta name="resource-type" content="document">
 <meta name="distribution" content="global">
 <meta name="Generator" content="makeinfo">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link href="index.html#Top" rel="start" title="Top">
+<link href="index.html" rel="start" title="Top">
 <link href="wm.html#SEC_Contents" rel="contents" title="Table of Contents">
-<link href="Widgets.html#Widgets" rel="up" title="Widgets">
-<link href="scrollbar.html#scrollbar" rel="next" title="scrollbar">
-<link href="canvas.html#canvas" rel="prev" title="canvas">
+<link href="Widgets.html" rel="up" title="Widgets">
+<link href="scrollbar.html" rel="next" title="scrollbar">
+<link href="canvas.html" rel="prev" title="canvas">
 <style type="text/css">
 <!--
 a.summary-letter {text-decoration: none}
-blockquote.smallquotation {font-size: smaller}
+blockquote.indentedblock {margin-right: 0em}
 div.display {margin-left: 3.2em}
 div.example {margin-left: 3.2em}
-div.indentedblock {margin-left: 3.2em}
 div.lisp {margin-left: 3.2em}
-div.smalldisplay {margin-left: 3.2em}
-div.smallexample {margin-left: 3.2em}
-div.smallindentedblock {margin-left: 3.2em; font-size: smaller}
-div.smalllisp {margin-left: 3.2em}
-kbd {font-style:oblique}
+kbd {font-style: oblique}
 pre.display {font-family: inherit}
 pre.format {font-family: inherit}
 pre.menu-comment {font-family: serif}
 pre.menu-preformatted {font-family: serif}
-pre.smalldisplay {font-family: inherit; font-size: smaller}
-pre.smallexample {font-size: smaller}
-pre.smallformat {font-family: inherit; font-size: smaller}
-pre.smalllisp {font-size: smaller}
-span.nocodebreak {white-space:nowrap}
-span.nolinebreak {white-space:nowrap}
-span.roman {font-family:serif; font-weight:normal}
-span.sansserif {font-family:sans-serif; font-weight:normal}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
 ul.no-bullet {list-style: none}
 -->
 </style>
@@ -47,22 +37,18 @@ ul.no-bullet {list-style: none}
 
 </head>
 
-<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
-<a name="menu"></a>
-<div class="header">
+<body lang="en">
+<span id="menu"></span><div class="header">
 <p>
-Next: <a href="scrollbar.html#scrollbar" accesskey="n" rel="next">scrollbar</a>, Previous: <a href="canvas.html#canvas" accesskey="p" rel="prev">canvas</a>, Up: <a href="Widgets.html#Widgets" accesskey="u" rel="up">Widgets</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
+Next: <a href="scrollbar.html" accesskey="n" rel="next">scrollbar</a>, Previous: <a href="canvas.html" accesskey="p" rel="prev">canvas</a>, Up: <a href="Widgets.html" accesskey="u" rel="up">Widgets</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
 </div>
 <hr>
-<a name="menu-1"></a>
-<h3 class="section">2.5 menu</h3>
+<span id="menu-1"></span><h3 class="section">2.5 menu</h3>
 
 <p>menu \- Create and manipulate menu widgets
-</p><a name="Synopsis-4"></a>
-<h4 class="unnumberedsubsec">Synopsis</h4>
+</p><span id="Synopsis-4"></span><h4 class="unnumberedsubsec">Synopsis</h4>
 <p><b>menu</b><i> </i><i>pathName </i><span class="roman">?</span><i>options</i>?
-</p><a name="Standard-Options-4"></a>
-<h4 class="unnumberedsubsec">Standard Options</h4>
+</p><span id="Standard-Options-4"></span><h4 class="unnumberedsubsec">Standard Options</h4>
 
 
 <div class="example">
@@ -72,9 +58,8 @@ activeForeground       cursor           foreground
 </pre></div>
 
 
-<p>See <a href="options.html#options">options</a>, for more information.
-</p><a name="Arguments-for-Menu"></a>
-<h4 class="unnumberedsubsec">Arguments for Menu</h4>
+<p>See <a href="options.html">options</a>, for more information.
+</p><span id="Arguments-for-Menu"></span><h4 class="unnumberedsubsec">Arguments for Menu</h4>
 
 
 <dl compact="compact">
@@ -100,8 +85,7 @@ or radio button is selected.
 </p></dd>
 </dl>
 
-<a name="Introduction-3"></a>
-<h4 class="unnumberedsubsec">Introduction</h4>
+<span id="Introduction-3"></span><h4 class="unnumberedsubsec">Introduction</h4>
 
 <p>The <b>menu</b> command creates a new top-level window (given
 by the <i>pathName</i> argument) and makes it into a menu widget.
@@ -147,23 +131,20 @@ with dimmer colors.  A disabled entry cannot be activated or invoked.
 Disabled entries may be re-enabled, at which point it becomes
 possible to activate and invoke them again.
 </p>
-<a name="Command-Entries"></a>
-<h4 class="unnumberedsubsec">Command Entries</h4>
+<span id="Command-Entries"></span><h4 class="unnumberedsubsec">Command Entries</h4>
 
 <p>The most common kind of menu entry is a command entry, which
 behaves much like a button widget.  When a command entry is
 invoked, a Tcl command is executed.  The Tcl
 command is specified with the <b>:command</b> option.
 </p>
-<a name="Separator-Entries"></a>
-<h4 class="unnumberedsubsec">Separator Entries</h4>
+<span id="Separator-Entries"></span><h4 class="unnumberedsubsec">Separator Entries</h4>
 
 <p>A separator is an entry that is displayed as a horizontal dividing
 line.  A separator may not be activated or invoked, and it has
 no behavior other than its display appearance.
 </p>
-<a name="Check_002dButton-Entries"></a>
-<h4 class="unnumberedsubsec">Check-Button Entries</h4>
+<span id="Check_002dButton-Entries"></span><h4 class="unnumberedsubsec">Check-Button Entries</h4>
 
 <p>A check-button menu entry behaves much like a check-button widget.
 When it is invoked it toggles back and forth between the selected
@@ -181,8 +162,7 @@ entry, then its value is evaluated as a Tcl command each time the entry
 is invoked;  this happens after toggling the entry&rsquo;s
 selected state.
 </p>
-<a name="Radio_002dButton-Entries"></a>
-<h4 class="unnumberedsubsec">Radio-Button Entries</h4>
+<span id="Radio_002dButton-Entries"></span><h4 class="unnumberedsubsec">Radio-Button Entries</h4>
 
 <p>A radio-button menu entry behaves much like a radio-button widget.
 Radio-button entries are organized in groups of which only one
@@ -206,8 +186,7 @@ the menu.  If a <b>:command</b> option is specified for a radio-button
 entry, then its value is evaluated as a Tcl command each time the entry
 is invoked;  this happens after selecting the entry.
 </p>
-<a name="Cascade-Entries"></a>
-<h4 class="unnumberedsubsec">Cascade Entries</h4>
+<span id="Cascade-Entries"></span><h4 class="unnumberedsubsec">Cascade Entries</h4>
 
 <p>A cascade entry is one with an associated menu (determined
 by the <b>:menu</b> option).  Cascade entries allow the construction
@@ -243,8 +222,7 @@ the form
 evaluated as a Tcl command each time the associated menu is posted (the
 evaluation occurs before the menu is posted).
 </p>
-<a name="A-Menu-Widget_0027s-Arguments"></a>
-<h4 class="unnumberedsubsec">A Menu Widget&rsquo;s Arguments</h4>
+<span id="A-Menu-Widget_0027s-Arguments"></span><h4 class="unnumberedsubsec">A Menu Widget&rsquo;s Arguments</h4>
 
 <p>The <b>menu</b> command creates a new Tcl command whose
 name is <i>pathName</i>.  This
@@ -504,8 +482,7 @@ window of the topmost pixel in the entry specified by <i>index</i>.
 
 </dd>
 </dl>
-<a name="Default-Bindings"></a>
-<h4 class="unnumberedsubsec">Default Bindings</h4>
+<span id="Default-Bindings"></span><h4 class="unnumberedsubsec">Default Bindings</h4>
 
 
 <p>Tk automatically creates class bindings for menus that give them
@@ -532,20 +509,18 @@ ignore mouse button presses and releases.
 <p>The behavior of menus can be changed by defining new bindings for
 individual widgets or by redefining the class bindings.
 </p>
-<a name="Bugs"></a>
-<h4 class="unnumberedsubsec">Bugs</h4>
+<span id="Bugs"></span><h4 class="unnumberedsubsec">Bugs</h4>
 
 <p>At present it isn&rsquo;t possible to use the
 option database to specify values for the options to individual
 entries.
 </p>
-<a name="Keywords-4"></a>
-<h4 class="unnumberedsubsec">Keywords</h4>
+<span id="Keywords-4"></span><h4 class="unnumberedsubsec">Keywords</h4>
 <p>menu, widget
 </p><hr>
 <div class="header">
 <p>
-Next: <a href="scrollbar.html#scrollbar" accesskey="n" rel="next">scrollbar</a>, Previous: <a href="canvas.html#canvas" accesskey="p" rel="prev">canvas</a>, Up: <a href="Widgets.html#Widgets" accesskey="u" rel="up">Widgets</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
+Next: <a href="scrollbar.html" accesskey="n" rel="next">scrollbar</a>, Previous: <a href="canvas.html" accesskey="p" rel="prev">canvas</a>, Up: <a href="Widgets.html" accesskey="u" rel="up">Widgets</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
 </div>
 
 

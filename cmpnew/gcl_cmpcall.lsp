@@ -19,7 +19,7 @@
 ;; Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 
 
-(in-package 'compiler)
+(in-package :compiler)
 
 (defvar *ifuncall* nil)
 
@@ -27,8 +27,7 @@
 (eval-when (compile eval)
 (defmacro link-arg-p (x)
   `(let ((.u ,x))
-     (not (member .u '(character boolean long-float short-float)))))
-)
+     (not (member .u '(character boolean long-float short-float) :test 'eq)))))
 
 (defun fast-link-proclaimed-type-p (fname &optional args)
   (and 
@@ -134,6 +133,7 @@
       (let ((*vs* *vs*) (form (caddr funob)))
            (declare (object form))
 	   (cond ((and (listp args)
+ 		       (< (length args) 12) ;FIXME fcalln1 limitation
 		       *use-sfuncall*
 		       ;;Determine if only one value at most is required:
 		       (or
@@ -167,8 +167,9 @@
 (defun fcalln-inline (&rest args)
   (wt-nl "({object _f=" (car args) ";enum type _t=type_of(_f);")
   (wt-nl "_f = _t==t_symbol && _f->s.s_gfdef!=OBJNULL ? (_t=type_of(_f->s.s_gfdef),_f->s.s_gfdef) : _f;")  
-  (wt-nl "_t==t_sfun ? _f->sfn.sfn_self : ")
-  (wt-nl "(fcall.argd= " (length (cdr args)) ",_t==t_vfun ? _f->vfn.vfn_self : ")
+  (wt-nl "_t==t_sfun&&(_f->sfn.sfn_argd&0xff)== " (length (cdr args)) " ? _f->sfn.sfn_self : ")
+  (wt-nl "(fcall.argd= " (length (cdr args))
+	 ",_t==t_vfun&&_f->vfn.vfn_minargs<= " (length (cdr args)) "&&" (length (cdr args)) "<=_f->vfn.vfn_maxargs  ? _f->vfn.vfn_self : ")
   (wt-nl "(fcall.fun=_f,fcalln));})")
   (wt-nl "(")
   (when (cdr args) (wt (cadr args))

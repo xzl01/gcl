@@ -19,7 +19,7 @@
 ;; Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 
 
-(in-package 'compiler)
+(in-package :compiler)
 
 ;;; Pass 1 generates the internal form
 ;;;	( id  info-object . rest )
@@ -465,7 +465,7 @@
     (t . INLINE)))
 
 (defun inline-type (type)
-  (or (cdr (assoc type *inline-types*)) 'inline))
+  (or (cdr (assoc type *inline-types* :test 'eq)) 'inline))
 
 (defun get-inline-info (fname args return-type &aux x ii)
   (and  (fast-link-proclaimed-type-p fname args)

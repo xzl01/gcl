@@ -9,9 +9,7 @@ GFILES:=$(addprefix gcl_pcl_gazonk,$(GFILES1))
 
 AFILES:=$(FILES) $(GFILES)
 
-SETUP='(load "sys-package.lisp")' \
-	'(setq *features* (delete (quote :kcl) *features*))'\
-	'(load "defsys.lisp")(push (quote :kcl) *features*)' \
+SETUP='(load "defsys.lisp")' \
 	'(setq pcl::*default-pathname-extensions* (cons "lisp" "o"))' \
 	'(setq pcl::*pathname-extensions* (cons "lisp" "o"))' \
 	'(load "sys-proclaim.lisp")' \
@@ -19,6 +17,7 @@ SETUP='(load "sys-package.lisp")' \
 	'(setq compiler::*default-c-file* t)'\
 	'(setq compiler::*default-data-file* t)'\
 	'(setq compiler::*default-system-p* t)' \
+	'(setq si::*code-block-reserve* (make-array 10000000 :element-type (quote character) :static t) a nil)' \
 	'(setq compiler::*keep-gaz* t compiler::*tmp-dir* "")'
 
 all: $(addsuffix .c,$(AFILES)) $(addsuffix .o,$(AFILES)) 

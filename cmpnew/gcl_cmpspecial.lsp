@@ -19,7 +19,7 @@
 ;; Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 
 
-(in-package 'compiler)
+(in-package :compiler)
 
 (si:putprop 'quote 'c1quote 'c1special)
 (si:putprop 'function 'c1function 'c1special)
@@ -40,8 +40,8 @@
   (when (endp args) (too-few-args 'eval-when 1 0))
   (dolist** (situation (car args) (c1nil))
     (case situation
-          (eval (return-from c1eval-when (c1progn (cdr args))))
-          ((load compile))
+          ((eval :execute) (return-from c1eval-when (c1progn (cdr args))))
+          ((load :load-toplevel compile  :compile-toplevel))
           (otherwise
            (cmperr "The situation ~s is illegal." situation))))
   )

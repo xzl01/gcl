@@ -19,7 +19,7 @@
 ;; Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 
 
-(in-package 'compiler)
+(in-package :compiler)
 
 (si:putprop 'multiple-value-call 'c1multiple-value-call 'c1special)
 (si:putprop 'multiple-value-call 'c2multiple-value-call 'c2)
@@ -108,22 +108,11 @@
   (unwind-exit 'fun-val nil (if top-data (car top-data)))
   )
 
-(defun c1values (args &aux (info (make-info)))
-      (cond ((and args (not (cdr args))
-		  (or (not (consp (car args)))
-		      (and (symbolp (caar args))
-			   (let ((tem (get-return-type (caar args))))
-			     (and tem
-				  (or (atom tem)
-				      (and (consp tem)
-					   (null (cdr tem))
-					   (not (eq '* (car tem))))))))))
-	     ;;the compiler put in unnecessary code
-	     ;;if we just had say (values nil)
-	     ;; so if we know there's one value only:
-	     (c1expr (car args)))
-	    (t  (setq args (c1args args info))
-              (list 'values info args))))
+(defun c1values (args &aux (info (make-info))(s (si::sgen "VALUES")))
+  (cond ((and args (not (cdr args)))
+	 (c1expr `(let ((,s ,(car args))) ,s)))
+	(t  (setq args (c1args args info))
+	    (list 'values info args))))
 
 (defun c2values (forms &aux (base *vs*) (*vs* *vs*))
      (cond ((and (eq *value-to-go* 'return-object)
@@ -175,27 +164,23 @@
 		(cmpwarn "~A was proclaimed to have only one return value. ~%;But you appear to want multiple values." fname))))))
 		
 (defun c2multiple-value-setq (vrefs form &aux top-data)
-    (multiple-value-check vrefs form)
+  (multiple-value-check vrefs form)
   (let ((*value-to-go* 'top)*top-data*)
     (c2expr* form) (setq top-data *top-data*))
   (and *record-call-info* (record-call-info nil (car top-data)))
+  (wt-nl "if(vs_base>vs_top) vs_top=vs_base;")
+  (wt-nl "*vs_top=Cnil;")
   (do ((vs vrefs (cdr vs)))
       ((endp vs))
-      (declare (object vs))
       (let ((vref (car vs)))
-           (declare (object vref))
-           (wt-nl "if(vs_base<vs_top){")
-           (set-var 'fun-val (car vref) (cadr vref))
-           (unless (endp (cdr vs)) (wt-nl "vs_base++;"))
-           (wt-nl "}else{") (set-var nil (car vref) (cadr vref))
-           (wt "}"))
-      )
+	(set-var 'fun-val (car vref) (cadr vref))
+	(unless (endp (cdr vs)) (wt-nl "if(vs_base<vs_top) vs_base++;"))))
   (cond ((null vrefs)
-         (wt-nl "if(vs_base=vs_top){vs_base[0]=Cnil;vs_top=vs_base+1;}")
+         (wt-nl "if(vs_base==vs_top){vs_base[0]=Cnil;}")
+         (wt-nl "vs_top=vs_base+1;}")
          (unwind-exit 'fun-val))
         (t (unless (eq *exit* 'return) (wt-nl) (reset-top))
-           (unwind-exit (cons 'var (car vrefs)))))
-  )
+           (unwind-exit (cons 'var (car vrefs))))))
 
 (defun c1multiple-value-bind (args &aux (info (make-info))
                                    (vars nil) (vnames nil) init-form
@@ -232,56 +217,37 @@
 
 
 (defun c2multiple-value-bind (vars init-form body
-                   &aux (block-p nil) (labels nil)
-                        (*unwind-exit* *unwind-exit*)
-                        (*vs* *vs*) (*clink* *clink*) (*ccb-vs* *ccb-vs*)
-			top-data)
-       (declare (object block-p))
-    (multiple-value-check vars init-form)
+				   &aux (block-p nil)
+				   (*unwind-exit* *unwind-exit*)
+				   (*vs* *vs*) (*clink* *clink*) (*ccb-vs* *ccb-vs*)
+				   top-data)
 
-  (dolist** (var vars)
+  (multiple-value-check vars init-form)
+
+  (dolist (var vars)
     (let ((kind (c2var-kind var)))
-         (declare (object kind))
       (if kind
           (let ((cvar (next-cvar)))
             (setf (var-kind var) kind)
             (setf (var-loc var) cvar)
             (wt-nl)
             (unless block-p (wt "{") (setq block-p t))
-	    (wt-var-decl var)
-	    )
-          (setf (var-ref var) (vs-push)))))
+	    (wt-var-decl var))
+	(setf (var-ref var) (vs-push)))))
 
   (let ((*value-to-go* 'top) *top-data*)
     (c2expr* init-form) (setq top-data *top-data*))
+
   (and *record-call-info* (record-call-info nil (car top-data)))
-  (let ((*clink* *clink*)
-        (*unwind-exit* *unwind-exit*)
-        (*ccb-vs* *ccb-vs*))
-    (do ((vs vars (cdr vs)))
-        ((endp vs))
-        (declare (object vs))
-      (push (next-label) labels)
-      (wt-nl "if(vs_base>=vs_top){")
-      (reset-top)
-      (wt-go (car labels)) (wt "}")
+
+  (wt-nl "if(vs_base>vs_top) vs_top=vs_base;")
+  (wt-nl "*vs_top=Cnil;")
+  (do ((vs vars (cdr vs)))
+      ((endp vs))
       (c2bind-loc (car vs) '(vs-base 0))
-      (unless (endp (cdr vs)) (wt-nl "vs_base++;"))))
+      (unless (endp (cdr vs)) (wt-nl "if (vs_base<vs_top) vs_base++;")))
 
   (wt-nl) (reset-top)
 
-  (let ((label (next-label)))
-    (wt-nl) (wt-go label)
-
-    (setq labels (nreverse labels))
-
-    (dolist** (v vars)
-      (wt-label (car labels))
-      (pop labels)
-      (c2bind-loc v nil))
-
-    (wt-label label))
-
   (c2expr body)
-  (when block-p (wt "}"))
-  )
+  (when block-p (wt "}")))

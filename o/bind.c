@@ -23,8 +23,9 @@ Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 	bind.c
 */
 
-#include "include.h"
 #include <string.h>
+
+#include "include.h"
 
 static void
 illegal_lambda(void);
@@ -95,17 +96,19 @@ lambda_bind(object *arg_top)
 	struct aux *aux=NULL;
 	int naux;
 	bool special_processed;
+	object s[1],ss;
 	vs_mark;
 
 	bds_check;
 	lambda = vs_head;
-	if (type_of(lambda) != t_cons)
+	if (!consp(lambda))
 		FEerror("No lambda list.", 0);
 	lambda_list = lambda->c.c_car;
 	body = lambda->c.c_cdr;
 
 	required = (struct required *)vs_top;
 	nreq = 0;
+	s[0]=Cnil;
 	for (;;) {
 		if (endp(lambda_list))
 			goto REQUIRED_ONLY;
@@ -152,7 +155,7 @@ OPTIONAL:
 			goto SEARCH_DECLARE;
 		x = lambda_list->c.c_car;
 		lambda_list = lambda_list->c.c_cdr;
-		if (type_of(x) == t_cons) {
+		if (consp(x)) {
 			check_symbol(x->c.c_car);
 			check_var(x->c.c_car);
 			vs_push(x->c.c_car);
@@ -226,9 +229,9 @@ KEYWORD:
 			goto SEARCH_DECLARE;
 		x = lambda_list->c.c_car;
 		lambda_list = lambda_list->c.c_cdr;
-		if (type_of(x) == t_cons) {
-			if (type_of(x->c.c_car) == t_cons) {
-				if (!keywordp(x->c.c_car->c.c_car))
+		if (consp(x)) {
+			if (consp(x->c.c_car)) {
+				if (type_of(x->c.c_car->c.c_car)!=t_symbol)
 				  /* FIXME better message */
 					FEunexpected_keyword(x->c.c_car->c.c_car);
 				vs_push(x->c.c_car->c.c_car);
@@ -296,7 +299,7 @@ AUX_L:
 			goto SEARCH_DECLARE;
 		x = lambda_list->c.c_car;
 		lambda_list = lambda_list->c.c_cdr;
-		if (type_of(x) == t_cons) {
+		if (consp(x)) {
 			check_symbol(x->c.c_car);
 			check_var(x->c.c_car);
 			vs_push(x->c.c_car);
@@ -336,10 +339,10 @@ SEARCH_DECLARE:
 				break;
 			continue;
 		}
-		if (type_of(form)!=t_cons || !isdeclare(form->c.c_car))
+		if (!consp(form) || !isdeclare(form->c.c_car))
 			break;
 		for (ds = form->c.c_cdr; !endp(ds); ds = ds->c.c_cdr) {
-			if (type_of(ds->c.c_car) != t_cons)
+			if (!consp(ds->c.c_car))
 				illegal_declare(form);
 			if (ds->c.c_car->c.c_car == sLspecial) {
 				vs = ds->c.c_car->c.c_cdr;
@@ -381,8 +384,7 @@ SEARCH_DECLARE:
 		}
 	if (special_processed)
 		continue;
-	/*  lex_special_bind(v);  */
-	lex_env[0] = MMcons(MMcons(v, Cnil), lex_env[0]);
+	s[0] = MMcons(MMcons(v, Cnil), s[0]);
 
 /**/
 				}
@@ -431,23 +433,27 @@ SEARCH_DECLARE:
 					 optional[i].opt_svar_spp);
 		}
 	if (rest_flag) {
-		vs_push(Cnil);
-		for (i = narg, j = nreq+nopt;  --i >= j;  )
-			vs_head = make_cons(base[i], vs_head);
-		bind_var(rest->rest_var, vs_head, rest->rest_spp);
+	  object *l=vs_top++;
+	  for (i=nreq+nopt;i<narg;i++)
+	    collect(l,make_cons(base[i],Cnil));
+	  *l=Cnil;
+	  bind_var(rest->rest_var, vs_head, rest->rest_spp);
 	}
 	if (key_flag) {
+                int allow_other_keys_found=0;
 		i = narg - nreq - nopt;
 		if (i >= 0 && i%2 != 0)
 		  /* FIXME better message */
 		  FEunexpected_keyword(Cnil);
 		other_keys_appeared = FALSE;
 		for (i = nreq + nopt;  i < narg;  i += 2) {
-			if (!keywordp(base[i]))
+			if (type_of(base[i])!=t_symbol)
 				FEunexpected_keyword(base[i]);
-			if (base[i] == sKallow_other_keys &&
-			    base[i+1] != Cnil)
+			if (base[i] == sKallow_other_keys && !allow_other_keys_found) {
+			    allow_other_keys_found=1;
+			    if (base[i+1] != Cnil)
 				allow_other_keys_flag = TRUE;
+                        }
 			for (j = 0;  j < nkey;  j++) {
 				if (keyword[j].key_word == base[i]) {
 					if (keyword[j].key_svar_val
@@ -460,7 +466,8 @@ SEARCH_DECLARE:
 					goto NEXT_ARG;
 				}
 			}
-			other_keys_appeared = TRUE;
+                        if (base[i] != sKallow_other_keys)
+			  other_keys_appeared = TRUE;
 
 		NEXT_ARG:
 			continue;
@@ -492,7 +499,7 @@ SEARCH_DECLARE:
 		eval_assign(temporary, aux[i].aux_init);
 		bind_var(aux[i].aux_var, temporary, aux[i].aux_spp);
 	}
-	if (type_of(body) != t_cons || body->c.c_car == form) {
+	if (!consp(body) || body->c.c_car == form) {
 		vs_reset;
 		vs_head = body;
 	} else {
@@ -500,6 +507,13 @@ SEARCH_DECLARE:
 		vs_reset;
 		vs_head = body;
 	}
+
+	if (s[0]!=Cnil) {
+	  for (ss=s[0];ss->c.c_cdr!=Cnil;ss=ss->c.c_cdr);
+	  ss->c.c_cdr=lex_env[0];
+	  lex_env[0]=s[0];
+	}
+
 	return;
 
 REQUIRED_ONLY:
@@ -515,10 +529,10 @@ REQUIRED_ONLY:
 				break;
 			continue;
 		}
-		if (type_of(form)!=t_cons || !isdeclare(form->c.c_car))
+		if (!consp(form) || !isdeclare(form->c.c_car))
 			break;
 		for (ds = form->c.c_cdr; !endp(ds); ds = ds->c.c_cdr) {
-			if (type_of(ds->c.c_car) != t_cons)
+			if (!consp(ds->c.c_car))
 				illegal_declare(form);
 			if (ds->c.c_car->c.c_car == sLspecial) {
 				vs = ds->c.c_car->c.c_cdr;
@@ -537,7 +551,7 @@ REQUIRED_ONLY:
 		continue;
 	/*  lex_special_bind(v);  */
 	temporary = MMcons(v, Cnil);
-	lex_env[0] = MMcons(temporary, lex_env[0]);
+	s[0] = MMcons(temporary, s[0]);
 
 /**/
 				}
@@ -555,7 +569,7 @@ REQUIRED_ONLY:
 		bind_var(required[i].req_var,
 			 base[i],
 			 required[i].req_spp);
-	if (type_of(body) != t_cons || body->c.c_car == form) {
+	if (!consp(body) || body->c.c_car == form) {
 		vs_reset;
 		vs_head = body;
 	} else {
@@ -563,6 +577,13 @@ REQUIRED_ONLY:
 		vs_reset;
 		vs_head = body;
 	}
+
+	if (s[0]!=Cnil) {
+	  for (ss=s[0];ss->c.c_cdr!=Cnil;ss=ss->c.c_cdr);
+	  ss->c.c_cdr=lex_env[0];
+	  lex_env[0]=s[0];
+	}
+
 }
 
 void
@@ -612,7 +633,7 @@ struct bind_temp {
 */
 
 object
-find_special(object body, struct bind_temp *start, struct bind_temp *end)
+find_special(object body, struct bind_temp *start, struct bind_temp *end,object *s)
 { 
         object temporary;
 	object form=Cnil;
@@ -622,6 +643,7 @@ find_special(object body, struct bind_temp *start, struct bind_temp *end)
 	vs_mark;
 
 	vs_push(Cnil);
+	s=s ? s : lex_env;
 	for (;  !endp(body);  body = body->c.c_cdr) {
 		form = body->c.c_car;
 
@@ -634,10 +656,10 @@ find_special(object body, struct bind_temp *start, struct bind_temp *end)
 				break;
 			continue;
 		}
-		if (type_of(form)!=t_cons || !isdeclare(form->c.c_car))
+		if (!consp(form) || !isdeclare(form->c.c_car))
 			break;
 		for (ds = form->c.c_cdr; !endp(ds); ds = ds->c.c_cdr) {
-			if (type_of(ds->c.c_car) != t_cons)
+			if (!consp(ds->c.c_car))
 				illegal_declare(form);
 			if (ds->c.c_car->c.c_car == sLspecial) {
 				vs = ds->c.c_car->c.c_cdr;
@@ -655,14 +677,14 @@ find_special(object body, struct bind_temp *start, struct bind_temp *end)
 		continue;
 	/*  lex_special_bind(v);  */
 	temporary = MMcons(v, Cnil);
-	lex_env[0] = MMcons(temporary, lex_env[0]);
+	s[0] = MMcons(temporary, s[0]);
 /**/
 				}
 			}
 		}
 	}
 
-	if (body != Cnil && body->c.c_car != form)
+	if (body != Cnil && body->c.c_car != form && type_of(form)==t_cons && isdeclare(form->c.c_car))/*FIXME*/
 		body = make_cons(form, body->c.c_cdr);
 	vs_reset;
 	return(body);
@@ -674,10 +696,10 @@ let_bind(object body, struct bind_temp *start, struct bind_temp *end)
 	struct bind_temp *bt;
 
 	bds_check;
-	vs_push(find_special(body, start, end));
 	for (bt = start;  bt < end;  bt++) {
 		eval_assign(bt->bt_init, bt->bt_init);
 	}
+	vs_push(find_special(body, start, end,NULL));
 	for (bt = start;  bt < end;  bt++) {
 		bind_var(bt->bt_var, bt->bt_init, bt->bt_spp);
 	}
@@ -688,12 +710,19 @@ object
 letA_bind(object body, struct bind_temp *start, struct bind_temp *end)
 {
 	struct bind_temp *bt;
-	
+	object s[1],ss;
+
 	bds_check;
-	vs_push(find_special(body, start, end));
+	s[0]=Cnil;
+	vs_push(find_special(body, start, end,s));
 	for (bt = start;  bt < end;  bt++) {
 		eval_assign(bt->bt_init, bt->bt_init);
 		bind_var(bt->bt_var, bt->bt_init, bt->bt_spp);
+	}
+	if (s[0]!=Cnil) {
+	  for (ss=s[0];ss->c.c_cdr!=Cnil;ss=ss->c.c_cdr);
+	  ss->c.c_cdr=lex_env[0];
+	  lex_env[0]=s[0];
 	}
 	return(vs_pop);
 }
@@ -703,12 +732,12 @@ letA_bind(object body, struct bind_temp *start, struct bind_temp *end)
 
 #endif
 
-#define	NOT_YET		10
-#define	FOUND		11
+#define	NOT_YET		stp_ordinary
+#define	FOUND		stp_special
 #define	NOT_KEYWORD	1
 
 void
-parse_key(object *base, bool rest, bool allow_other_keys,int n, ...)
+parse_key(object *base, bool rest, bool allow_other_keys, int n, ...)
 { 
         object temporary;
 	va_list ap;
@@ -735,7 +764,7 @@ parse_key(object *base, bool rest, bool allow_other_keys,int n, ...)
 	  FEunexpected_keyword(Cnil);
 	if (narg == 2) {
 		k = base[0];
-		if (!keywordp(k))
+		if (type_of(k)!=t_symbol)
 		  FEunexpected_keyword(k);
 		if (k == sKallow_other_keys && ! allow_other_keys_found) {
 		  allow_other_keys_found=1;
@@ -777,7 +806,7 @@ parse_key(object *base, bool rest, bool allow_other_keys,int n, ...)
 	va_end(ap);
 	for (v = base;  v < vs_top;  v += 2) {
 		k = v[0];
-		if (!keywordp(k)) {
+		if (type_of(k)!=t_symbol) {
 			error_flag = NOT_KEYWORD;
 			other_key = k;
 			continue;
@@ -796,12 +825,11 @@ parse_key(object *base, bool rest, bool allow_other_keys,int n, ...)
 		}
 	}
 	if (rest) {
-		top = vs_top;
-		vs_push(Cnil);
-		base++;
-		while (base < vs_top)
-			stack_cons();
-		vs_top = top;
+	  object *a,*l;
+	  for (l=a=base;a<vs_top;a++)
+	    collect(l,make_cons(*a,Cnil));
+	  *l=Cnil;
+	  base++;
 	}
 	top = base + n;
 	va_start(ap,n);
@@ -827,16 +855,19 @@ check_other_key(object l, int n, ...)
 	object k;
 	int i;
 	bool allow_other_keys = FALSE;
+	int allow_other_keys_found=0;
 
 	for (;  !endp(l);  l = l->c.c_cdr->c.c_cdr) {
 		k = l->c.c_car;
-		if (!keywordp(k))
+		if (type_of(k)!=t_symbol)
 		  FEunexpected_keyword(k);
 		if (endp(l->c.c_cdr))
 		  /* FIXME better message */
 		  FEunexpected_keyword(Cnil);
-		if (k == sKallow_other_keys && l->c.c_cdr->c.c_car != Cnil) {
-			allow_other_keys = TRUE;
+		if (k == sKallow_other_keys && !allow_other_keys_found) {
+		  allow_other_keys_found=1;
+		  if (l->c.c_cdr->c.c_car != Cnil)
+		    allow_other_keys = TRUE;
 		} else {
 		  char buf [100];
 		  bzero(buf,n);
@@ -918,8 +949,8 @@ parse_key_new_new(int n, object *base, struct key *keys, object first, va_list a
  /* from here down identical to parse_key_rest */
  new = new + n ;
   {int j=keys->n;
-   object *p= (object *)(keys->defaults);
-   while (--j >=0) base[j]=p[j];
+   object **p= (object **)(keys->defaults);
+   while (--j >=0) base[j]=*(p[j]);
  }
  {if (n==0){ return 0;}
  {int allow = keys->allow_other_keys;
@@ -939,7 +970,7 @@ parse_key_new_new(int n, object *base, struct key *keys, object first, va_list a
      new = new -2;
      k = *new;
      while(--i >= 0)
-       {if ((*(ke++)).o == k)
+       {if (*(*(ke++)).o == k)
 	  {base[i]= new[1];
 	   n=n-2;
 	   goto top;
@@ -1026,8 +1057,7 @@ parse_key_rest_new(object rest, int n, object *base, struct key *keys, object fi
     
  new = new + n ;
   {int j=keys->n;
-   object *p= (object *)(keys->defaults);
-   while (--j >=0) base[j]=p[j];
+   while (--j >=0) base[j]=*keys->defaults[j].o;
  }
  {if (n==0){ return 0;}
  {int allow = keys->allow_other_keys;
@@ -1047,7 +1077,7 @@ parse_key_rest_new(object rest, int n, object *base, struct key *keys, object fi
      new = new -2;
      k = *new;
      while(--i >= 0)
-       {if ((*(ke++)).o == k)
+       {if (*(*(ke++)).o == k)
 	  {base[i]= new[1];
 	   n=n-2;
 	   goto top;
@@ -1066,18 +1096,19 @@ parse_key_rest_new(object rest, int n, object *base, struct key *keys, object fi
   return -1;
 }}}
 
+static object foo[2]={Cnil,OBJNULL};
   
 void
 set_key_struct(struct key *ks, object data)
 {int i=ks->n;
  while (--i >=0)
-   {ks->keys[i].o =   data->cfd.cfd_self[ ks->keys[i].i ];
+   {ks->keys[i].o =   data->cfd.cfd_self+ks->keys[i].i;
     if (ks->defaults != (void *)Cstd_key_defaults)
       {fixnum m=ks->defaults[i].i;
         ks->defaults[i].o=
-	  (m==-2 ? Cnil :
-	   m==-1 ? OBJNULL :
-	   data->cfd.cfd_self[m]);}
+	  (m==-2 ? foo :
+	   m==-1 ? foo+1 :
+	   data->cfd.cfd_self+m);}
 }}
 
 #undef AUX
@@ -1110,7 +1141,7 @@ gcl_init_bind(void)
 	make_cons(make_ordinary("&BODY"), Cnil)))))))));
 
 	make_constant("LAMBDA-PARAMETERS-LIMIT",
-		      make_fixnum(64));
+		      make_fixnum(MAX_ARGS+1));
 
 
 

@@ -1,45 +1,35 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<!-- Created by GNU Texinfo 5.2, http://www.gnu.org/software/texinfo/ -->
+<!-- Created by GNU Texinfo 6.7, http://www.gnu.org/software/texinfo/ -->
 <head>
-<title>GCL TK Manual: menubutton</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>menubutton (GCL TK Manual)</title>
 
-<meta name="description" content="GCL TK Manual: menubutton">
-<meta name="keywords" content="GCL TK Manual: menubutton">
+<meta name="description" content="menubutton (GCL TK Manual)">
+<meta name="keywords" content="menubutton (GCL TK Manual)">
 <meta name="resource-type" content="document">
 <meta name="distribution" content="global">
 <meta name="Generator" content="makeinfo">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link href="index.html#Top" rel="start" title="Top">
+<link href="index.html" rel="start" title="Top">
 <link href="wm.html#SEC_Contents" rel="contents" title="Table of Contents">
-<link href="Widgets.html#Widgets" rel="up" title="Widgets">
-<link href="text.html#text" rel="next" title="text">
-<link href="checkbutton.html#checkbutton" rel="prev" title="checkbutton">
+<link href="Widgets.html" rel="up" title="Widgets">
+<link href="text.html" rel="next" title="text">
+<link href="checkbutton.html" rel="prev" title="checkbutton">
 <style type="text/css">
 <!--
 a.summary-letter {text-decoration: none}
-blockquote.smallquotation {font-size: smaller}
+blockquote.indentedblock {margin-right: 0em}
 div.display {margin-left: 3.2em}
 div.example {margin-left: 3.2em}
-div.indentedblock {margin-left: 3.2em}
 div.lisp {margin-left: 3.2em}
-div.smalldisplay {margin-left: 3.2em}
-div.smallexample {margin-left: 3.2em}
-div.smallindentedblock {margin-left: 3.2em; font-size: smaller}
-div.smalllisp {margin-left: 3.2em}
-kbd {font-style:oblique}
+kbd {font-style: oblique}
 pre.display {font-family: inherit}
 pre.format {font-family: inherit}
 pre.menu-comment {font-family: serif}
 pre.menu-preformatted {font-family: serif}
-pre.smalldisplay {font-family: inherit; font-size: smaller}
-pre.smallexample {font-size: smaller}
-pre.smallformat {font-family: inherit; font-size: smaller}
-pre.smalllisp {font-size: smaller}
-span.nocodebreak {white-space:nowrap}
-span.nolinebreak {white-space:nowrap}
-span.roman {font-family:serif; font-weight:normal}
-span.sansserif {font-family:sans-serif; font-weight:normal}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
 ul.no-bullet {list-style: none}
 -->
 </style>
@@ -47,22 +37,18 @@ ul.no-bullet {list-style: none}
 
 </head>
 
-<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
-<a name="menubutton"></a>
-<div class="header">
+<body lang="en">
+<span id="menubutton"></span><div class="header">
 <p>
-Next: <a href="text.html#text" accesskey="n" rel="next">text</a>, Previous: <a href="checkbutton.html#checkbutton" accesskey="p" rel="prev">checkbutton</a>, Up: <a href="Widgets.html#Widgets" accesskey="u" rel="up">Widgets</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
+Next: <a href="text.html" accesskey="n" rel="next">text</a>, Previous: <a href="checkbutton.html" accesskey="p" rel="prev">checkbutton</a>, Up: <a href="Widgets.html" accesskey="u" rel="up">Widgets</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
 </div>
 <hr>
-<a name="menubutton-1"></a>
-<h3 class="section">2.8 menubutton</h3>
+<span id="menubutton-1"></span><h3 class="section">2.8 menubutton</h3>
 
 <p>menubutton \- Create and manipulate menubutton widgets
-</p><a name="Synopsis-7"></a>
-<h4 class="unnumberedsubsec">Synopsis</h4>
+</p><span id="Synopsis-7"></span><h4 class="unnumberedsubsec">Synopsis</h4>
 <p><b>menubutton</b><i> </i><i>pathName </i><span class="roman">?</span><i>options</i>?
-</p><a name="Standard-Options-7"></a>
-<h4 class="unnumberedsubsec">Standard Options</h4>
+</p><span id="Standard-Options-7"></span><h4 class="unnumberedsubsec">Standard Options</h4>
 
 
 <div class="example">
@@ -73,9 +59,8 @@ background        disabledForeground  padY        underline
 </pre></div>
 
 
-<p>See <a href="options.html#options">options</a>, for more information.
-</p><a name="Arguments-for-Menubutton"></a>
-<h4 class="unnumberedsubsec">Arguments for Menubutton</h4>
+<p>See <a href="options.html">options</a>, for more information.
+</p><span id="Arguments-for-Menubutton"></span><h4 class="unnumberedsubsec">Arguments for Menubutton</h4>
 
 
 <dl compact="compact">
@@ -137,8 +122,7 @@ from the size of the bitmap or text being displayed in it.
 </p></dd>
 </dl>
 
-<a name="Introduction-4"></a>
-<h4 class="unnumberedsubsec">Introduction</h4>
+<span id="Introduction-4"></span><h4 class="unnumberedsubsec">Introduction</h4>
 
 <p>The <b>menubutton</b> command creates a new window (given by the
 <i>pathName</i> argument) and makes it into a menubutton widget.
@@ -170,8 +154,7 @@ new menubutton is posted instead.
 The <b>tk-menu-bar</b> procedure is used to set up menu bars for
 scanning; see that procedure for more details.
 </p>
-<a name="A-Menubutton-Widget_0027s-Arguments"></a>
-<h4 class="unnumberedsubsec">A Menubutton Widget&rsquo;s Arguments</h4>
+<span id="A-Menubutton-Widget_0027s-Arguments"></span><h4 class="unnumberedsubsec">A Menubutton Widget&rsquo;s Arguments</h4>
 
 <p>The <b>menubutton</b> command creates a new Tcl command whose
 name is <i>pathName</i>.  This
@@ -220,8 +203,7 @@ use &ldquo;<i>pathName </i><b>:configure :state normal</b>&rdquo; instead.
 </p>
 </dd>
 </dl>
-<a name="g_t_0022Default-Bindings_0022-2"></a>
-<h4 class="unnumberedsubsec">&quot;Default Bindings&quot;</h4>
+<span id="g_t_0022Default-Bindings_0022-2"></span><h4 class="unnumberedsubsec">&quot;Default Bindings&quot;</h4>
 
 
 <p>Tk automatically creates class bindings for menu buttons that give them
@@ -266,13 +248,12 @@ actions occur:  the menu button is completely non-responsive.
 <p>The behavior of menu buttons can be changed by defining new bindings for
 individual widgets or by redefining the class bindings.
 </p>
-<a name="Keywords-7"></a>
-<h4 class="unnumberedsubsec">Keywords</h4>
+<span id="Keywords-7"></span><h4 class="unnumberedsubsec">Keywords</h4>
 <p>menubutton, widget
 </p><hr>
 <div class="header">
 <p>
-Next: <a href="text.html#text" accesskey="n" rel="next">text</a>, Previous: <a href="checkbutton.html#checkbutton" accesskey="p" rel="prev">checkbutton</a>, Up: <a href="Widgets.html#Widgets" accesskey="u" rel="up">Widgets</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
+Next: <a href="text.html" accesskey="n" rel="next">text</a>, Previous: <a href="checkbutton.html" accesskey="p" rel="prev">checkbutton</a>, Up: <a href="Widgets.html" accesskey="u" rel="up">Widgets</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
 </div>
 
 

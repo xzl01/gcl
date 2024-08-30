@@ -333,16 +333,16 @@ setup_READ()
 	backq_level = 0;
 }
 
-static void
-setup_standard_READ()
-{
-	READtable = standard_readtable;
-	READdefault_float_format = 'F';
-	READbase = 10;
-	READsuppress = FALSE;
-	sSAsharp_eq_contextA->s.s_dbind=Cnil;
-	backq_level = 0;
-}
+/* static void */
+/* setup_standard_READ() */
+/* { */
+/* 	READtable = standard_readtable; */
+/* 	READdefault_float_format = 'F'; */
+/* 	READbase = 10; */
+/* 	READsuppress = FALSE; */
+/* 	sSAsharp_eq_contextA->s.s_dbind=Cnil; */
+/* 	backq_level = 0; */
+/* } */
 
 object
 read_char(in)
@@ -695,10 +695,29 @@ BEGIN:
 		    goto K;
 		  else
 		    break;
-		}
-		else if ('a' <= char_code(c) && char_code(c) <= 'z')
-			c = code_char(char_code(c) - ('a' - 'A'));
-		else if (char_code(c) == ':') {
+		} else {
+
+		  switch(char_code(c)) {
+		  case '\b':
+		  case '\t':
+		  case '\n':
+		  case '\r':
+		  case '\f':
+		  case ' ':
+		  case '\177':
+		    READER_ERROR(in,"Cannot read character");
+		  default:
+		    break;
+		  }
+
+		  if ('a' <= char_code(c) && char_code(c) <= 'z') {
+		    if ('a' <= char_code(c) && char_code(c) <= 'z' &&
+			(READtable->rt.rt_case==sKupcase || READtable->rt.rt_case==sKinvert))
+		      c = code_char(char_code(c) - ('a' - 'A'));
+		    else if ('A' <= char_code(c) && char_code(c) <= 'Z' &&
+			     (READtable->rt.rt_case==sKdowncase || READtable->rt.rt_case==sKinvert))
+		      c = code_char(char_code(c) + ('a' - 'A'));
+		  } else if (char_code(c) == ':') {
 			if (colon_type == 0) {
 				colon_type = 1;
 				colon = length;
@@ -707,6 +726,7 @@ BEGIN:
 			else
 				colon_type = -1;
 				/*  Colon has appeared twice.  */
+		  }
 		}
         }
 	if (preserving_whitespace_flag || cat(c) != cat_whitespace)
@@ -807,46 +827,49 @@ SYMBOL:
 }
 
 static void
-Lleft_parenthesis_reader()
-{
-	object in, x;
-	object *p;
+Lleft_parenthesis_reader() {
 
-	check_arg(2);
-	in = vs_base[0];
-	vs_head = Cnil;
-	p = &vs_head;
-	for (;;) {
-		delimiting_char = code_char(')');
-		in_list_flag = TRUE;
-		x = read_object(in);
-		if (x == OBJNULL)
-			goto ENDUP;
-		if (dot_flag) {
-			if (p == &vs_head)
-	FEerror("A dot appeared after a left parenthesis.", 0);
-			delimiting_char = code_char(')');
-			in_list_flag = TRUE;
-			*p = SAFE_CDR(read_object(in));
-			if (dot_flag)
-	FEerror("Two dots appeared consecutively.", 0);
-			if (*p==OBJNULL)
-	FEerror("Object missing after dot.", 0);
-			delimiting_char = code_char(')');
-			in_list_flag = TRUE;
-			if (read_object(in)!=OBJNULL)
-        FEerror("Two objects after dot.",0);
-			goto ENDUP;
-		}
-		vs_push(x);
-		*p = make_cons(x, Cnil);
-		vs_popp;
-		p = &((*p)->c.c_cdr);
-	}
+  object in, x;
+  object *p;
+  
+  check_arg(2);
+  in = vs_base[0];
+  vs_top=vs_base+1;
+  p = &vs_head;
 
-ENDUP:
-	vs_base[0] = vs_pop;
-	return;
+  for (;;) {
+
+    delimiting_char = code_char(')');
+    in_list_flag = TRUE;
+
+    if ((x=read_object(in))==OBJNULL) {
+      *p=Cnil;
+      break;
+    }
+
+    if (dot_flag) {
+
+      if (p==&vs_head) READER_ERROR(in,"A dot appeared after a left parenthesis.");
+
+      delimiting_char = code_char(')');
+      in_list_flag = TRUE;
+      *p=SAFE_CDR(read_object(in));
+
+      if (dot_flag) READER_ERROR(in,"Two dots appeared consecutively.");
+      if (*p==OBJNULL) READER_ERROR(in,"Object missing after dot.");
+
+      delimiting_char = code_char(')');
+      in_list_flag = TRUE;
+      if (read_object(in)!=OBJNULL) READER_ERROR(in,"Two objects after dot.");
+
+      break;
+
+    }
+
+    collect(p,make_cons(x,Cnil));
+
+  }
+
 }
 
 
@@ -959,13 +982,8 @@ static void
 Lsingle_quote_reader()
 {
 	check_arg(2);
-	vs_popp;
-	vs_push(sLquote);
-	vs_push(read_object(vs_base[0]));
-	vs_push(Cnil);
-	stack_cons();
-	stack_cons();
-	vs_base[0] = vs_pop;
+	vs_base[0] = list(2,sLquote,read_object(vs_base[0]));
+	vs_top=vs_base+1;
 }
 
 static void
@@ -1111,14 +1129,8 @@ Lsharp_single_quote_reader()
 	check_arg(3);
 	if(vs_base[2] != Cnil && !READsuppress)
 		extra_argument('#');
-	vs_popp;
-	vs_popp;
-	vs_push(sLfunction);
-	vs_push(read_object(vs_base[0]));
-	vs_push(Cnil);
-	stack_cons();
-	stack_cons();
-	vs_base[0] = vs_pop;
+	vs_base[0] = list(2,sLfunction,read_object(vs_base[0]));
+	vs_top=vs_base+1;
 }
 
 #define	QUOTE	1
@@ -1163,20 +1175,8 @@ Lsharp_left_parenthesis_reader()
 			}	
 			goto L;
 		}
-		vs_push(siScomma);
-		vs_push(sLapply);
-		vs_push(sLquote);
-		vs_push(sLvector);
-		vs_push(Cnil);
-		stack_cons();
-		stack_cons();
-		vs_push(vs_base[2]);
-		vs_push(Cnil);
-		stack_cons();
-		stack_cons();
-		stack_cons();
-		stack_cons();
-		vs_base = vs_top - 1;
+		vs_base[0]=list(4,siScomma,sLapply,list(2,sLquote,sLvector),vs_base[2]);
+		vs_top=vs_base+1;
 		return;
 	}
 	vsp = vs_top;
@@ -1393,28 +1393,6 @@ FFN(siLsharp_comma_reader_for_compiler)()
 	vs_base[0] = make_cons(siSsharp_comma, vs_base[0]);
 }
 
-/*
-	For fasload.
-*/
-static void
-Lsharp_exclamation_reader()
-{
-	check_arg(3);
-	if(vs_base[2] != Cnil && !READsuppress)
-		extra_argument('!');
-	vs_popp;
-	vs_popp;
-	if (READsuppress) {
-		vs_base[0] = Cnil;
-		return;
-	}
-	vs_base[0] = read_object(vs_base[0]);
-	if (sSAsharp_eq_contextA->s.s_dbind!=Cnil)
-		vs_base[0]=patch_sharp(vs_base[0]);
-	ieval(vs_base[0]);
-	vs_popp;
-}
-
 static void
 Lsharp_B_reader()
 {
@@ -1564,38 +1542,6 @@ Ldefault_dispatch_macro()
 }
 
 /*
-	#p" ... " returns the pathname with namestring ... .
-*/
-static void
-Lsharp_p_reader()
-{
-	check_arg(3);
-	if (vs_base[2] != Cnil && !READsuppress)
-		extra_argument('p');
-	vs_popp;
-	vs_popp;
-	vs_base[0] = read_object(vs_base[0]);
-	vs_base[0] = coerce_to_pathname(vs_base[0]);
-}
-
-/*
-	#" ... " returns the pathname with namestring ... .
-*/
-static void
-Lsharp_double_quote_reader()
-{
-	check_arg(3);
-
-	if (vs_base[2] != Cnil && !READsuppress)
-		extra_argument('"');
-	vs_popp;
-	unread_char(vs_base[1], vs_base[0]);
-	vs_popp;
-	vs_base[0] = read_object(vs_base[0]);
-	vs_base[0] = coerce_to_pathname(vs_base[0]);
-}
-
-/*
 	#$ fixnum returns a random-state with the fixnum
 	as its content.
 */
@@ -1644,6 +1590,7 @@ object from, to;
 	if (to == Cnil) {
 		to = alloc_object(t_readtable);
 		to->rt.rt_self = NULL;
+		to->rt.rt_case = sKupcase;
 			/*  For GBC not to go mad.  */
 		vs_push(to);
 			/*  Saving for GBC.  */
@@ -1665,6 +1612,7 @@ object from, to;
 				rtab[i].rte_dtab[j]
 				= from->rt.rt_self[i].rte_dtab[j];
 		}
+	to->rt.rt_case=from->rt.rt_case;
 	vs_reset;
 	END_NO_INTERRUPT;}
 	return(to);
@@ -1790,8 +1738,7 @@ READ:
 		x = read_object_recursive(strm);
 		if (x == OBJNULL)
 			break;
-		*p = make_cons(x, Cnil);
-		p = &((*p)->c.c_cdr);
+		collect(p,make_cons(x,Cnil));
 	}
 	if (recursivep == Cnil) {
 	  if (sSAsharp_eq_contextA->s.s_dbind!=Cnil)
@@ -2152,7 +2099,8 @@ LFD(Lreadtablep)()
 		rdtbl->rt.rt_self[c].rte_chattrib
 		= cat_terminating;
 	rdtbl->rt.rt_self[c].rte_macro = fnc;
-	@(return Ct)
+        SGC_TOUCH(rdtbl);
+        @(return Ct)
 @)
 
 @(defun get_macro_character (chr &optional (rdtbl `current_readtable()`))
@@ -2212,6 +2160,18 @@ LFD(Lreadtablep)()
 	@(return Ct)
 @)
 
+DEFUN_NEW("READTABLE-CASE",object,fLreadtable_case,LISP,1,1,NONE,OO,OO,OO,OO,(object rt),"") {
+  check_type_readtable_no_default(&rt);
+  RETURN1(rt->rt.rt_case);
+}
+
+DEFUN_NEW("SET-READTABLE-CASE",object,fSset_readtable_case,SI,2,2,NONE,OO,OO,OO,OO,(object rt,object cas),"") {
+  check_type_readtable_no_default(&rt);
+  if (cas!=sKupcase && cas!=sKdowncase && cas!=sKpreserve && cas!=sKinvert)
+    TYPE_ERROR(cas,list(5,sLmember,sKupcase,sKdowncase,sKpreserve,sKinvert));
+  RETURN1(rt->rt.rt_case=cas);
+}
+
 @(static defun get_dispatch_macro_character (dspchr subchr
 	&optional (rdtbl `current_readtable()`))
 @
@@ -2235,7 +2195,7 @@ object x;
 	object in;
 	vs_mark;
 
-	in = make_string_input_stream(x, 0, x->st.st_fillp);
+	in = fSmake_string_input_stream_int(x, 0, x->st.st_fillp);
 	vs_push(in);
 	preserving_whitespace_flag = FALSE;
 	detect_eos_flag = FALSE;
@@ -2346,8 +2306,6 @@ gcl_init_read()
 	dtab['*'] = make_cf(Lsharp_asterisk_reader);
 	dtab[':'] = make_cf(Lsharp_colon_reader);
 	dtab['.'] = make_cf(Lsharp_dot_reader);
-	dtab['!'] = make_cf(Lsharp_exclamation_reader);
-	/*  Used for fasload only. */
 	dtab[','] = make_cf(Lsharp_comma_reader);
 	dtab['B'] = dtab['b'] = make_cf(Lsharp_B_reader);
 	dtab['O'] = dtab['o'] = make_cf(Lsharp_O_reader);
@@ -2368,9 +2326,6 @@ gcl_init_read()
 	dtab['<'] = make_cf(Lsharp_less_than_reader);
 */
 	dtab['|'] = make_cf(Lsharp_vertical_bar_reader);
-	dtab['"'] = make_cf(Lsharp_double_quote_reader);
-	dtab['p'] = make_cf(Lsharp_p_reader);
-	dtab['P'] = make_cf(Lsharp_p_reader);
 	/*  This is specific to this implimentation  */
 	dtab['$'] = make_cf(Lsharp_dollar_reader);
 	/*  This is specific to this implimentation  */
@@ -2381,6 +2336,13 @@ gcl_init_read()
 */
 
 	gcl_init_backq();
+
+	sKupcase = make_keyword("UPCASE");
+	sKdowncase = make_keyword("DOWNCASE");
+	sKpreserve = make_keyword("PRESERVE");
+	sKinvert = make_keyword("INVERT");
+
+	standard_readtable->rt.rt_case=sKupcase;
 
 	Vreadtable
  	= make_special("*READTABLE*",
@@ -2456,95 +2418,96 @@ gcl_init_read_function()
 
 object sSPinit;
 
-object
-read_fasl_vector1(in)
-object in;
-{
-	int dimcount, dim;
-	VOL object *vsp;
-	object vspo;
-	VOL object x;
-	long i;
-	bool e;
-	object old_READtable;
-	int old_READdefault_float_format;
-	int old_READbase;
-	int old_READsuppress;
-	volatile object old_READcontext;
-	int old_backq_level;
+/* object */
+/* read_fasl_vector1(in) */
+/* object in; */
+/* { */
+/* 	int dimcount, dim; */
+/* 	VOL object *vsp; */
+/* 	object vspo; */
+/* 	VOL object x; */
+/* 	long i; */
+/* 	bool e; */
+/* 	object old_READtable; */
+/* 	int old_READdefault_float_format; */
+/* 	int old_READbase; */
+/* 	int old_READsuppress; */
+/* 	volatile object old_READcontext; */
+/* 	int old_backq_level; */
 
-        /* to prevent longjmp clobber */
-        i=(long)&vsp;
-	vsp=&vspo;
-	old_READtable = READtable;
-	old_READdefault_float_format = READdefault_float_format;
-	old_READbase = READbase;
-	old_READsuppress = READsuppress;
-	old_READcontext=sSAsharp_eq_contextA->s.s_dbind;
-	/* BUG FIX by Toshiba */
-	vs_push(old_READtable);
-	old_backq_level = backq_level;
+/*         /\* to prevent longjmp clobber *\/ */
+/*         i=(long)&vsp; */
+/* 	i+=i; */
+/* 	vsp=&vspo; */
+/* 	old_READtable = READtable; */
+/* 	old_READdefault_float_format = READdefault_float_format; */
+/* 	old_READbase = READbase; */
+/* 	old_READsuppress = READsuppress; */
+/* 	old_READcontext=sSAsharp_eq_contextA->s.s_dbind; */
+/* 	/\* BUG FIX by Toshiba *\/ */
+/* 	vs_push(old_READtable); */
+/* 	old_backq_level = backq_level; */
 
-	setup_standard_READ();
+/* 	setup_standard_READ(); */
 
-	frs_push(FRS_PROTECT, Cnil);
-	if (nlj_active) {
-		e = TRUE;
-		goto L;
-	}
+/* 	frs_push(FRS_PROTECT, Cnil); */
+/* 	if (nlj_active) { */
+/* 		e = TRUE; */
+/* 		goto L; */
+/* 	} */
 
-	while (readc_stream(in) != '#')
-		;
-	while (readc_stream(in) != '(')
-		;
-	vsp = vs_top;
-	dimcount = 0;
-	for (;;) {
-                sSAsharp_eq_contextA->s.s_dbind=Cnil;
-		backq_level = 0;
-		delimiting_char = code_char(')');
-		preserving_whitespace_flag = FALSE;
-		detect_eos_flag = FALSE;
-		x = read_object(in);
-		if (x == OBJNULL)
-			break;
-		vs_check_push(x);
-		if (sSAsharp_eq_contextA->s.s_dbind!=Cnil)
-			x = vs_head = patch_sharp(x);
-		dimcount++;
-	}
-	if(dimcount==1 && type_of(vs_head)==t_vector)
-	  {/* new style where all read at once */
-	    x=vs_head;
-	    goto DONE;}
-	/* old style separately sharped, and no %init */
-	{BEGIN_NO_INTERRUPT;
-	x=alloc_simple_vector(dimcount,aet_object);
-	vs_push(x);
-	x->v.v_self
-	= (object *)alloc_relblock(dimcount * sizeof(object));
-	END_NO_INTERRUPT;}
-	for (dim = 0; dim < dimcount; dim++)
-		{SGC_TOUCH(x);
-		 x->cfd.cfd_self[dim] = vsp[dim];}
+/* 	while (readc_stream(in) != '#') */
+/* 		; */
+/* 	while (readc_stream(in) != '(') */
+/* 		; */
+/* 	vsp = vs_top; */
+/* 	dimcount = 0; */
+/* 	for (;;) { */
+/*                 sSAsharp_eq_contextA->s.s_dbind=Cnil; */
+/* 		backq_level = 0; */
+/* 		delimiting_char = code_char(')'); */
+/* 		preserving_whitespace_flag = FALSE; */
+/* 		detect_eos_flag = FALSE; */
+/* 		x = read_object(in); */
+/* 		if (x == OBJNULL) */
+/* 			break; */
+/* 		vs_check_push(x); */
+/* 		if (sSAsharp_eq_contextA->s.s_dbind!=Cnil) */
+/* 			x = vs_head = patch_sharp(x); */
+/* 		dimcount++; */
+/* 	} */
+/* 	if(dimcount==1 && type_of(vs_head)==t_vector) */
+/* 	  {/\* new style where all read at once *\/ */
+/* 	    x=vs_head; */
+/* 	    goto DONE;} */
+/* 	/\* old style separately sharped, and no %init *\/ */
+/* 	{BEGIN_NO_INTERRUPT; */
+/* 	x=alloc_simple_vector(dimcount,aet_object); */
+/* 	vs_push(x); */
+/* 	x->v.v_self */
+/* 	= (object *)alloc_relblock(dimcount * sizeof(object)); */
+/* 	END_NO_INTERRUPT;} */
+/* 	for (dim = 0; dim < dimcount; dim++) */
+/* 		{SGC_TOUCH(x); */
+/* 		 x->cfd.cfd_self[dim] = vsp[dim];} */
 	
 		 
-	  DONE:
-	e = FALSE;
+/* 	  DONE: */
+/* 	e = FALSE; */
 
-L:
-	frs_pop();
+/* L: */
+/* 	frs_pop(); */
 
-	READtable = old_READtable;
-	READdefault_float_format = old_READdefault_float_format;
-	READbase = old_READbase;
-	READsuppress = old_READsuppress;
-	sSAsharp_eq_contextA->s.s_dbind=old_READcontext;
-	backq_level = old_backq_level;
-	if (e) {
-		nlj_active = FALSE;
-		unwind(nlj_fr, nlj_tag);
-	}
-	vs_top = (object *)vsp;
-	return(x);
-}
+/* 	READtable = old_READtable; */
+/* 	READdefault_float_format = old_READdefault_float_format; */
+/* 	READbase = old_READbase; */
+/* 	READsuppress = old_READsuppress; */
+/* 	sSAsharp_eq_contextA->s.s_dbind=old_READcontext; */
+/* 	backq_level = old_backq_level; */
+/* 	if (e) { */
+/* 		nlj_active = FALSE; */
+/* 		unwind(nlj_fr, nlj_tag); */
+/* 	} */
+/* 	vs_top = (object *)vsp; */
+/* 	return(x); */
+/* } */

@@ -63,8 +63,9 @@ gcl_isnormal_double(double d) {
 
 }
 
-int gcl_isnormal_float(float f)
-{
+int
+gcl_isnormal_float(float f) {
+
   union {float f;int i;} u;
 
   if (!ISFINITE(f) || !f)
@@ -73,6 +74,55 @@ int gcl_isnormal_float(float f)
   u.f = f;
   return (u.i & 0x7f800000) != 0;
 
+}
+
+static inline int
+gcl_isnan_double(double d) {
+
+  if (ISFINITE(d))
+    return 0;
+  if (d==d)
+    return 0;
+  return 1;
+
+}
+
+static inline int
+gcl_isnan_float(float f) {
+
+  if (ISFINITE(f))
+    return 0;
+  if (f==f)
+    return 0;
+  return 1;
+
+}
+
+int
+gcl_isnan(object x) {
+
+  switch(type_of(x)) {
+  case t_shortfloat:
+    return gcl_isnan_float(sf(x));
+  case t_longfloat:
+    return gcl_isnan_double(lf(x));
+  default:
+    return 0;
+  }
+
+}
+
+int
+gcl_is_not_finite(object x)  {
+
+  switch(type_of(x)) {
+  case t_shortfloat:
+    return !ISFINITE(sf(x));
+  case t_longfloat:
+    return !ISFINITE(lf(x));
+  default:
+    return 0;
+  }
 }
 
 static void
@@ -277,7 +327,7 @@ LFD(Ldenominator)(void)
 		vs_base[0] = small_fixnum(1);
 }
 
-inline void
+void
 intdivrem(object x,object y,fixnum d,object *q,object *r) {
 
   enum type tx=type_of(x),ty=type_of(y);

@@ -6,12 +6,20 @@
 MakeAfun(addr,F_ARGD(min,max,flags,ARGTYPES(a,b,c,d)),0);
 MakeAfun(addr,F_ARGD(2,3,NONE,ARGTYPES(OO,OO,OO,OO)),0);
 */
+
+static int mv;
+
 object MakeAfun(object (*addr)(object,object), unsigned int argd, object data)
-{int type = (F_ARG_FLAGS_P(argd,F_requires_fun_passed) ? t_closure : t_afun);
+{
+  ufixnum at=F_TYPES(argd)>>F_TYPE_WIDTH;
+  ufixnum ma=F_MIN_ARGS(argd);
+  ufixnum xa=F_MAX_ARGS(argd);
+  ufixnum rt=F_RESULT_TYPE(argd);
+  int type = (F_ARG_FLAGS_P(argd,F_requires_fun_passed) ? t_closure : (!at&&!rt&&ma==xa&&!mv ? t_sfun : t_afun));
   object x = alloc_object(type);
   x->sfn.sfn_name = Cnil;
   x->sfn.sfn_self = addr;
-  x->sfn.sfn_argd = argd;
+  x->sfn.sfn_argd = type==t_sfun ? ma : argd;
   if (type == t_closure)
     { x->cl.cl_env = 0;
       x->cl.cl_envdim=0;}
@@ -107,7 +115,7 @@ DEFUN_NEW("SET-KEY-STRUCT",object,fSset_key_struct,SI,1,1,NONE,OO,OO,OO,OO,(obje
 }
      
 
-#define collect(top_,next_,val_) ({object _x=MMcons(val_,Cnil);\
+#define mcollect(top_,next_,val_) ({object _x=MMcons(val_,Cnil);\
                                    if (top_==Cnil) top_=next_=_x; \
                                    else next_=next_->c.c_cdr=_x;})
 
@@ -125,23 +133,23 @@ put_fn_procls(object sym,fixnum argd,fixnum oneval,object def,object rdef) {
   for (i=0;i<minargs;i++,atypes >>=F_TYPE_WIDTH) 
     switch(maxargs!=minargs ? F_object : atypes & MASK_RANGE(0,F_TYPE_WIDTH)) {
     case F_object:
-      collect(ta,na,def);
+      mcollect(ta,na,def);
       break;
     case F_int:
-      collect(ta,na,sLfixnum);
+      mcollect(ta,na,sLfixnum);
       break;
     case F_shortfloat:
-      collect(ta,na,sLshort_float);
+      mcollect(ta,na,sLshort_float);
       break;
     case F_double_ptr:
-      collect(ta,na,sLlong_float);
+      mcollect(ta,na,sLlong_float);
       break;
     default:
       FEerror("Bad sfn declaration",0);
       break;
     }
   if (maxargs!=minargs)
-    collect(ta,na,sLA);
+    mcollect(ta,na,sLA);
   putprop(sym,ta,sSproclaimed_arg_types);
   ta=na=Cnil;
   if (oneval) 
@@ -188,15 +196,19 @@ LISP_makefun(char *strg, void *fn, unsigned int argd)
 void
 SI_makefunm(char *strg, void *fn, unsigned int argd)
 { object sym = make_si_ordinary(strg);
- fSfset(sym, fSmakefun(sym,fn,argd));
- put_fn_procls(sym,argd,0,Ct,Ct);
+  mv=1;
+  fSfset(sym, fSmakefun(sym,fn,argd));
+  mv=0;
+  put_fn_procls(sym,argd,0,Ct,Ct);
 }
 
 void
 LISP_makefunm(char *strg, void *fn, unsigned int argd)
 { object sym = make_ordinary(strg);
- fSfset(sym, fSmakefun(sym,fn,argd));
- put_fn_procls(sym,argd,0,Ct,Ct);
+  mv=1;
+  fSfset(sym, fSmakefun(sym,fn,argd));
+  mv=0;
+  put_fn_procls(sym,argd,0,Ct,Ct);
 }
 
 

@@ -25,13 +25,7 @@
 ; rather than recursion, as needed for large data sets.
 
 
-(in-package 'lisp)
-
-(export '(union nunion intersection nintersection
-          set-difference nset-difference set-exclusive-or nset-exclusive-or
-          subsetp nth nth-value nthcdr first second third fourth fifth sixth seventh eighth ninth tenth))
-
-(in-package 'system)
+(in-package :si)
 
 (eval-when (compile)
   (proclaim '(optimize (safety 0) (space 3)))
@@ -129,8 +123,8 @@
 
 (defun smallnthcdr (n x)
   (declare (fixnum n))
-  (cond ((atom x) (when x (tp-error x proper-list)))
-	((= n 0) x)
+  (cond ((= n 0) x)
+	((atom x) (when x (tp-error x proper-list)))
 	((smallnthcdr (1- n) (cdr x)))))
 
 (defun bignthcdr (n i s f) 
@@ -186,3 +180,34 @@
 (defmacro nth-value (n expr)
   (declare (optimize (safety 1)))
   `(nth ,n (multiple-value-list ,expr)))
+
+(eval-when (compile eval)
+
+  (defmacro repl-if (tc) `(labels ((l (tr &aux (k (if kf (funcall kf tr) tr)))
+				       (cond (,tc n)
+					     ((atom tr) tr)
+					     ((let* ((ca (car tr))(a (l ca))(cd (cdr tr))(d (l cd)))
+						(if (and (eq a ca) (eq d cd)) tr (cons a d)))))))
+			     (declare (ftype (function (t) t) l))
+			     (l tr))))
+
+(defun subst (n o tr &key key test test-not
+		&aux (kf (when key (coerce key 'function)))
+		(tf (when test (coerce test 'function)))
+		(ntf (when test-not (coerce test-not 'function))))
+  (declare (optimize (safety 1)))
+  (check-type key (or null function))
+  (check-type test (or null function))
+  (check-type test-not (or null function))
+  (repl-if (cond (tf (funcall tf o k))(ntf (not (funcall ntf o k)))((eql o k)))))
+
+(defun subst-if (n p tr &key key &aux (kf (when key (coerce key 'function))))
+  (declare (optimize (safety 1)))
+  (check-type p function)
+  (check-type key (or null function))
+  (repl-if (funcall p k)))
+(defun subst-if-not (n p tr &key key &aux (kf (when key (coerce key 'function))))
+  (declare (optimize (safety 1)))
+  (check-type p function)
+  (check-type key (or null function))
+  (repl-if (not (funcall p k)))))

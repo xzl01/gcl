@@ -1,45 +1,35 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<!-- Created by GNU Texinfo 5.2, http://www.gnu.org/software/texinfo/ -->
+<!-- Created by GNU Texinfo 6.7, http://www.gnu.org/software/texinfo/ -->
 <head>
-<title>GCL TK Manual: canvas</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>canvas (GCL TK Manual)</title>
 
-<meta name="description" content="GCL TK Manual: canvas">
-<meta name="keywords" content="GCL TK Manual: canvas">
+<meta name="description" content="canvas (GCL TK Manual)">
+<meta name="keywords" content="canvas (GCL TK Manual)">
 <meta name="resource-type" content="document">
 <meta name="distribution" content="global">
 <meta name="Generator" content="makeinfo">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link href="index.html#Top" rel="start" title="Top">
+<link href="index.html" rel="start" title="Top">
 <link href="wm.html#SEC_Contents" rel="contents" title="Table of Contents">
-<link href="Widgets.html#Widgets" rel="up" title="Widgets">
-<link href="menu.html#menu" rel="next" title="menu">
-<link href="scale.html#scale" rel="prev" title="scale">
+<link href="Widgets.html" rel="up" title="Widgets">
+<link href="menu.html" rel="next" title="menu">
+<link href="scale.html" rel="prev" title="scale">
 <style type="text/css">
 <!--
 a.summary-letter {text-decoration: none}
-blockquote.smallquotation {font-size: smaller}
+blockquote.indentedblock {margin-right: 0em}
 div.display {margin-left: 3.2em}
 div.example {margin-left: 3.2em}
-div.indentedblock {margin-left: 3.2em}
 div.lisp {margin-left: 3.2em}
-div.smalldisplay {margin-left: 3.2em}
-div.smallexample {margin-left: 3.2em}
-div.smallindentedblock {margin-left: 3.2em; font-size: smaller}
-div.smalllisp {margin-left: 3.2em}
-kbd {font-style:oblique}
+kbd {font-style: oblique}
 pre.display {font-family: inherit}
 pre.format {font-family: inherit}
 pre.menu-comment {font-family: serif}
 pre.menu-preformatted {font-family: serif}
-pre.smalldisplay {font-family: inherit; font-size: smaller}
-pre.smallexample {font-size: smaller}
-pre.smallformat {font-family: inherit; font-size: smaller}
-pre.smalllisp {font-size: smaller}
-span.nocodebreak {white-space:nowrap}
-span.nolinebreak {white-space:nowrap}
-span.roman {font-family:serif; font-weight:normal}
-span.sansserif {font-family:sans-serif; font-weight:normal}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
 ul.no-bullet {list-style: none}
 -->
 </style>
@@ -47,22 +37,18 @@ ul.no-bullet {list-style: none}
 
 </head>
 
-<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
-<a name="canvas"></a>
-<div class="header">
+<body lang="en">
+<span id="canvas"></span><div class="header">
 <p>
-Next: <a href="menu.html#menu" accesskey="n" rel="next">menu</a>, Previous: <a href="scale.html#scale" accesskey="p" rel="prev">scale</a>, Up: <a href="Widgets.html#Widgets" accesskey="u" rel="up">Widgets</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
+Next: <a href="menu.html" accesskey="n" rel="next">menu</a>, Previous: <a href="scale.html" accesskey="p" rel="prev">scale</a>, Up: <a href="Widgets.html" accesskey="u" rel="up">Widgets</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
 </div>
 <hr>
-<a name="canvas-1"></a>
-<h3 class="section">2.4 canvas</h3>
+<span id="canvas-1"></span><h3 class="section">2.4 canvas</h3>
 
 <p>canvas \- Create and manipulate canvas widgets
-</p><a name="Synopsis-3"></a>
-<h4 class="unnumberedsubsec">Synopsis</h4>
+</p><span id="Synopsis-3"></span><h4 class="unnumberedsubsec">Synopsis</h4>
 <p><b>canvas</b><i> </i><i>pathName </i><span class="roman">?</span><i>options</i>?
-</p><a name="Standard-Options-3"></a>
-<h4 class="unnumberedsubsec">Standard Options</h4>
+</p><span id="Standard-Options-3"></span><h4 class="unnumberedsubsec">Standard Options</h4>
 
 
 <div class="example">
@@ -73,9 +59,8 @@ insertBackground insertWidth       selectForeground
 </pre></div>
 
 
-<p>See <a href="options.html#options">options</a>, for more information.
-</p><a name="Arguments-for-Canvas"></a>
-<h4 class="unnumberedsubsec">Arguments for Canvas</h4>
+<p>See <a href="options.html">options</a>, for more information.
+</p><span id="Arguments-for-Canvas"></span><h4 class="unnumberedsubsec">Arguments for Canvas</h4>
 
 
 <dl compact="compact">
@@ -155,8 +140,7 @@ of the forms described in the COORDINATES section below.
 </p></dd>
 </dl>
 
-<a name="Introduction-2"></a>
-<h4 class="unnumberedsubsec">Introduction</h4>
+<span id="Introduction-2"></span><h4 class="unnumberedsubsec">Introduction</h4>
 
 <p>The <b>canvas</b> command creates a new window (given
 by the <i>pathName</i> argument) and makes it into a canvas widget.
@@ -180,8 +164,7 @@ the mouse cursor over an item.
 This means that items in a canvas can have behaviors defined by
 the Tcl scripts bound to them.
 </p>
-<a name="Display-List"></a>
-<h4 class="unnumberedsubsec">Display List</h4>
+<span id="Display-List"></span><h4 class="unnumberedsubsec">Display List</h4>
 
 <p>The items in a canvas are ordered for purposes of display,
 with the first item in the display list being displayed
@@ -194,8 +177,7 @@ display list, on top of everything else.
 Widget commands may be used to re-arrange the order of the
 display list.
 </p>
-<a name="Item-Ids-And-Tags"></a>
-<h4 class="unnumberedsubsec">Item Ids And Tags</h4>
+<span id="Item-Ids-And-Tags"></span><h4 class="unnumberedsubsec">Item Ids And Tags</h4>
 
 <p>Items in a canvas widget may be named in either of two ways:
 by id or by tag.
@@ -241,8 +223,7 @@ the display list that is suitable for the command.
 Exceptions are noted in the widget command descriptions
 below.
 </p>
-<a name="Coordinates"></a>
-<h4 class="unnumberedsubsec">Coordinates</h4>
+<span id="Coordinates"></span><h4 class="unnumberedsubsec">Coordinates</h4>
 
 <p>All coordinates related to canvases are stored as floating-point
 numbers.
@@ -256,8 +237,7 @@ the screen;  if it is <b>c</b> then the distance is in centimeters;
 Larger y-coordinates refer to points lower on the screen;  larger
 x-coordinates refer to points farther to the right.
 </p>
-<a name="Transformations"></a>
-<h4 class="unnumberedsubsec">Transformations</h4>
+<span id="Transformations"></span><h4 class="unnumberedsubsec">Transformations</h4>
 
 <p>Normally the origin of the canvas coordinate system is at the
 upper-left corner of the window containing the canvas.
@@ -271,8 +251,7 @@ system relative to the window coordinate system.
 <p>Indidividual items may be moved or scaled using widget commands
 described below, but they may not be rotated.
 </p>
-<a name="Indices"></a>
-<h4 class="unnumberedsubsec">Indices</h4>
+<span id="Indices"></span><h4 class="unnumberedsubsec">Indices</h4>
 
 <p>Text items support the notion of an <i>index</i> for identifying
 particular positions within the item.
@@ -324,8 +303,7 @@ line that is closest to the given point.
 </p>
 </dd>
 </dl>
-<a name="A-Canvas-Widget_0027s-Arguments"></a>
-<h4 class="unnumberedsubsec">A Canvas Widget&rsquo;s Arguments</h4>
+<span id="A-Canvas-Widget_0027s-Arguments"></span><h4 class="unnumberedsubsec">A Canvas Widget&rsquo;s Arguments</h4>
 
 <p>The <b>canvas</b> command creates a new Tcl command whose
 name is <i>pathName</i>.  This
@@ -929,8 +907,7 @@ and so on.  The return value is an empty string.
 </p>
 </dd>
 </dl>
-<a name="Overview-Of-Item-Types"></a>
-<h4 class="unnumberedsubsec">Overview Of Item Types</h4>
+<span id="Overview-Of-Item-Types"></span><h4 class="unnumberedsubsec">Overview Of Item Types</h4>
 
 <p>The sections below describe the various types of items supported
 by canvas widgets.  Each item type is characterized by two things:
@@ -944,8 +921,7 @@ Where items do support these facilities, it is noted explicitly
 in the descriptions below (at present, only text items provide
 this support).
 </p>
-<a name="Arc-Items"></a>
-<h4 class="unnumberedsubsec">Arc Items</h4>
+<span id="Arc-Items"></span><h4 class="unnumberedsubsec">Arc Items</h4>
 
 <p>Items of type <b>arc</b> appear on the display as arc-shaped regions.
 An arc is a section of an oval delimited by two angles (specified
@@ -1032,8 +1008,7 @@ This option defaults to 1.0.
 </dd>
 </dl>
 
-<a name="Bitmap-Items"></a>
-<h4 class="unnumberedsubsec">Bitmap Items</h4>
+<span id="Bitmap-Items"></span><h4 class="unnumberedsubsec">Bitmap Items</h4>
 
 <p>Items of type <b>bitmap</b> appear on the display as images with
 two colors, foreground and background.
@@ -1087,8 +1062,7 @@ existing tags for the item.
 </dl>
 </dd>
 </dl>
-<a name="Line-Items"></a>
-<h4 class="unnumberedsubsec">Line Items</h4>
+<span id="Line-Items"></span><h4 class="unnumberedsubsec">Line Items</h4>
 
 <p>Items of type <b>line</b> appear on the display as one or more connected
 line segments or curves.
@@ -1189,8 +1163,7 @@ If this option isn&rsquo;t specified then it defaults to 1.0.
 </dl>
 </dd>
 </dl>
-<a name="Oval-Items"></a>
-<h4 class="unnumberedsubsec">Oval Items</h4>
+<span id="Oval-Items"></span><h4 class="unnumberedsubsec">Oval Items</h4>
 
 <p>Items of type <b>oval</b> appear as circular or oval regions on
 the display.  Each oval may have an outline, a fill, or
@@ -1255,8 +1228,7 @@ This option defaults to 1.0.
 </dl>
 </dd>
 </dl>
-<a name="Polygon-Items"></a>
-<h4 class="unnumberedsubsec">Polygon Items</h4>
+<span id="Polygon-Items"></span><h4 class="unnumberedsubsec">Polygon Items</h4>
 
 <p>Items of type <b>polygon</b> appear as polygonal or curved filled regions
 on the display.
@@ -1316,8 +1288,7 @@ existing tags for the item.
 </dd>
 </dl>
 
-<a name="Rectangle-Items"></a>
-<h4 class="unnumberedsubsec">Rectangle Items</h4>
+<span id="Rectangle-Items"></span><h4 class="unnumberedsubsec">Rectangle Items</h4>
 
 <p>Items of type <b>rectangle</b> appear as rectangular regions on
 the display.  Each rectangle may have an outline, a fill, or
@@ -1379,8 +1350,7 @@ This option defaults to 1.0.
 </dl>
 </dd>
 </dl>
-<a name="Text-Items"></a>
-<h4 class="unnumberedsubsec">Text Items</h4>
+<span id="Text-Items"></span><h4 class="unnumberedsubsec">Text Items</h4>
 
 <p>A text item displays a string of characters on the screen in one
 or more lines.
@@ -1470,8 +1440,7 @@ character.
 </dl>
 </dd>
 </dl>
-<a name="Window-Items"></a>
-<h4 class="unnumberedsubsec">Window Items</h4>
+<span id="Window-Items"></span><h4 class="unnumberedsubsec">Window Items</h4>
 
 <p>Items of type <b>window</b> cause a particular window to be displayed
 at a given position on the canvas.
@@ -1529,8 +1498,7 @@ the canvas widget or a child of some ancestor of the canvas widget.
 </p>
 </dd>
 </dl>
-<a name="Application_002dDefined-Item-Types"></a>
-<h4 class="unnumberedsubsec">Application-Defined Item Types</h4>
+<span id="Application_002dDefined-Item-Types"></span><h4 class="unnumberedsubsec">Application-Defined Item Types</h4>
 
 <p>It is possible for individual applications to define new item
 types for canvas widgets using C code.
@@ -1539,15 +1507,13 @@ and it&rsquo;s possible they may change, but you should be able to
 see how they work by examining the code for some of the existing
 item types.
 </p>
-<a name="Bindings-1"></a>
-<h4 class="unnumberedsubsec">Bindings</h4>
+<span id="Bindings-1"></span><h4 class="unnumberedsubsec">Bindings</h4>
 
 <p>In the current implementation, new canvases are not given any
 default behavior:  you&rsquo;ll have to execute explicit Tcl commands
 to give the canvas its behavior.
 </p>
-<a name="Credits"></a>
-<h4 class="unnumberedsubsec">Credits</h4>
+<span id="Credits"></span><h4 class="unnumberedsubsec">Credits</h4>
 
 <p>Tk&rsquo;s canvas widget is a blatant ripoff of ideas from Joel Bartlett&rsquo;s
 <i>ezd</i><span class="roman"> program.  </span><i>Ezd</i> provides structured graphics in a Scheme
@@ -1555,13 +1521,12 @@ environment and preceded canvases by a year or two.  Its simple
 mechanisms for placing and animating graphical objects inspired the
 functions of canvases.
 </p>
-<a name="Keywords-3"></a>
-<h4 class="unnumberedsubsec">Keywords</h4>
+<span id="Keywords-3"></span><h4 class="unnumberedsubsec">Keywords</h4>
 <p>canvas, widget
 </p><hr>
 <div class="header">
 <p>
-Next: <a href="menu.html#menu" accesskey="n" rel="next">menu</a>, Previous: <a href="scale.html#scale" accesskey="p" rel="prev">scale</a>, Up: <a href="Widgets.html#Widgets" accesskey="u" rel="up">Widgets</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
+Next: <a href="menu.html" accesskey="n" rel="next">menu</a>, Previous: <a href="scale.html" accesskey="p" rel="prev">scale</a>, Up: <a href="Widgets.html" accesskey="u" rel="up">Widgets</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
 </div>
 
 

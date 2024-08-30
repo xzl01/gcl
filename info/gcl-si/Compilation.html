@@ -1,46 +1,36 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<!-- Created by GNU Texinfo 5.2, http://www.gnu.org/software/texinfo/ -->
+<!-- Created by GNU Texinfo 6.7, http://www.gnu.org/software/texinfo/ -->
 <head>
-<title>GCL SI Manual: Compilation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Compilation (GCL SI Manual)</title>
 
-<meta name="description" content="GCL SI Manual: Compilation">
-<meta name="keywords" content="GCL SI Manual: Compilation">
+<meta name="description" content="Compilation (GCL SI Manual)">
+<meta name="keywords" content="Compilation (GCL SI Manual)">
 <meta name="resource-type" content="document">
 <meta name="distribution" content="global">
 <meta name="Generator" content="makeinfo">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link href="index.html#Top" rel="start" title="Top">
-<link href="Function-and-Variable-Index.html#Function-and-Variable-Index" rel="index" title="Function and Variable Index">
+<link href="index.html" rel="start" title="Top">
+<link href="Function-and-Variable-Index.html" rel="index" title="Function and Variable Index">
 <link href="Function-and-Variable-Index.html#SEC_Contents" rel="contents" title="Table of Contents">
-<link href="index.html#Top" rel="up" title="Top">
-<link href="Symbols.html#Symbols" rel="next" title="Symbols">
-<link href="Special-Forms-and-Functions.html#Special-Forms-and-Functions" rel="prev" title="Special Forms and Functions">
+<link href="index.html" rel="up" title="Top">
+<link href="Symbols.html" rel="next" title="Symbols">
+<link href="Special-Forms-and-Functions.html" rel="prev" title="Special Forms and Functions">
 <style type="text/css">
 <!--
 a.summary-letter {text-decoration: none}
-blockquote.smallquotation {font-size: smaller}
+blockquote.indentedblock {margin-right: 0em}
 div.display {margin-left: 3.2em}
 div.example {margin-left: 3.2em}
-div.indentedblock {margin-left: 3.2em}
 div.lisp {margin-left: 3.2em}
-div.smalldisplay {margin-left: 3.2em}
-div.smallexample {margin-left: 3.2em}
-div.smallindentedblock {margin-left: 3.2em; font-size: smaller}
-div.smalllisp {margin-left: 3.2em}
-kbd {font-style:oblique}
+kbd {font-style: oblique}
 pre.display {font-family: inherit}
 pre.format {font-family: inherit}
 pre.menu-comment {font-family: serif}
 pre.menu-preformatted {font-family: serif}
-pre.smalldisplay {font-family: inherit; font-size: smaller}
-pre.smallexample {font-size: smaller}
-pre.smallformat {font-family: inherit; font-size: smaller}
-pre.smalllisp {font-size: smaller}
-span.nocodebreak {white-space:nowrap}
-span.nolinebreak {white-space:nowrap}
-span.roman {font-family:serif; font-weight:normal}
-span.sansserif {font-family:sans-serif; font-weight:normal}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
 ul.no-bullet {list-style: none}
 -->
 </style>
@@ -48,18 +38,16 @@ ul.no-bullet {list-style: none}
 
 </head>
 
-<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
-<a name="Compilation"></a>
-<div class="header">
+<body lang="en">
+<span id="Compilation"></span><div class="header">
 <p>
-Next: <a href="Symbols.html#Symbols" accesskey="n" rel="next">Symbols</a>, Previous: <a href="Special-Forms-and-Functions.html#Special-Forms-and-Functions" accesskey="p" rel="prev">Special Forms and Functions</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Function-and-Variable-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Function-and-Variable-Index.html#Function-and-Variable-Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="Symbols.html" accesskey="n" rel="next">Symbols</a>, Previous: <a href="Special-Forms-and-Functions.html" accesskey="p" rel="prev">Special Forms and Functions</a>, Up: <a href="index.html" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Function-and-Variable-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Function-and-Variable-Index.html" title="Index" rel="index">Index</a>]</p>
 </div>
 <hr>
-<a name="Compilation-1"></a>
-<h2 class="chapter">7 Compilation</h2>
+<span id="Compilation-1"></span><h2 class="chapter">7 Compilation</h2>
 
 <dl>
-<dt><a name="index-COMPILE"></a>Function: <strong>COMPILE</strong> <em>(name &amp;optional (definition nil))</em></dt>
+<dt id="index-COMPILE">Function: <strong>COMPILE</strong> <em>(name &amp;optional (definition nil))</em></dt>
 <dd><p>Package:LISP
 </p>
 <p>If DEFINITION is NIL, NAME must be the name of a not-yet-compiled
@@ -78,7 +66,7 @@ NIL, these files are automatically deleted after compilation.
 </dd></dl>
 
 <dl>
-<dt><a name="index-LINK"></a>Function: <strong>LINK</strong> <em>(files image &amp;optional post extra-libs (run-user-init t) &amp;aux raw init) </em></dt>
+<dt id="index-LINK">Function: <strong>LINK</strong> <em>(files image &amp;optional post extra-libs (run-user-init t) &amp;aux raw init)</em></dt>
 <dd><p>Package:LISP
 </p>
 <p>On systems where dlopen is used for relocations, one cannot make custom
@@ -122,7 +110,7 @@ method in a relatively transparent way.
 </dd></dl>
 
 <dl>
-<dt><a name="index-EVAL_002dWHEN"></a>Special Form: <strong>EVAL-WHEN</strong></dt>
+<dt id="index-EVAL_002dWHEN">Special Form: <strong>EVAL-WHEN</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -139,7 +127,7 @@ be evaluated when the compiled code is loaded.
 </dd></dl>
 
 <dl>
-<dt><a name="index-COMPILE_002dFILE"></a>Function: <strong>COMPILE-FILE</strong> <em>(input-pathname &amp;key output-file (load nil) (message-file nil)  ;GCL specific keywords: system-p c-debug c-file h-file data-file)</em></dt>
+<dt id="index-COMPILE_002dFILE">Function: <strong>COMPILE-FILE</strong> <em>(input-pathname &amp;key output-file (load nil) (message-file nil)  ;GCL specific keywords: system-p c-debug c-file h-file data-file)</em></dt>
 <dd><p>Package:LISP
 </p>
 
@@ -191,8 +179,7 @@ are given.  Note that most common lisps will simply ignore the top level atom
 </p>
 </dd></dl>
 
-<a name="subsection-Evaluation-at-Compile-time"></a>
-<h2 class="unnumbered">subsection Evaluation at Compile time</h2>
+<span id="subsection-Evaluation-at-Compile-time"></span><h2 class="unnumbered">subsection Evaluation at Compile time</h2>
 
 <p>In GCL the eval-when behaviour was changed in order to allow
 more efficient init code, and also to bring it into line with the resolution
@@ -252,7 +239,7 @@ compile-file and *fasd-data* is not eq to :system-p.
 <p>See OPTIMIZE on how to enable warnings of slow constructs.
 </p>
 <dl>
-<dt><a name="index-PROCLAIM"></a>Function: <strong>PROCLAIM</strong> <em>(decl-spec)</em></dt>
+<dt id="index-PROCLAIM">Function: <strong>PROCLAIM</strong> <em>(decl-spec)</em></dt>
 <dd><p>Package:LISP
 </p>
 <p>Puts the declaration given by DECL-SPEC into effect globally.  See the doc of
@@ -267,7 +254,7 @@ DECLARE for possible DECL-SPECs.
 
 
 <dl>
-<dt><a name="index-PROVIDE"></a>Function: <strong>PROVIDE</strong> <em>(module-name)</em></dt>
+<dt id="index-PROVIDE">Function: <strong>PROVIDE</strong> <em>(module-name)</em></dt>
 <dd><p>Package:LISP
 </p>
 <p>Adds the specified module to the list of modules maintained in *MODULES*.
@@ -276,7 +263,7 @@ DECLARE for possible DECL-SPECs.
 </dd></dl>
 
 <dl>
-<dt><a name="index-COMPILED_002dFUNCTION_002dP"></a>Function: <strong>COMPILED-FUNCTION-P</strong> <em>(x)</em></dt>
+<dt id="index-COMPILED_002dFUNCTION_002dP">Function: <strong>COMPILED-FUNCTION-P</strong> <em>(x)</em></dt>
 <dd><p>Package:LISP
 </p>
 <p>Returns T if X is a compiled function; NIL otherwise.
@@ -285,7 +272,7 @@ DECLARE for possible DECL-SPECs.
 </dd></dl>
 
 <dl>
-<dt><a name="index-GPROF_002dSTART"></a>Function: <strong>GPROF-START</strong> <em>()</em></dt>
+<dt id="index-GPROF_002dSTART">Function: <strong>GPROF-START</strong> <em>()</em></dt>
 <dd><p>Package:SYSTEM
 </p>
 <p>GCL now has preliminary support for profiling with gprof, an
@@ -298,7 +285,7 @@ counters.
 
 
 <dl>
-<dt><a name="index-GPROF_002dQUIT"></a>Function: <strong>GPROF-QUIT</strong> <em>()</em></dt>
+<dt id="index-GPROF_002dQUIT">Function: <strong>GPROF-QUIT</strong> <em>()</em></dt>
 <dd><p>Package:SYSTEM
 </p>
 <p>GCL now has preliminary support for profiling with gprof, an
@@ -313,7 +300,7 @@ their lisp names.  Please see also the PROFILE function.
 
 
 <dl>
-<dt><a name="index-GPROF_002dSET"></a>Function: <strong>GPROF-SET</strong> <em>(begin end)</em></dt>
+<dt id="index-GPROF_002dSET">Function: <strong>GPROF-SET</strong> <em>(begin end)</em></dt>
 <dd><p>Package:SYSTEM
 </p>
 <p>GCL now has preliminary support for profiling with gprof, an
@@ -331,31 +318,31 @@ GPROF-SET with both argments set to 0.
 
 
 <dl>
-<dt><a name="index-_002aDEFAULT_002dSYSTEM_002dP_002a"></a>Variable: <strong>*DEFAULT-SYSTEM-P*</strong></dt>
+<dt id="index-_002aDEFAULT_002dSYSTEM_002dP_002a">Variable: <strong>*DEFAULT-SYSTEM-P*</strong></dt>
 <dd><p>Pakcage:COMPILER
 Specifies the default setting of :SYSTEM-P used by COMPILE.  Defaults to NIL.
 </p></dd></dl>
 
 <dl>
-<dt><a name="index-_002aDEFAULT_002dC_002dFILE_002a"></a>Variable: <strong>*DEFAULT-C-FILE*</strong></dt>
+<dt id="index-_002aDEFAULT_002dC_002dFILE_002a">Variable: <strong>*DEFAULT-C-FILE*</strong></dt>
 <dd><p>Pakcage:COMPILER
 Specifies the default setting of :C-FILE used by COMPILE.  Defaults to NIL.
 </p></dd></dl>
 
 <dl>
-<dt><a name="index-_002aDEFAULT_002dH_002dFILE_002a"></a>Variable: <strong>*DEFAULT-H-FILE*</strong></dt>
+<dt id="index-_002aDEFAULT_002dH_002dFILE_002a">Variable: <strong>*DEFAULT-H-FILE*</strong></dt>
 <dd><p>Pakcage:COMPILER
 Specifies the default setting of :H-FILE used by COMPILE.  Defaults to NIL.
 </p></dd></dl>
 
 <dl>
-<dt><a name="index-_002aDEFAULT_002dDATA_002dFILE_002a"></a>Variable: <strong>*DEFAULT-DATA-FILE*</strong></dt>
+<dt id="index-_002aDEFAULT_002dDATA_002dFILE_002a">Variable: <strong>*DEFAULT-DATA-FILE*</strong></dt>
 <dd><p>Pakcage:COMPILER
 Specifies the default setting of :DATA-FILE used by COMPILE.  Defaults to NIL.
 </p></dd></dl>
 
 <dl>
-<dt><a name="index-_002aFEATURES_002a"></a>Variable: <strong>*FEATURES*</strong></dt>
+<dt id="index-_002aFEATURES_002a">Variable: <strong>*FEATURES*</strong></dt>
 <dd><p>Package:LISP
 List of symbols that name features of the current version of GCL.
 These features are used to decide the read-time conditionalization facility
@@ -391,7 +378,7 @@ true.  The NOT description is true only when its sub-description is false.
 <hr>
 <div class="header">
 <p>
-Next: <a href="Symbols.html#Symbols" accesskey="n" rel="next">Symbols</a>, Previous: <a href="Special-Forms-and-Functions.html#Special-Forms-and-Functions" accesskey="p" rel="prev">Special Forms and Functions</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Function-and-Variable-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Function-and-Variable-Index.html#Function-and-Variable-Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="Symbols.html" accesskey="n" rel="next">Symbols</a>, Previous: <a href="Special-Forms-and-Functions.html" accesskey="p" rel="prev">Special Forms and Functions</a>, Up: <a href="index.html" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Function-and-Variable-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Function-and-Variable-Index.html" title="Index" rel="index">Index</a>]</p>
 </div>
 
 

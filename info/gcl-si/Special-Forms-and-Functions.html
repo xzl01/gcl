@@ -1,46 +1,36 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<!-- Created by GNU Texinfo 5.2, http://www.gnu.org/software/texinfo/ -->
+<!-- Created by GNU Texinfo 6.7, http://www.gnu.org/software/texinfo/ -->
 <head>
-<title>GCL SI Manual: Special Forms and Functions</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Special Forms and Functions (GCL SI Manual)</title>
 
-<meta name="description" content="GCL SI Manual: Special Forms and Functions">
-<meta name="keywords" content="GCL SI Manual: Special Forms and Functions">
+<meta name="description" content="Special Forms and Functions (GCL SI Manual)">
+<meta name="keywords" content="Special Forms and Functions (GCL SI Manual)">
 <meta name="resource-type" content="document">
 <meta name="distribution" content="global">
 <meta name="Generator" content="makeinfo">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link href="index.html#Top" rel="start" title="Top">
-<link href="Function-and-Variable-Index.html#Function-and-Variable-Index" rel="index" title="Function and Variable Index">
+<link href="index.html" rel="start" title="Top">
+<link href="Function-and-Variable-Index.html" rel="index" title="Function and Variable Index">
 <link href="Function-and-Variable-Index.html#SEC_Contents" rel="contents" title="Table of Contents">
-<link href="index.html#Top" rel="up" title="Top">
-<link href="Compilation.html#Compilation" rel="next" title="Compilation">
-<link href="Streams-and-Reading.html#Streams-and-Reading" rel="prev" title="Streams and Reading">
+<link href="index.html" rel="up" title="Top">
+<link href="Compilation.html" rel="next" title="Compilation">
+<link href="Streams-and-Reading.html" rel="prev" title="Streams and Reading">
 <style type="text/css">
 <!--
 a.summary-letter {text-decoration: none}
-blockquote.smallquotation {font-size: smaller}
+blockquote.indentedblock {margin-right: 0em}
 div.display {margin-left: 3.2em}
 div.example {margin-left: 3.2em}
-div.indentedblock {margin-left: 3.2em}
 div.lisp {margin-left: 3.2em}
-div.smalldisplay {margin-left: 3.2em}
-div.smallexample {margin-left: 3.2em}
-div.smallindentedblock {margin-left: 3.2em; font-size: smaller}
-div.smalllisp {margin-left: 3.2em}
-kbd {font-style:oblique}
+kbd {font-style: oblique}
 pre.display {font-family: inherit}
 pre.format {font-family: inherit}
 pre.menu-comment {font-family: serif}
 pre.menu-preformatted {font-family: serif}
-pre.smalldisplay {font-family: inherit; font-size: smaller}
-pre.smallexample {font-size: smaller}
-pre.smallformat {font-family: inherit; font-size: smaller}
-pre.smalllisp {font-size: smaller}
-span.nocodebreak {white-space:nowrap}
-span.nolinebreak {white-space:nowrap}
-span.roman {font-family:serif; font-weight:normal}
-span.sansserif {font-family:sans-serif; font-weight:normal}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
 ul.no-bullet {list-style: none}
 -->
 </style>
@@ -48,18 +38,16 @@ ul.no-bullet {list-style: none}
 
 </head>
 
-<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
-<a name="Special-Forms-and-Functions"></a>
-<div class="header">
+<body lang="en">
+<span id="Special-Forms-and-Functions"></span><div class="header">
 <p>
-Next: <a href="Compilation.html#Compilation" accesskey="n" rel="next">Compilation</a>, Previous: <a href="Streams-and-Reading.html#Streams-and-Reading" accesskey="p" rel="prev">Streams and Reading</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Function-and-Variable-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Function-and-Variable-Index.html#Function-and-Variable-Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="Compilation.html" accesskey="n" rel="next">Compilation</a>, Previous: <a href="Streams-and-Reading.html" accesskey="p" rel="prev">Streams and Reading</a>, Up: <a href="index.html" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Function-and-Variable-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Function-and-Variable-Index.html" title="Index" rel="index">Index</a>]</p>
 </div>
 <hr>
-<a name="Special-Forms-and-Functions-1"></a>
-<h2 class="chapter">6 Special Forms and Functions</h2>
+<span id="Special-Forms-and-Functions-1"></span><h2 class="chapter">6 Special Forms and Functions</h2>
 
 <dl>
-<dt><a name="index-LAMBDA_002dLIST_002dKEYWORDS"></a>Constant: <strong>LAMBDA-LIST-KEYWORDS</strong></dt>
+<dt id="index-LAMBDA_002dLIST_002dKEYWORDS">Constant: <strong>LAMBDA-LIST-KEYWORDS</strong></dt>
 <dd><p>Package:LISP
 List of all the lambda-list keywords used in GCL.
 </p>
@@ -67,20 +55,7 @@ List of all the lambda-list keywords used in GCL.
 </dd></dl>
 
 <dl>
-<dt><a name="index-GET_002dSETF_002dMETHOD"></a>Function: <strong>GET-SETF-METHOD</strong> <em>(form)</em></dt>
-<dd><p>Package:LISP
-</p>
-<p>Returns the five values (or five &rsquo;gangs&rsquo;) constituting the SETF method for
-FORM.  See the doc of DEFINE-SETF-METHOD for the meanings of the gangs.  It
-is an error if the third value (i.e., the list of store variables) is not a
-one-element list.  See the doc of GET-SETF-METHOD-MULTIPLE-VALUE for
-comparison.
-</p>
-
-</dd></dl>
-
-<dl>
-<dt><a name="index-THE"></a>Special Form: <strong>THE</strong></dt>
+<dt id="index-THE">Special Form: <strong>THE</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -95,7 +70,7 @@ this is not the case.
 </dd></dl>
 
 <dl>
-<dt><a name="index-SETF"></a>Special Form: <strong>SETF</strong></dt>
+<dt id="index-SETF">Special Form: <strong>SETF</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -129,7 +104,7 @@ apply
 </dd></dl>
 
 <dl>
-<dt><a name="index-WHEN"></a>Special Form: <strong>WHEN</strong></dt>
+<dt id="index-WHEN">Special Form: <strong>WHEN</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -144,7 +119,7 @@ simply returns NIL.
 </dd></dl>
 
 <dl>
-<dt><a name="index-CCASE"></a>Macro: <strong>CCASE</strong></dt>
+<dt id="index-CCASE">Macro: <strong>CCASE</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -160,7 +135,7 @@ returns the value(s) of the last FORM.  If not, signals a correctable error.
 </dd></dl>
 
 <dl>
-<dt><a name="index-MACROEXPAND"></a>Function: <strong>MACROEXPAND</strong> <em>(form &amp;optional (env nil))</em></dt>
+<dt id="index-MACROEXPAND">Function: <strong>MACROEXPAND</strong> <em>(form &amp;optional (env nil))</em></dt>
 <dd><p>Package:LISP
 </p>
 <p>If FORM is a macro form, then expands it repeatedly until it is not a macro
@@ -171,7 +146,7 @@ indicating whether the original form was a macro.
 </dd></dl>
 
 <dl>
-<dt><a name="index-MULTIPLE_002dVALUE_002dCALL"></a>Special Form: <strong>MULTIPLE-VALUE-CALL</strong></dt>
+<dt id="index-MULTIPLE_002dVALUE_002dCALL">Special Form: <strong>MULTIPLE-VALUE-CALL</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -185,7 +160,7 @@ indicating whether the original form was a macro.
 </dd></dl>
 
 <dl>
-<dt><a name="index-DEFSETF"></a>Macro: <strong>DEFSETF</strong></dt>
+<dt id="index-DEFSETF">Macro: <strong>DEFSETF</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -217,7 +192,7 @@ symbols TEMP1 ... TEMPn and with STORE-VAR bound to the symbol TEMP0.
 </dd></dl>
 
 <dl>
-<dt><a name="index-TAGBODY"></a>Special Form: <strong>TAGBODY</strong></dt>
+<dt id="index-TAGBODY">Special Form: <strong>TAGBODY</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -232,7 +207,7 @@ symbols TEMP1 ... TEMPn and with STORE-VAR bound to the symbol TEMP0.
 
 
 <dl>
-<dt><a name="index-ETYPECASE"></a>Macro: <strong>ETYPECASE</strong></dt>
+<dt id="index-ETYPECASE">Macro: <strong>ETYPECASE</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -248,7 +223,7 @@ returns the value(s) of the last FORM.  If not, signals an error.
 </dd></dl>
 
 <dl>
-<dt><a name="index-LET_002a"></a>Special Form: <strong>LET*</strong></dt>
+<dt id="index-LET_002a">Special Form: <strong>LET*</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -263,7 +238,7 @@ from left to right, then evaluates FORMs as a PROGN.
 </dd></dl>
 
 <dl>
-<dt><a name="index-PROG1"></a>Special Form: <strong>PROG1</strong></dt>
+<dt id="index-PROG1">Special Form: <strong>PROG1</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -277,7 +252,7 @@ from left to right, then evaluates FORMs as a PROGN.
 </dd></dl>
 
 <dl>
-<dt><a name="index-DEFUN"></a>Special Form: <strong>DEFUN</strong></dt>
+<dt id="index-DEFUN">Special Form: <strong>DEFUN</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -300,7 +275,7 @@ retrieved by (documentation &rsquo;NAME &rsquo;function).
 </dd></dl>
 
 <dl>
-<dt><a name="index-MULTIPLE_002dVALUE_002dBIND"></a>Special Form: <strong>MULTIPLE-VALUE-BIND</strong></dt>
+<dt id="index-MULTIPLE_002dVALUE_002dBIND">Special Form: <strong>MULTIPLE-VALUE-BIND</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -315,7 +290,7 @@ NIL) and evaluates FORMs in order.
 </dd></dl>
 
 <dl>
-<dt><a name="index-DECLARE"></a>Special Form: <strong>DECLARE</strong></dt>
+<dt id="index-DECLARE">Special Form: <strong>DECLARE</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -371,7 +346,7 @@ For example
 </dd></dl>
 
 <dl>
-<dt><a name="index-DEFMACRO"></a>Special Form: <strong>DEFMACRO</strong></dt>
+<dt id="index-DEFMACRO">Special Form: <strong>DEFMACRO</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -414,7 +389,7 @@ Also, see the function doc of PPRINT for the output-formatting.
 </dd></dl>
 
 <dl>
-<dt><a name="index-_002aEVALHOOK_002a"></a>Variable: <strong>*EVALHOOK*</strong></dt>
+<dt id="index-_002aEVALHOOK_002a">Variable: <strong>*EVALHOOK*</strong></dt>
 <dd><p>Package:LISP
 If *EVALHOOK* is not NIL, its value must be a function that can receive
 two arguments: a form to evaluate and an environment.  This function does
@@ -424,7 +399,7 @@ the evaluation instead of EVAL.
 </dd></dl>
 
 <dl>
-<dt><a name="index-FUNCTIONP"></a>Function: <strong>FUNCTIONP</strong> <em>(x)</em></dt>
+<dt id="index-FUNCTIONP">Function: <strong>FUNCTIONP</strong> <em>(x)</em></dt>
 <dd><p>Package:LISP
 </p>
 <p>Returns T if X is a function, suitable for use by FUNCALL or APPLY.  Returns
@@ -434,7 +409,7 @@ NIL otherwise.
 </dd></dl>
 
 <dl>
-<dt><a name="index-LAMBDA_002dPARAMETERS_002dLIMIT"></a>Constant: <strong>LAMBDA-PARAMETERS-LIMIT</strong></dt>
+<dt id="index-LAMBDA_002dPARAMETERS_002dLIMIT">Constant: <strong>LAMBDA-PARAMETERS-LIMIT</strong></dt>
 <dd><p>Package:LISP
 The exclusive upper bound on the number of distinct parameter names that may
 appear in a single lambda-list.  Actually, however, there is no such upper
@@ -444,7 +419,7 @@ bound in GCL.
 </dd></dl>
 
 <dl>
-<dt><a name="index-FLET"></a>Special Form: <strong>FLET</strong></dt>
+<dt id="index-FLET">Special Form: <strong>FLET</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -463,7 +438,7 @@ ignored.
 </dd></dl>
 
 <dl>
-<dt><a name="index-ECASE"></a>Macro: <strong>ECASE</strong></dt>
+<dt id="index-ECASE">Macro: <strong>ECASE</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -479,7 +454,7 @@ returns the value(s) of the last FORM.  If not, signals an error.
 </dd></dl>
 
 <dl>
-<dt><a name="index-PROG2"></a>Special Form: <strong>PROG2</strong></dt>
+<dt id="index-PROG2">Special Form: <strong>PROG2</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -494,7 +469,7 @@ of SECOND.
 </dd></dl>
 
 <dl>
-<dt><a name="index-PROGV"></a>Special Form: <strong>PROGV</strong></dt>
+<dt id="index-PROGV">Special Form: <strong>PROGV</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -510,7 +485,7 @@ special) to the corresponding value.
 </dd></dl>
 
 <dl>
-<dt><a name="index-QUOTE"></a>Special Form: <strong>QUOTE</strong></dt>
+<dt id="index-QUOTE">Special Form: <strong>QUOTE</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -524,7 +499,7 @@ Simply returns X without evaluating it.
 </dd></dl>
 
 <dl>
-<dt><a name="index-DOTIMES"></a>Special Form: <strong>DOTIMES</strong></dt>
+<dt id="index-DOTIMES">Special Form: <strong>DOTIMES</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -540,7 +515,7 @@ the value of COUNTFORM (exclusive).  Then returns the value(s) of RESULT
 </dd></dl>
 
 <dl>
-<dt><a name="index-SPECIAL_002dFORM_002dP"></a>Function: <strong>SPECIAL-FORM-P</strong> <em>(symbol)</em></dt>
+<dt id="index-SPECIAL_002dFORM_002dP">Function: <strong>SPECIAL-FORM-P</strong> <em>(symbol)</em></dt>
 <dd><p>Package:LISP
 </p>
 <p>Returns T if SYMBOL globally names a special form; NIL otherwise.
@@ -577,7 +552,7 @@ dotimes		prog*
 </dd></dl>
 
 <dl>
-<dt><a name="index-FUNCTION"></a>Special Form: <strong>FUNCTION</strong></dt>
+<dt id="index-FUNCTION">Special Form: <strong>FUNCTION</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -593,7 +568,7 @@ returns that function.
 </dd></dl>
 
 <dl>
-<dt><a name="index-MULTIPLE_002dVALUES_002dLIMIT"></a>Constant: <strong>MULTIPLE-VALUES-LIMIT</strong></dt>
+<dt id="index-MULTIPLE_002dVALUES_002dLIMIT">Constant: <strong>MULTIPLE-VALUES-LIMIT</strong></dt>
 <dd><p>Package:LISP
 The exclusive upper bound on the number of values that may be returned from
 a function.  Actually, however, there is no such upper bound in GCL.
@@ -602,7 +577,7 @@ a function.  Actually, however, there is no such upper bound in GCL.
 </dd></dl>
 
 <dl>
-<dt><a name="index-APPLYHOOK"></a>Function: <strong>APPLYHOOK</strong> <em>(function args evalhookfn applyhookfn &amp;optional (env nil))</em></dt>
+<dt id="index-APPLYHOOK">Function: <strong>APPLYHOOK</strong> <em>(function args evalhookfn applyhookfn &amp;optional (env nil))</em></dt>
 <dd><p>Package:LISP
 </p>
 <p>Applies FUNCTION to ARGS, with *EVALHOOK* bound to EVALHOOKFN and with
@@ -613,7 +588,7 @@ top-level application of FUNCTION to ARGS.
 </dd></dl>
 
 <dl>
-<dt><a name="index-_002aMACROEXPAND_002dHOOK_002a"></a>Variable: <strong>*MACROEXPAND-HOOK*</strong></dt>
+<dt id="index-_002aMACROEXPAND_002dHOOK_002a">Variable: <strong>*MACROEXPAND-HOOK*</strong></dt>
 <dd><p>Package:LISP
 Holds a function that can take two arguments (a macro expansion function
 and the macro form to be expanded) and returns the expanded form.  This
@@ -624,7 +599,7 @@ function is whenever a macro-expansion takes place.  Initially this is set to
 </dd></dl>
 
 <dl>
-<dt><a name="index-PROG_002a"></a>Special Form: <strong>PROG*</strong></dt>
+<dt id="index-PROG_002a">Special Form: <strong>PROG*</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -638,7 +613,7 @@ function is whenever a macro-expansion takes place.  Initially this is set to
 </dd></dl>
 
 <dl>
-<dt><a name="index-BLOCK"></a>Special Form: <strong>BLOCK</strong></dt>
+<dt id="index-BLOCK">Special Form: <strong>BLOCK</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -654,7 +629,7 @@ within the block.
 </dd></dl>
 
 <dl>
-<dt><a name="index-PROGN"></a>Special Form: <strong>PROGN</strong></dt>
+<dt id="index-PROGN">Special Form: <strong>PROGN</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -668,7 +643,7 @@ within the block.
 </dd></dl>
 
 <dl>
-<dt><a name="index-APPLY"></a>Function: <strong>APPLY</strong> <em>(function arg &amp;rest more-args)</em></dt>
+<dt id="index-APPLY">Function: <strong>APPLY</strong> <em>(function arg &amp;rest more-args)</em></dt>
 <dd><p>Package:LISP
 </p>
 <p>Applies FUNCTION.  The arguments to the function consist of all ARGs
@@ -678,7 +653,7 @@ except for the last, and all elements of the last ARG.
 </dd></dl>
 
 <dl>
-<dt><a name="index-LABELS"></a>Special Form: <strong>LABELS</strong></dt>
+<dt id="index-LABELS">Special Form: <strong>LABELS</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -696,7 +671,7 @@ functions are simply ignored.
 </dd></dl>
 
 <dl>
-<dt><a name="index-RETURN"></a>Special Form: <strong>RETURN</strong></dt>
+<dt id="index-RETURN">Special Form: <strong>RETURN</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -711,7 +686,7 @@ which defaults to NIL, is returned as the value of the block.
 </dd></dl>
 
 <dl>
-<dt><a name="index-TYPECASE"></a>Macro: <strong>TYPECASE</strong></dt>
+<dt id="index-TYPECASE">Macro: <strong>TYPECASE</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -727,7 +702,7 @@ returns the value of the last FORM.  If not, simply returns NIL.
 </dd></dl>
 
 <dl>
-<dt><a name="index-AND"></a>Special Form: <strong>AND</strong></dt>
+<dt id="index-AND">Special Form: <strong>AND</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -743,7 +718,7 @@ last FORM.
 </dd></dl>
 
 <dl>
-<dt><a name="index-LET"></a>Special Form: <strong>LET</strong></dt>
+<dt id="index-LET">Special Form: <strong>LET</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -758,7 +733,7 @@ all at once, then evaluates FORMs as a PROGN.
 </dd></dl>
 
 <dl>
-<dt><a name="index-COND"></a>Special Form: <strong>COND</strong></dt>
+<dt id="index-COND">Special Form: <strong>COND</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -775,7 +750,7 @@ TEST.  Returns NIL, if all TESTs evaluate to NIL.
 </dd></dl>
 
 <dl>
-<dt><a name="index-GET_002dSETF_002dMETHOD_002dMULTIPLE_002dVALUE"></a>Function: <strong>GET-SETF-METHOD-MULTIPLE-VALUE</strong> <em>(form)</em></dt>
+<dt id="index-GET_002dSETF_002dMETHOD_002dMULTIPLE_002dVALUE">Function: <strong>GET-SETF-METHOD-MULTIPLE-VALUE</strong> <em>(form)</em></dt>
 <dd><p>Package:LISP
  Returns the five values (or five &rsquo;gangs&rsquo;)
 constituting the SETF method for FORM.  See the doc of
@@ -788,7 +763,7 @@ comparison.
 </dd></dl>
 
 <dl>
-<dt><a name="index-CATCH"></a>Special Form: <strong>CATCH</strong></dt>
+<dt id="index-CATCH">Special Form: <strong>CATCH</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -805,7 +780,7 @@ the catcher tag.
 </dd></dl>
 
 <dl>
-<dt><a name="index-DEFINE_002dMODIFY_002dMACRO"></a>Macro: <strong>DEFINE-MODIFY-MACRO</strong></dt>
+<dt id="index-DEFINE_002dMODIFY_002dMACRO">Macro: <strong>DEFINE-MODIFY-MACRO</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -824,7 +799,7 @@ retrieved by (documentation &rsquo;NAME &rsquo;function).
 </dd></dl>
 
 <dl>
-<dt><a name="index-MACROEXPAND_002d1"></a>Function: <strong>MACROEXPAND-1</strong> <em>(form &amp;optional (env nil))</em></dt>
+<dt id="index-MACROEXPAND_002d1">Function: <strong>MACROEXPAND-1</strong> <em>(form &amp;optional (env nil))</em></dt>
 <dd><p>Package:LISP
 </p>
 <p>If FORM is a macro form, then expands it once.  Returns two values: the
@@ -835,7 +810,7 @@ a macro.
 </dd></dl>
 
 <dl>
-<dt><a name="index-FUNCALL"></a>Function: <strong>FUNCALL</strong> <em>(function &amp;rest arguments)</em></dt>
+<dt id="index-FUNCALL">Function: <strong>FUNCALL</strong> <em>(function &amp;rest arguments)</em></dt>
 <dd><p>Package:LISP
 </p>
 <p>Applies FUNCTION to the ARGUMENTs
@@ -844,7 +819,7 @@ a macro.
 </dd></dl>
 
 <dl>
-<dt><a name="index-CALL_002dARGUMENTS_002dLIMIT"></a>Constant: <strong>CALL-ARGUMENTS-LIMIT</strong></dt>
+<dt id="index-CALL_002dARGUMENTS_002dLIMIT">Constant: <strong>CALL-ARGUMENTS-LIMIT</strong></dt>
 <dd><p>Package:LISP
 The upper exclusive bound on the number of arguments that may be passed to
 a function.  Actually, however, there is no such upper bound in GCL.
@@ -853,7 +828,7 @@ a function.  Actually, however, there is no such upper bound in GCL.
 </dd></dl>
 
 <dl>
-<dt><a name="index-CASE"></a>Special Form: <strong>CASE</strong></dt>
+<dt id="index-CASE">Special Form: <strong>CASE</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -869,7 +844,7 @@ returns the value(s) of the last FORM.  If not, simply returns NIL.
 </dd></dl>
 
 <dl>
-<dt><a name="index-DEFINE_002dSETF_002dMETHOD"></a>Macro: <strong>DEFINE-SETF-METHOD</strong></dt>
+<dt id="index-DEFINE_002dSETF_002dMETHOD">Macro: <strong>DEFINE-SETF-METHOD</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -900,7 +875,7 @@ by (documentation &rsquo;NAME &rsquo;setf).
 </dd></dl>
 
 <dl>
-<dt><a name="index-COMPILER_002dLET"></a>Special Form: <strong>COMPILER-LET</strong></dt>
+<dt id="index-COMPILER_002dLET">Special Form: <strong>COMPILER-LET</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -916,7 +891,7 @@ time, but no bindings occur when the compiled code is executed.
 </dd></dl>
 
 <dl>
-<dt><a name="index-VALUES"></a>Function: <strong>VALUES</strong> <em>(&amp;rest args)</em></dt>
+<dt id="index-VALUES">Function: <strong>VALUES</strong> <em>(&amp;rest args)</em></dt>
 <dd><p>Package:LISP
 </p>
 <p>Returns ARGs in order, as values.
@@ -925,7 +900,7 @@ time, but no bindings occur when the compiled code is executed.
 </dd></dl>
 
 <dl>
-<dt><a name="index-MULTIPLE_002dVALUE_002dLIST"></a>Special Form: <strong>MULTIPLE-VALUE-LIST</strong></dt>
+<dt id="index-MULTIPLE_002dVALUE_002dLIST">Special Form: <strong>MULTIPLE-VALUE-LIST</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -939,7 +914,7 @@ time, but no bindings occur when the compiled code is executed.
 </dd></dl>
 
 <dl>
-<dt><a name="index-MULTIPLE_002dVALUE_002dPROG1"></a>Special Form: <strong>MULTIPLE-VALUE-PROG1</strong></dt>
+<dt id="index-MULTIPLE_002dVALUE_002dPROG1">Special Form: <strong>MULTIPLE-VALUE-PROG1</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -954,7 +929,7 @@ the other FORMs.  Returns the saved values.
 </dd></dl>
 
 <dl>
-<dt><a name="index-MACROLET"></a>Special Form: <strong>MACROLET</strong></dt>
+<dt id="index-MACROLET">Special Form: <strong>MACROLET</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -971,7 +946,7 @@ Doc-strings for local macros are simply ignored.
 </dd></dl>
 
 <dl>
-<dt><a name="index-GO"></a>Special Form: <strong>GO</strong></dt>
+<dt id="index-GO">Special Form: <strong>GO</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -985,7 +960,7 @@ Doc-strings for local macros are simply ignored.
 </dd></dl>
 
 <dl>
-<dt><a name="index-PROG"></a>Special Form: <strong>PROG</strong></dt>
+<dt id="index-PROG">Special Form: <strong>PROG</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -999,7 +974,7 @@ Doc-strings for local macros are simply ignored.
 </dd></dl>
 
 <dl>
-<dt><a name="index-_002aAPPLYHOOK_002a"></a>Variable: <strong>*APPLYHOOK*</strong></dt>
+<dt id="index-_002aAPPLYHOOK_002a">Variable: <strong>*APPLYHOOK*</strong></dt>
 <dd><p>Package:LISP
 Used to substitute another function for the implicit APPLY normally done
 within EVAL.  If *APPLYHOOK* is not NIL, its value must be a function 
@@ -1010,7 +985,7 @@ and an environment.  This function does the application instead of APPLY.
 </dd></dl>
 
 <dl>
-<dt><a name="index-RETURN_002dFROM"></a>Special Form: <strong>RETURN-FROM</strong></dt>
+<dt id="index-RETURN_002dFROM">Special Form: <strong>RETURN-FROM</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -1025,7 +1000,7 @@ of RESULT, which defaults to NIL, is returned as the value of the block.
 </dd></dl>
 
 <dl>
-<dt><a name="index-UNLESS"></a>Special Form: <strong>UNLESS</strong></dt>
+<dt id="index-UNLESS">Special Form: <strong>UNLESS</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -1040,7 +1015,7 @@ simply returns NIL.
 </dd></dl>
 
 <dl>
-<dt><a name="index-MULTIPLE_002dVALUE_002dSETQ"></a>Special Form: <strong>MULTIPLE-VALUE-SETQ</strong></dt>
+<dt id="index-MULTIPLE_002dVALUE_002dSETQ">Special Form: <strong>MULTIPLE-VALUE-SETQ</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -1055,7 +1030,7 @@ Returns the value assigned to the first variable.
 </dd></dl>
 
 <dl>
-<dt><a name="index-LOCALLY"></a>Special Form: <strong>LOCALLY</strong></dt>
+<dt id="index-LOCALLY">Special Form: <strong>LOCALLY</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -1069,7 +1044,7 @@ Returns the value assigned to the first variable.
 </dd></dl>
 
 <dl>
-<dt><a name="index-IDENTITY"></a>Function: <strong>IDENTITY</strong> <em>(x)</em></dt>
+<dt id="index-IDENTITY">Function: <strong>IDENTITY</strong> <em>(x)</em></dt>
 <dd><p>Package:LISP
 </p>
 <p>Simply returns X.
@@ -1078,7 +1053,7 @@ Returns the value assigned to the first variable.
 </dd></dl>
 
 <dl>
-<dt><a name="index-NOT"></a>Function: <strong>NOT</strong> <em>(x)</em></dt>
+<dt id="index-NOT">Function: <strong>NOT</strong> <em>(x)</em></dt>
 <dd><p>Package:LISP
 </p>
 <p>Returns T if X is NIL; NIL otherwise.
@@ -1087,7 +1062,7 @@ Returns the value assigned to the first variable.
 </dd></dl>
 
 <dl>
-<dt><a name="index-DEFCONSTANT"></a>Macro: <strong>DEFCONSTANT</strong></dt>
+<dt id="index-DEFCONSTANT">Macro: <strong>DEFCONSTANT</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -1103,7 +1078,7 @@ and can be retrieved by (documentation &rsquo;NAME &rsquo;variable).
 </dd></dl>
 
 <dl>
-<dt><a name="index-VALUES_002dLIST"></a>Function: <strong>VALUES-LIST</strong> <em>(list)</em></dt>
+<dt id="index-VALUES_002dLIST">Function: <strong>VALUES-LIST</strong> <em>(list)</em></dt>
 <dd><p>Package:LISP
 </p>
 <p>Returns all of the elements of LIST in order, as values.
@@ -1112,7 +1087,7 @@ and can be retrieved by (documentation &rsquo;NAME &rsquo;variable).
 </dd></dl>
 
 <dl>
-<dt><a name="index-ERROR"></a>Function: <strong>ERROR</strong> <em>(control-string &amp;rest args)</em></dt>
+<dt id="index-ERROR">Function: <strong>ERROR</strong> <em>(control-string &amp;rest args)</em></dt>
 <dd><p>Package:LISP
 </p>
 <p>Signals a fatal error.
@@ -1121,7 +1096,7 @@ and can be retrieved by (documentation &rsquo;NAME &rsquo;variable).
 </dd></dl>
 
 <dl>
-<dt><a name="index-IF"></a>Special Form: <strong>IF</strong></dt>
+<dt id="index-IF">Special Form: <strong>IF</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -1136,7 +1111,7 @@ If not, evaluates ELSE (which defaults to NIL) and returns the result.
 </dd></dl>
 
 <dl>
-<dt><a name="index-UNWIND_002dPROTECT"></a>Special Form: <strong>UNWIND-PROTECT</strong></dt>
+<dt id="index-UNWIND_002dPROTECT">Special Form: <strong>UNWIND-PROTECT</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -1152,7 +1127,7 @@ form.
 </dd></dl>
 
 <dl>
-<dt><a name="index-EVALHOOK"></a>Function: <strong>EVALHOOK</strong> <em>(form evalhookfn applyhookfn &amp;optional (env nil))</em></dt>
+<dt id="index-EVALHOOK">Function: <strong>EVALHOOK</strong> <em>(form evalhookfn applyhookfn &amp;optional (env nil))</em></dt>
 <dd><p>Package:LISP
 </p>
 <p>Evaluates FORM with *EVALHOOK* bound to EVALHOOKFN and *APPLYHOOK* bound
@@ -1163,7 +1138,7 @@ of FORM.
 </dd></dl>
 
 <dl>
-<dt><a name="index-OR"></a>Special Form: <strong>OR</strong></dt>
+<dt id="index-OR">Special Form: <strong>OR</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -1179,7 +1154,7 @@ returns whatever values it returns.
 </dd></dl>
 
 <dl>
-<dt><a name="index-CTYPECASE"></a>Macro: <strong>CTYPECASE</strong></dt>
+<dt id="index-CTYPECASE">Macro: <strong>CTYPECASE</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -1195,7 +1170,7 @@ returns the value(s) of the last FORM.  If not, signals a correctable error.
 </dd></dl>
 
 <dl>
-<dt><a name="index-EVAL"></a>Function: <strong>EVAL</strong> <em>(exp)</em></dt>
+<dt id="index-EVAL">Function: <strong>EVAL</strong> <em>(exp)</em></dt>
 <dd><p>Package:LISP
 </p>
 <p>Evaluates EXP and returns the result(s).
@@ -1204,7 +1179,7 @@ returns the value(s) of the last FORM.  If not, signals a correctable error.
 </dd></dl>
 
 <dl>
-<dt><a name="index-PSETF"></a>Macro: <strong>PSETF</strong></dt>
+<dt id="index-PSETF">Macro: <strong>PSETF</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -1220,7 +1195,7 @@ NIL always.
 </dd></dl>
 
 <dl>
-<dt><a name="index-THROW"></a>Special Form: <strong>THROW</strong></dt>
+<dt id="index-THROW">Special Form: <strong>THROW</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -1236,7 +1211,7 @@ returned.
 </dd></dl>
 
 <dl>
-<dt><a name="index-DEFPARAMETER"></a>Macro: <strong>DEFPARAMETER</strong></dt>
+<dt id="index-DEFPARAMETER">Macro: <strong>DEFPARAMETER</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -1252,7 +1227,7 @@ retrieved by (documentation &rsquo;NAME &rsquo;variable).
 </dd></dl>
 
 <dl>
-<dt><a name="index-DEFVAR"></a>Macro: <strong>DEFVAR</strong></dt>
+<dt id="index-DEFVAR">Macro: <strong>DEFVAR</strong></dt>
 <dd><p>Package:LISP
 </p>
 <p>Syntax:
@@ -1270,7 +1245,7 @@ retrieved by (documentation &rsquo;NAME &rsquo;variable).
 <hr>
 <div class="header">
 <p>
-Next: <a href="Compilation.html#Compilation" accesskey="n" rel="next">Compilation</a>, Previous: <a href="Streams-and-Reading.html#Streams-and-Reading" accesskey="p" rel="prev">Streams and Reading</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Function-and-Variable-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Function-and-Variable-Index.html#Function-and-Variable-Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="Compilation.html" accesskey="n" rel="next">Compilation</a>, Previous: <a href="Streams-and-Reading.html" accesskey="p" rel="prev">Streams and Reading</a>, Up: <a href="index.html" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Function-and-Variable-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Function-and-Variable-Index.html" title="Index" rel="index">Index</a>]</p>
 </div>
 
 

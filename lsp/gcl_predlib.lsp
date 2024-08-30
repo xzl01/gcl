@@ -22,9 +22,7 @@
 ;;;;                              predicate routines
 
 
-(in-package 'system)
-
-(export '(lisp::deftype lisp::typep lisp::subtypep lisp::coerce) 'lisp)
+(in-package :si)
 
 (eval-when (compile)
 (proclaim '(optimize (safety 2) (space 3)))
@@ -87,7 +85,7 @@
 (deftype vector (&optional element-type size)
   `(array ,element-type (,size)))
 (deftype string (&optional size)
-  `(vector string-char ,size))
+  `(vector character ,size))
 (deftype base-string (&optional size)
   `(vector base-char ,size))
 (deftype bit-vector (&optional size)
@@ -96,7 +94,7 @@
 (deftype simple-vector (&optional size)
   `(simple-array t (,size)))
 (deftype simple-string (&optional size)
-  `(simple-array string-char (,size)))
+  `(simple-array character (,size)))
 (deftype simple-base-string (&optional size)
   `(simple-array base-char (,size)))
 (deftype simple-bit-vector (&optional size)
@@ -112,6 +110,7 @@
        (not (array-has-fill-pointer-p x))
        (not (si:displaced-array-p x))))
 
+(defun logical-pathnamep (x) (when (pathnamep x) (eql (c-t-tt x) 1)))
 
 (do ((l '((null . null)
           (symbol . symbolp)
@@ -126,7 +125,17 @@
           (character . characterp)
           (package . packagep)
           (stream . streamp)
+          (string-input-stream . string-input-stream-p)
+          (string-output-stream . string-output-stream-p)
+          (file-stream . file-stream-p)
+          (synonym-stream . synonym-stream-p)
+          (broadcast-stream . broadcast-stream-p)
+          (concatenated-stream . concatenated-stream-p)
+          (two-way-stream . two-way-stream-p)
+          (echo-stream . echo-stream-p)
           (pathname . pathnamep)
+          (pathname-designator . pathname-designatorp)
+          (logical-pathname . logical-pathnamep)
           (readtable . readtablep)
           (hash-table . hash-table-p)
           (random-state . random-state-p)
@@ -198,6 +207,8 @@
          ((null l) t)
        (unless (typep object (car l)) (return nil))))
     (satisfies (funcall (car i) object))
+    (eql (eql (car i) object))
+    (member (member object i))
     ((t) t)
     ((nil) nil)
     (boolean (or (eq object 't) (eq object 'nil)))
@@ -206,8 +217,8 @@
     (ratio (eq (type-of object) 'ratio))
     (standard-char
      (and (characterp object) (standard-char-p object)))
-    ((base-char string-char)
-     (and (characterp object) (string-char-p object)))
+    ((base-char character)
+     (characterp object))
     (integer
      (and (integerp object) (in-interval-p object i)))
     (rational
@@ -282,6 +293,40 @@
 	      (typep object (apply tem i)))))))
 
 
+
+(defun minmax (i1 i2 low-p e &aux (fn (if low-p (if e '< '>) (if e '> '<))))
+  (cond ((eq i1 '*) (if e i1 i2))
+	((eq i2 '*) (if e i2 i1))
+	((funcall fn i1 i2) i1)
+	(i2)))
+
+(defun expand-range (low high bottom top)
+  (let ((low (minmax low bottom t t))(high (minmax high top nil t)))
+    (when (or (eq low '*) (eq high '*) (<= low high)) (list low high))))
+
+(defun nc (tp)
+  (when (consp tp)
+    (case (car tp)
+	  ;; (immfix (let ((m (cadr tp))(x (caddr tp))
+	  ;; 	    (list (list 'integer (if (eq m '*) most-negative-immfix m) (if (eq x '*) most-positive-immfix x)))))
+	  ;; (bfix (let* ((m (cadr tp))(x (caddr tp))(m (if (eq m '*) most-negative-fixnum m))(x (if (eq x '*) most-positive-fixnum x)))
+	  ;; 	  (if (< (* m x) 0)
+	  ;; 	      `((integer ,m ,(1- most-negative-immfix))(integer ,(1+ most-positive-immfix) ,x))
+	  ;; 	    `((integer ,m ,x)))))
+	  ;; (bignum (let* ((m (cadr tp))(x (caddr tp))(sm (or (eq m '*) (< m 0)))(sx (or (eq x '*) (>= x 0))))
+	  ;; 	    (if (and sm sx)
+	  ;; 		`((integer ,m ,(1- most-negative-fixnum))(integer ,(1+ most-positive-fixnum) ,x))
+	  ;; 	      `((integer ,m ,x)))))
+	  ((integer ratio short-float long-float) (list tp))
+	  (otherwise (append (nc (car tp)) (nc (cdr tp)))))))
+
+
+(defun expand-ranges (type)
+  (reduce (lambda (y x &aux (z (assoc (car x) y)))
+	     (if z (subst (cons (car z) (apply 'expand-range (cadr x) (caddr x) (cdr z))) z y)
+	       (cons x y))) (nc type) :initial-value nil))
+
+
 ;;; NORMALIZE-TYPE normalizes the type using the DEFTYPE definitions.
 ;;; The result is always a list.
 (defun normalize-type (type &aux tp i )
@@ -303,13 +348,12 @@
 ;; FIXME this needs to be more robust
 (defun known-type-p (type)
   (when (consp type) (setq type (car type)))
-  (if (or (equal (string type) "ERROR")
-	  (member type
+  (if (or (member type
                   '(t nil boolean null symbol keyword atom cons list sequence
 		      signed-char unsigned-char signed-short unsigned-short
 		      number integer bignum rational ratio float method-combination
 		      short-float single-float double-float long-float complex
-		      character standard-char string-char real 
+		      character standard-char character real 
 		      package stream pathname readtable hash-table random-state
 		      structure array simple-array function compiled-function
 		      arithmetic-error base-char base-string broadcast-stream 
@@ -325,8 +369,9 @@
 		      storage-condition stream-error string-stream structure-class
 		      style-warning synonym-stream two-way-stream structure-object
 		      type-error unbound-slot unbound-variable undefined-function
-		      warning ))
-          (get type 's-data))
+		      warning) :test 'eq)
+          (get type 's-data)
+	  (equal (string type) "ERROR"))
       t
       nil))
 
@@ -583,23 +628,23 @@
        	       (if (sub-interval-p '(* *) i2) (values t t) (values nil t)))
        	      (t (values nil ntp2))))
        	   (standard-char
-	    (if (member t2 '(base-char string-char character))
+	    (if (member t2 '(base-char character character))
 	        (values t t)
 	        (values nil ntp2)))
        	   (base-char
-	    (if (member t2 '(character string-char))
+	    (if (member t2 '(character character))
 	        (values t t)
 	        (values nil ntp2)))
        	   (extended-char
-	    (if (member t2 '(character string-char))
+	    (if (member t2 '(character character))
 	        (values t t)
 	        (values nil ntp2)))
-	   (string-char
+	   (character
 	    (if (eq t2 'character)
 	        (values t t)
 	        (values nil ntp2)))
 	   (character
-	    (if (eq t2 'string-char)
+	    (if (eq t2 'character)
 	        (values t t)
 	        (values nil ntp2)))
 	   (integer
@@ -635,7 +680,7 @@
 	                       (unless (or (equal (car i1) (car i2))
 					   ; FIXME
 					   (and (eq (car i1) 'base-char)
-						(eq (car i2) 'string-char)))
+						(eq (car i2) 'character)))
 	                               ;; Unless the element type matches,
 	                               ;;  return NIL T.
 	                               ;; Is this too strict?
@@ -658,7 +703,7 @@
 	                       (unless (or (equal (car i1) (car i2))
 					   ; FIXME
 					   (and (eq (car i1) 'base-char)
-						(eq (car i2) 'string-char)))
+						(eq (car i2) 'character)))
 	                               (return-from subtypep
 	                                            (values nil t)))))
 	           (when (or (endp (cdr i1)) (eq (cadr i1) '*))
@@ -779,6 +824,8 @@
 (defvar *gcl-extra-version* nil)
 (defvar *gcl-minor-version* nil)
 (defvar *gcl-major-version* nil)
+(defvar *gcl-git-tag* nil)
+(defvar *gcl-release-date*  nil)
 
 (defun warn-version (majvers minvers extvers)
   (and *gcl-major-version* *gcl-minor-version* *gcl-extra-version*

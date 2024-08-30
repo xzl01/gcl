@@ -1,45 +1,35 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<!-- Created by GNU Texinfo 5.2, http://www.gnu.org/software/texinfo/ -->
+<!-- Created by GNU Texinfo 6.7, http://www.gnu.org/software/texinfo/ -->
 <head>
-<title>GCL TK Manual: entry</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>entry (GCL TK Manual)</title>
 
-<meta name="description" content="GCL TK Manual: entry">
-<meta name="keywords" content="GCL TK Manual: entry">
+<meta name="description" content="entry (GCL TK Manual)">
+<meta name="keywords" content="entry (GCL TK Manual)">
 <meta name="resource-type" content="document">
 <meta name="distribution" content="global">
 <meta name="Generator" content="makeinfo">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link href="index.html#Top" rel="start" title="Top">
+<link href="index.html" rel="start" title="Top">
 <link href="wm.html#SEC_Contents" rel="contents" title="Table of Contents">
-<link href="Widgets.html#Widgets" rel="up" title="Widgets">
-<link href="message.html#message" rel="next" title="message">
-<link href="text.html#text" rel="prev" title="text">
+<link href="Widgets.html" rel="up" title="Widgets">
+<link href="message.html" rel="next" title="message">
+<link href="text.html" rel="prev" title="text">
 <style type="text/css">
 <!--
 a.summary-letter {text-decoration: none}
-blockquote.smallquotation {font-size: smaller}
+blockquote.indentedblock {margin-right: 0em}
 div.display {margin-left: 3.2em}
 div.example {margin-left: 3.2em}
-div.indentedblock {margin-left: 3.2em}
 div.lisp {margin-left: 3.2em}
-div.smalldisplay {margin-left: 3.2em}
-div.smallexample {margin-left: 3.2em}
-div.smallindentedblock {margin-left: 3.2em; font-size: smaller}
-div.smalllisp {margin-left: 3.2em}
-kbd {font-style:oblique}
+kbd {font-style: oblique}
 pre.display {font-family: inherit}
 pre.format {font-family: inherit}
 pre.menu-comment {font-family: serif}
 pre.menu-preformatted {font-family: serif}
-pre.smalldisplay {font-family: inherit; font-size: smaller}
-pre.smallexample {font-size: smaller}
-pre.smallformat {font-family: inherit; font-size: smaller}
-pre.smalllisp {font-size: smaller}
-span.nocodebreak {white-space:nowrap}
-span.nolinebreak {white-space:nowrap}
-span.roman {font-family:serif; font-weight:normal}
-span.sansserif {font-family:sans-serif; font-weight:normal}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
 ul.no-bullet {list-style: none}
 -->
 </style>
@@ -47,22 +37,18 @@ ul.no-bullet {list-style: none}
 
 </head>
 
-<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
-<a name="entry"></a>
-<div class="header">
+<body lang="en">
+<span id="entry"></span><div class="header">
 <p>
-Next: <a href="message.html#message" accesskey="n" rel="next">message</a>, Previous: <a href="text.html#text" accesskey="p" rel="prev">text</a>, Up: <a href="Widgets.html#Widgets" accesskey="u" rel="up">Widgets</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
+Next: <a href="message.html" accesskey="n" rel="next">message</a>, Previous: <a href="text.html" accesskey="p" rel="prev">text</a>, Up: <a href="Widgets.html" accesskey="u" rel="up">Widgets</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
 </div>
 <hr>
-<a name="entry-1"></a>
-<h3 class="section">2.10 entry</h3>
+<span id="entry-1"></span><h3 class="section">2.10 entry</h3>
 
 <p>entry \- Create and manipulate entry widgets
-</p><a name="Synopsis-9"></a>
-<h4 class="unnumberedsubsec">Synopsis</h4>
+</p><span id="Synopsis-9"></span><h4 class="unnumberedsubsec">Synopsis</h4>
 <p><b>entry</b><i> </i><i>pathName </i><span class="roman">?</span><i>options</i>?
-</p><a name="Standard-Options-9"></a>
-<h4 class="unnumberedsubsec">Standard Options</h4>
+</p><span id="Standard-Options-9"></span><h4 class="unnumberedsubsec">Standard Options</h4>
 
 
 <div class="example">
@@ -74,9 +60,8 @@ font            insertOnTime      selectBorderWidth
 </pre></div>
 
 
-<p>See <a href="options.html#options">options</a>, for more information.
-</p><a name="Arguments-for-Entry"></a>
-<h4 class="unnumberedsubsec">Arguments for Entry</h4>
+<p>See <a href="options.html">options</a>, for more information.
+</p><span id="Arguments-for-Entry"></span><h4 class="unnumberedsubsec">Arguments for Entry</h4>
 
 
 <dl compact="compact">
@@ -102,8 +87,7 @@ in average-size characters of the widget&rsquo;s font.
 </p></dd>
 </dl>
 
-<a name="Description-6"></a>
-<h4 class="unnumberedsubsec">Description</h4>
+<span id="Description-6"></span><h4 class="unnumberedsubsec">Description</h4>
 
 <p>The <b>entry</b> command creates a new window (given by the
 <i>pathName</i> argument) and makes it into an entry widget.
@@ -136,8 +120,7 @@ the standard <b>scrollCommand</b> mechanism for interacting with
 scrollbars (see the description of the <b>scrollCommand</b> option
 for details).  They also support scanning, as described below.
 </p>
-<a name="A-Entry-Widget_0027s-Arguments"></a>
-<h4 class="unnumberedsubsec">A Entry Widget&rsquo;s Arguments</h4>
+<span id="A-Entry-Widget_0027s-Arguments"></span><h4 class="unnumberedsubsec">A Entry Widget&rsquo;s Arguments</h4>
 
 <p>The <b>entry</b> command creates a new Tcl command whose
 name is <i>pathName</i>.  This
@@ -290,8 +273,7 @@ at the left edge of the window.  Returns an empty string.
 </p>
 </dd>
 </dl>
-<a name="g_t_0022Default-Bindings_0022-3"></a>
-<h4 class="unnumberedsubsec">&quot;Default Bindings&quot;</h4>
+<span id="g_t_0022Default-Bindings_0022-3"></span><h4 class="unnumberedsubsec">&quot;Default Bindings&quot;</h4>
 
 <p>Tk automatically creates class bindings for entries that give them
 the following default behavior:
@@ -336,13 +318,12 @@ take place.
 <p>The behavior of entries can be changed by defining new bindings for
 individual widgets or by redefining the class bindings.
 </p>
-<a name="Keywords-9"></a>
-<h4 class="unnumberedsubsec">Keywords</h4>
+<span id="Keywords-9"></span><h4 class="unnumberedsubsec">Keywords</h4>
 <p>entry, widget
 </p><hr>
 <div class="header">
 <p>
-Next: <a href="message.html#message" accesskey="n" rel="next">message</a>, Previous: <a href="text.html#text" accesskey="p" rel="prev">text</a>, Up: <a href="Widgets.html#Widgets" accesskey="u" rel="up">Widgets</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
+Next: <a href="message.html" accesskey="n" rel="next">message</a>, Previous: <a href="text.html" accesskey="p" rel="prev">text</a>, Up: <a href="Widgets.html" accesskey="u" rel="up">Widgets</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
 </div>
 
 

@@ -19,9 +19,8 @@
 ; Some of the files that interface to the Xlib are adapted from DEC/MIT files.
 ; See the file dec.copyright for details.
 
-(make-package :XLIB)
+(load "package.lisp")
 (in-package :XLIB)
-(sys::use-package '(:lisp :system :sys))
 
 (defvar *files* '( "gcl_Xlib"
       "gcl_Xutil"
@@ -42,11 +41,18 @@
 
 
 (defun compile-xgcl()
+  #+(or m68k sh4)
+  (progn (trace si::readdir si::opendir si::closedir si::pathname-match-p)
+	 (print (directory "*.c"))
+	 (untrace si::readdir si::opendir si::closedir si::pathname-match-p))
   (mapc (lambda (x) 
 	  (let ((x (concatenate 'string compiler::*cc* " -I../h " (namestring x))))
 	    (unless (zerop (system x))
 	      (error "compile failure: ~s~%" x))))
-	(directory "*.c"))
+	(or (directory "*.c")
+	    #+(or m68k sh4)
+	    (progn (print "qemu/readdir issue still present")
+		   (mapcar (lambda (x) (truename (merge-pathnames ".c" x))) '("XStruct-4" "general-c" "Xutil-2" "Events" "XStruct-2")))))
   (mapc (lambda (x)
 	  (compile-file (format nil "~a.lsp" x) :system-p t)) *files*))
 

@@ -27,8 +27,8 @@ object get_lcm(object,object);
 object integer_count(object);
 object integer_length(object);
 object integer_shift(object,object);
-object listA(int,...);
-object list(int,...);
+object listA(fixnum,...);
+object list(fixnum,...);
 object log_op2(fixnum,object,object);
 object make_cons(object,object);
 object make_fixnum1(long);
@@ -170,6 +170,7 @@ int gcl_putc(int,void *);
 #ifdef CMPINCLUDE
 int setjmp();
 int _setjmp();
+int _setjmp3();
 #endif
 void vfun_wrong_number_of_args(object);
 void ihs_overflow (void);
@@ -179,4 +180,5 @@ char *gcl_gets(char *,int);
 int gcl_puts(const char *);
 int endp_error(object);
 object Icall_gen_error_handler(object,object,object,object,ufixnum,...);
-
+object Icall_gen_error_handler_noreturn(object,object,object,object,ufixnum,...) __attribute__((noreturn));
+object file_stream(object);

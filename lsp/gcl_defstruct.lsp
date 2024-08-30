@@ -22,18 +22,10 @@
 ;;;;        The structure routines.
 
 
-(in-package 'lisp)
-(export 'defstruct)
-
-
-(in-package 'system)
+(in-package :si)
 
 
 (proclaim '(optimize (safety 2) (space 3)))
-
-
-
-;(in-package 'system)
 
 
 
@@ -99,7 +91,10 @@
 		      (setq dont-overwrite t)
 		      )
 		     (t  (setf (get access-function 'structure-access)
-			       (cons (if type type name) offset)))))))
+			       (cons (if type type name) offset))
+			 (when slot-type
+			   (proclaim `(ftype (function (,name) ,slot-type) ,access-function)))
+			 )))))
     nil))
 
 
@@ -504,7 +499,7 @@
 	 ;bootstrapping code!
 	 (setq def (make-s-data-structure
 		     (make-array (* leng (size-of t))
-				 :element-type 'string-char :static t)
+				 :element-type 'character :static t)
 		     (make-t-type leng nil slot-descriptions)
 		     *standard-slot-positions*
 		     slot-descriptions
@@ -569,9 +564,7 @@
 	      (setf (symbol-function predicate)
 		    #'(lambda (x)
 			(si::structure-subtype-p x name))))
-	  (setf (get predicate 'compiler::co1)
-		'compiler::co1structure-predicate)
-	  (setf (get predicate 'struct-predicate) name)
+	  (proclaim `(ftype (function (,name) t) ,predicate));FIXME boolean is unboxed
 	  )
   ) nil)
 

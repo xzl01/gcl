@@ -105,16 +105,16 @@ char *original_file, *save_file;
 */	
 
 	if (stdin != original || original->_file != 0) {
-		fprintf(stderr, "Can't open the original file.\n");
-		exit(1);
+		emsg("Can't open the original file.\n");
+		do_gcl_abort();
 	}
 	setbuf(original, stdin_buf);
 	fclose(stdout);
 	unlink(save_file);
 	n = open(save_file, O_CREAT|O_WRONLY, 0777);
 	if (n != 1 || (save = fdopen(n, "w")) != stdout) {
-		fprintf(stderr, "Can't open the save file.\n");
-		exit(1);
+		emsg("Can't open the save file.\n");
+		do_gcl_abort();
 	}
 	setbuf(save, stdout_buf);
 
@@ -140,7 +140,7 @@ char *original_file, *save_file;
 
 extern void _cleanup();
 
-LFD(Lsave)() {
+LFD(siLsave)() {
   char filename[256];
   
   check_arg(1);
@@ -159,6 +159,6 @@ LFD(Lsave)() {
 void
 gcl_init_unixsave(void)
 {
-	make_function("SAVE", Lsave);
+	make_si_function("SAVE", siLsave);
 }
 

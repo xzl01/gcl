@@ -66,6 +66,7 @@ DEFUN_NEW("COMPILE-REGEXP",object,fScompile_regexp,SI,1,1,NONE,OO,OO,OO,OO,(obje
 
   char *tmp;
   object res;
+  ufixnum i=0;
 
   if (type_of(p)!= t_string && type_of(p)!=t_symbol)
     not_a_string_or_symbol(p);
@@ -81,9 +82,10 @@ DEFUN_NEW("COMPILE-REGEXP",object,fScompile_regexp,SI,1,1,NONE,OO,OO,OO,OO,(obje
   res->v.v_elttype=aet_uchar;
   res->v.v_adjustable=0;
   res->v.v_offset=0;
-  if (!(res->v.v_self=(void *)regcomp(tmp,&res->v.v_dim)))
+  res->v.v_self=NULL;
+  if (!(res->v.v_self=(void *)regcomp(tmp,&i)))
     FEerror("regcomp failure",0);
-  res->v.v_fillp=res->v.v_dim;
+  res->v.v_fillp=res->v.v_dim=i;
 
   RETURN1(res);
 
@@ -155,7 +157,7 @@ be over written.   \
 
 
      str=string->st.st_self;
-     if (str+end==(void *)core_end || str+end==(void *)compiled_regexp) {
+     if (NULL_OR_ON_C_STACK(str+end) || str+end==(void *)compiled_regexp) {
 
        if (!(str=alloca(string->st.st_fillp+1)))
 	 FEerror("Cannot allocate memory on C stack",0);

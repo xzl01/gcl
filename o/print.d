@@ -35,11 +35,7 @@ int  line_length = 72;
 #define  WRITEC_NEWLINE(strm) (writec_stream('\n',strm))
 #endif
 
-#define	to_be_escaped(c) \
-	(standard_readtable->rt.rt_self[(c)&0377].rte_chattrib \
-	 != cat_constituent || \
-	 isLower((c)&0377) || (c) == ':')
-
+#define READ_TABLE_CASE (Vreadtable->s.s_dbind->rt.rt_case)
 
 #define	mod(x)		((x)%Q_SIZE)
 
@@ -310,10 +306,10 @@ static int
 char_inc(char *b,char *p) {
 
   if (b==p) {
-    if (*p=='-') {
-      p++;
-      memmove(p+1,p,strlen(p)+1);
-    }
+    /* if (*p=='-') { */
+    /*   p++; */
+    /*   memmove(p+1,p,strlen(p)+1); */
+    /* } */
     *p='1';
   } else if (*p=='9') {
     *p='0';
@@ -341,15 +337,15 @@ truncate_double(char *b,double d,int dp) {
   for (p=c1;*p && *p!='e';p++);
   pp=p>c1 && p[-1]!='.' ? p-1 : p;
   for (;pp>c1 && pp[-1]=='0';pp--);
-  strcpy(pp,p);
+  memmove(pp,p,1+strlen(p));
   if (pp!=p && COMP(c1,&pp,d,dp))
     k=truncate_double(n=c1,d,dp);
 
   strcpy(c,n);
   for (p=c;*p && *p!='e';p++);
-  if (p[-1]!='.' && char_inc(c,p-1) && COMP(c,&pp,d,dp)) {
+  if (p>c && p[-1]!='.' && char_inc(c,p-1) && COMP(c,&pp,d,dp)) {
     j=truncate_double(c,d,dp);
-    if (j<k) {
+    if (j<=k) {
       k=j;
       n=c;
     }
@@ -361,15 +357,15 @@ truncate_double(char *b,double d,int dp) {
 }
 
 void
-edit_double(int n, double d, int *sp, char *s, int *ep) {
+edit_double(int n,double d,int *sp,char *s,int *ep,int dp) {
 
-  char *p, b[FPRC + 9];
+  char *p, b[FPRC+9];
   int i;
   
   if (!ISFINITE(d)) {
     if (sSAprint_nansA->s.s_dbind !=Cnil) {
       sprintf(s, "%e",d);
-      *sp = 2;
+      *sp=2;
       return;
     }
     else
@@ -378,30 +374,36 @@ edit_double(int n, double d, int *sp, char *s, int *ep) {
     sprintf(b, "%*.*e",FPRC+8,FPRC,d);
   if (b[FPRC+3] != 'e') {
     sprintf(b, "%*.*e",FPRC+7,FPRC,d);
-    *ep = (b[FPRC+5]-'0')*10 + (b[FPRC+6]-'0');
+    *ep=(b[FPRC+5]-'0')*10+(b[FPRC+6]-'0');
   } else
-    *ep = (b[FPRC+5]-'0')*100 + (b[FPRC+6]-'0')*10 + (b[FPRC+7]-'0');
+    *ep=(b[FPRC+5]-'0')*100+(b[FPRC+6]-'0')*10+(b[FPRC+7]-'0');
 
-  *sp = 1;
-  if (b[0] == '-')
-    *sp *= -1;
-  if (b[FPRC+4] == '-')
-    *ep *= -1;
+  *sp=1;
+  if (b[0]=='-') {
+    *sp*=-1;
+    b[0]=' ';
+  }if (b[FPRC+4]=='-')
+    *ep*=-1;
 
-  truncate_double(b,d,n!=7);
+  truncate_double(b,d,dp);
+  if ((p=strchr(b,'e')))
+    *p=0;
 
-  if (isdigit(b[0])) {
+  if (n+2<strlen(b) && b[n+2]>='5')
+    char_inc(b,b+n+1);
+
+  if (isdigit((int)b[0])) {
     b[1]=b[0];
     (*ep)++;
   }
-  if (b[2]=='0') (*ep)++;
-  b[2] = b[1];
-  p = b + 2;
-  for (i=0;i<n && i<FPRC+1 && isdigit(p[i]);i++)
+  b[2]=b[1];
+
+  for (i=0,p=b+2;i<n && p[i];i++)
       s[i] = p[i];
   for (;i<n;i++)
     s[i] = '0';
   s[n] = '\0';
+
 }
 
 static void
@@ -418,7 +420,7 @@ bool shortp;
 
 	if (shortp)
 		n = 7;
-	edit_double(n, d, &sign, buff, &exp);
+	edit_double(n, d, &sign, buff, &exp, !shortp);
 	if (sign==2) {write_str("#<");
 		      write_str(buff);
 		      write_ch('>');
@@ -494,7 +496,6 @@ int level;
 	void (*wf)(int) = write_ch_fun;
 
 	object *vt = PRINTvs_top;
-	object *vl = PRINTvs_limit;
 	bool e = PRINTescape;
 	bool ra = PRINTreadably;
 	bool r = PRINTradix;
@@ -603,7 +604,6 @@ L:
 	PRINTradix = r;
 	PRINTescape = e;
 	PRINTreadably = ra;
-	PRINTvs_limit = vl;
 	PRINTvs_top = vt;
 
 	write_ch_fun = wf;
@@ -619,14 +619,130 @@ object coerce_big_to_string(object,int);
 static bool
 potential_number_p(object,int);
 
+#define CASE_OF(x_) ({int _x=(x_);isUpper(_x) ? 1 : (isLower(_x) ? -1 : 0);})
+
+static int
+constant_case(object x) {
+
+  fixnum i,j,jj;
+
+  for (i=j=0;i<x->s.s_fillp;i++,j=j ? j : jj)
+    if (j*(jj=CASE_OF(x->s.s_self[i]))==-1)
+      return 0;
+
+  return j;
+
+}
+
+static int
+needs_escape (object x) {
+
+  fixnum i,all_dots=1;
+  int ch;
+
+  if (!PRINTescape)
+    return 0;
+
+  for (i=0;i<x->s.s_fillp;i++)
+    switch((ch=x->s.s_self[i])) {
+    case ':':
+      return 1;
+    case '.':
+      break;
+    default:
+      all_dots=0;
+      if (Vreadtable->s.s_dbind->rt.rt_self[ch].rte_chattrib!=cat_constituent)
+	return 1;
+      if ((READ_TABLE_CASE==sKupcase   && isLower(ch)) ||
+	  (READ_TABLE_CASE==sKdowncase && isUpper(ch)))
+	return 1;
+    }
+
+  if (potential_number_p(x, PRINTbase) || all_dots)
+    return 1;
+
+  return !x->s.s_fillp;
+
+}
+
+#define convertible_upper(c) ((READ_TABLE_CASE==sKupcase  ||READ_TABLE_CASE==sKinvert)&& isUpper(c))
+#define convertible_lower(c) ((READ_TABLE_CASE==sKdowncase||READ_TABLE_CASE==sKinvert)&& isLower(c))
+
+static void
+print_symbol_name_body(object x) {
+
+  int i,j,fc,tc,lw,k,cc;
+
+  cc=constant_case(x);
+  k=needs_escape(x);
+
+  if (k)
+    write_ch('|');
+
+  for (lw=i=0;i<x->s.s_fillp;i++) {
+    j = x->s.s_self[i];
+    if (PRINTescape &&
+       (Vreadtable->s.s_dbind->rt.rt_self[j].rte_chattrib==cat_single_escape ||
+	Vreadtable->s.s_dbind->rt.rt_self[j].rte_chattrib==cat_multiple_escape))
+      write_ch('\\');
+    fc=convertible_upper(j) ? 1 :
+        (convertible_lower(j) ? -1 : 0);
+    tc=(READ_TABLE_CASE==sKinvert ? -cc :
+	 (PRINTcase == sKupcase ? 1 :
+	  (PRINTcase == sKdowncase ? -1 :
+	   (PRINTcase == sKcapitalize ? (i==lw ? 1 : -1) : 0))));
+    if (ispunct(j)||isspace(j)) lw=i+1;
+    j+=(tc && fc && !k ? (tc-fc)>>1 : 0)*('A'-'a');
+    write_ch(j);
+
+  }
+
+  if (k)
+    write_ch('|');
+
+}
+
+#define DONE 1
+#define FOUND -1
+
+static int
+do_write_sharp_eq(struct htent *e,bool dot) {
+
+  fixnum val=fix(e->hte_value);
+  bool defined=val&1;
+
+  if (dot) {
+    write_str(" . ");
+    if (!defined) return FOUND;
+  }
+
+  if (!defined) e->hte_value=make_fixnum(val|1);
+  write_ch('#');
+  write_decimal(val>>1);
+  write_ch(defined ? '#' : '=');
+
+  return defined ? DONE : FOUND;
+
+}
+
+static int
+write_sharp_eq(object x,bool dot) {
+
+  struct htent *e;
+
+  return PRINTvs_top[0]!=Cnil && (e=gethash(x,PRINTvs_top[0]))->hte_key!=OBJNULL ?
+    do_write_sharp_eq(e,dot) : 0;
+
+}
+
+
 void
 write_object(x, level)
 object x;
 int level;
 {
 	object r, y;
-	int i, j, k,lw;
-	object *vp;
+	int i, j, k;
 
 	cs_check(x);
 
@@ -797,117 +913,35 @@ int level;
 		break;
 
 	case t_symbol:
-		if (!PRINTescape) {
-			for (lw = 0,i = 0;  i < x->s.s_fillp;  i++) {
-				j = x->s.s_self[i];
-				if (isUpper(j)) {
-                                    if (PRINTcase == sKdowncase ||
-                                        (PRINTcase == sKcapitalize && i!=lw))
-                                          j += 'a' - 'A';
-                                 } else if (!isLower(j))
-                                         lw = i + 1;
-                                  write_ch(j);
+	  {
 
-			}
-			break;
-		}
-		if (x->s.s_hpack == Cnil) {
-		    if (PRINTcircle) {
-			for (vp = PRINTvs_top;  vp < PRINTvs_limit;  vp += 2)
-			    if (x == *vp) {
-				if (vp[1] != Cnil) {
-				    write_ch('#');
-				    write_decimal((vp-PRINTvs_top)/2);
-				    write_ch('#');
-				    return;
-				} else {
-				    write_ch('#');
-				    write_decimal((vp-PRINTvs_top)/2);
-				    write_ch('=');
-				    vp[1] = Ct;
-				}
-			    }
-		    }
-		    if (PRINTgensym)
-			write_str("#:");
-		} else if (x->s.s_hpack == keyword_package)
-			write_ch(':');
-		else if (PRINTpackage||find_symbol(x,current_package())!=x
-			 || intern_flag == 0)
-		  {
-			k = 0;
-			for (i = 0;
-			     i < x->s.s_hpack->p.p_name->st.st_fillp;
-			     i++) {
-				j = x->s.s_hpack->p.p_name
-				    ->st.st_self[i];
-				if (to_be_escaped(j))
-					k++;
-			}
-			if (k > 0)
-				write_ch('|');
-		     for (lw = 0, i = 0;	
-			     i < x->s.s_hpack->p.p_name->st.st_fillp;
-			     i++) {
-				j = x->s.s_hpack->p.p_name
-				    ->st.st_self[i];
- 				if (j == '|' || j == '\\')
-					write_ch('\\');
-                                 if (k == 0) {
-                                         if (isUpper(j)) {
-                                                 if (PRINTcase == sKdowncase ||
-                                                     (PRINTcase == sKcapitalize && i!=lw))
-                                                 j += 'a' - 'A';
-                                         } else if (!isLower(j))
-                                                 lw = i + 1;
-                                 }
-				write_ch(j);
-			}
-			if (k > 0)
-				write_ch('|');
-			if (find_symbol(x, x->s.s_hpack) != x)
-				error("can't print symbol");
-			if (PRINTpackage || intern_flag == INTERNAL)
-				write_str("::");
-			else if (intern_flag == EXTERNAL)
-				write_ch(':');
-			else
-			FEerror("Pathological symbol --- cannot print.", 0);
-		}
-		k = 0;
-		if (potential_number_p(x, PRINTbase))
-			k++;
-		for (i = 0;  i < x->s.s_fillp;  i++) {
-			j = x->s.s_self[i];
-			if (to_be_escaped(j))
-				k++;
-		}
-		for (i = 0;  i < x->s.s_fillp;  i++)
-			if (x->s.s_self[i] != '.')
-				goto NOT_DOT;
-		k++;
+	    if (PRINTescape) {
+	      if (x->s.s_hpack == Cnil) {
+		if (PRINTcircle)
+		  if (write_sharp_eq(x,FALSE)==DONE) return;
+		if (PRINTgensym)
+		  write_str("#:");
+	      } else if (x->s.s_hpack == keyword_package) {
+		write_ch(':');
+	      } else if (PRINTpackage||find_symbol(x,current_package())!=x || !intern_flag) {
 
-	NOT_DOT:			
-		if (k > 0)
-			write_ch('|');
-                 for (lw = 0, i = 0;  i < x->s.s_fillp;  i++) {
-			j = x->s.s_self[i];
- 			if (j == '|' || j == '\\')
-				write_ch('\\');
-                         if (k == 0) {
-                                 if (isUpper(j)) {
-                                         if (PRINTcase == sKdowncase ||
-                                             (PRINTcase == sKcapitalize && i != lw))
-                                             j += 'a' - 'A';
-                                 } else if (!isLower(j))
-                                         lw = i + 1;
-                         }
-			write_ch(j);
-		}
-		if (k > 0)
-			write_ch('|');
-		break;
+		print_symbol_name_body(x->s.s_hpack->p.p_name);
 
+		if (find_symbol(x, x->s.s_hpack) != x)
+		  error("can't print symbol");
+		if (PRINTpackage || intern_flag == INTERNAL)
+		  write_str("::");
+		else if (intern_flag == EXTERNAL)
+		  write_ch(':');
+		else
+		  FEerror("Pathological symbol --- cannot print.", 0);
+
+	      }
+
+	    }
+	    print_symbol_name_body(x);
+	    break;
+	  }
 	case t_array:
 	{
 		int subscripts[ARANKLIM];
@@ -919,23 +953,8 @@ int level;
 			write_str(">");
 			break;
 		}
-		if (PRINTcircle) {
-			for (vp = PRINTvs_top;  vp < PRINTvs_limit;  vp += 2)
-			    if (x == *vp) {
-				if (vp[1] != Cnil) {
-				    write_ch('#');
-				    write_decimal((vp-PRINTvs_top)/2);
-				    write_ch('#');
-				    return;
-				} else {
-				    write_ch('#');
-				    write_decimal((vp-PRINTvs_top)/2);
-				    write_ch('=');
-				    vp[1] = Ct;
-				    break;
-				}
-			    }
-		}
+		if (PRINTcircle)
+		  if (write_sharp_eq(x,FALSE)==DONE) return;
 		if (PRINTlevel >= 0 && level >= PRINTlevel) {
 			write_ch('#');
 			break;
@@ -1010,23 +1029,8 @@ int level;
 			write_str(">");
 			break;
 		}
-		if (PRINTcircle) {
-			for (vp = PRINTvs_top;  vp < PRINTvs_limit;  vp += 2)
-			    if (x == *vp) {
-				if (vp[1] != Cnil) {
-				    write_ch('#');
-				    write_decimal((vp-PRINTvs_top)/2);
-				    write_ch('#');
-				    return;
-				} else {
-				    write_ch('#');
-				    write_decimal((vp-PRINTvs_top)/2);
-				    write_ch('=');
-				    vp[1] = Ct;
-				    break;
-				}
-			    }
-		}
+		if (PRINTcircle)
+		  if (write_sharp_eq(x,FALSE)==DONE) return;
 		if (PRINTlevel >= 0 && level >= PRINTlevel) {
 			write_ch('#');
 			break;
@@ -1096,23 +1100,8 @@ int level;
 			write_object(x->c.c_cdr, level);
 			break;
 		}
-		if (PRINTcircle) {
-			for (vp = PRINTvs_top;  vp < PRINTvs_limit;  vp += 2)
-			    if (x == *vp) {
-				if (vp[1] != Cnil) {
-				    write_ch('#');
-				    write_decimal((vp-PRINTvs_top)/2);
-				    write_ch('#');
-				    return;
-				} else {
-				    write_ch('#');
-				    write_decimal((vp-PRINTvs_top)/2);
-				    write_ch('=');
-				    vp[1] = Ct;
-				    break;
-				}
-			    }
-		}
+		if (PRINTcircle)
+		  if (write_sharp_eq(x,FALSE)==DONE) return;
                 if (PRINTpretty) {
 		if (x->c.c_car == sLquote &&
 		    type_of(x->c.c_cdr) == t_cons &&
@@ -1158,22 +1147,15 @@ int level;
 				}
 				break;
 			}
-			if (PRINTcircle) {
-			  for (vp = PRINTvs_top; vp < PRINTvs_limit; vp += 2)
-			    if (x == *vp) {
-				if (vp[1] != Cnil) {
-				    write_str(" . #");
-				    write_decimal((vp-PRINTvs_top)/2);
-				    write_ch('#');
-				    goto RIGHT_PAREN;
-				} else {
-				    write_ch(INDENT);
-				    write_str(". ");
-				    write_object(x, level);
-				    goto RIGHT_PAREN;
-				}
-			    }
-			}
+			if (PRINTcircle)
+			  switch (write_sharp_eq(x,TRUE)) {
+			  case FOUND:
+			    write_object(x, level);
+			  case DONE:
+			    goto RIGHT_PAREN;
+			  default:
+			    break;
+			  }
 			if (i == 0 && y != OBJNULL && type_of(y) == t_symbol)
 				write_ch(INDENT1);
 			else
@@ -1335,23 +1317,8 @@ int level;
 		break;
 
 	case t_structure:
-		if (PRINTcircle) {
-			for (vp = PRINTvs_top;  vp < PRINTvs_limit;  vp += 2)
-			    if (x == *vp) {
-				if (vp[1] != Cnil) {
-				    write_ch('#');
-				    write_decimal((vp-PRINTvs_top)/2);
-				    write_ch('#');
-				    return;
-				} else {
-				    write_ch('#');
-				    write_decimal((vp-PRINTvs_top)/2);
-				    write_ch('=');
-				    vp[1] = Ct;
-				    break;
-				}
-			    }
-		}
+		if (PRINTcircle)
+		  if (write_sharp_eq(x,FALSE)==DONE) return;
 		if (PRINTlevel >= 0 && level >= PRINTlevel) {
 			write_ch('#');
 			break;
@@ -1381,7 +1348,7 @@ int level;
 		if (1 || PRINTescape) {
 			write_ch('#');
 			write_ch('p');
-			vs_push(namestring(x));
+			vs_push(x->pn.pn_namestring==Cnil ? make_simple_string("") : x->pn.pn_namestring);
 			write_object(vs_head, level);
 			vs_popp;
 		} else {
@@ -1430,167 +1397,157 @@ int level;
 	}
 }
 
-static int dgs;
+static int dgs,dga;
 
 #include "page.h"
 
 static void
-travel_push_new(object x) {
+travel_push(object x) {
 
-  object y;
   int i;
 
- BEGIN:
-  if (NULL_OR_ON_C_STACK(x)) return;
-  if (is_marked(x)) {
-    vs_check_push(x);
-    vs_check_push(Cnil);
+  if (is_imm_fixnum(x))
     return;
-  }
-  switch (type_of(x)) {
-  case t_symbol:
-    if (dgs && x->s.s_hpack==Cnil) {mark(x);}
-    break;
-  case t_cons:
-    y=x->c.c_cdr;
-    mark(x);
-    travel_push_new(x->c.c_car);
-    x=y;
-    goto BEGIN;
-    break;
-  case t_array:
-    mark(x);
-    if ((enum aelttype)x->a.a_elttype == aet_object)
-      for (i=0;i<x->a.a_dim;i++)
-	travel_push_new(x->a.a_self[i]);
-    break;
-  case t_vector:
-    mark(x);
-    if ((enum aelttype)x->v.v_elttype == aet_object)
-      for (i=0;i<x->v.v_fillp;i++)
-	travel_push_new(x->v.v_self[i]);
-    break;
-  case t_structure:
-    mark(x);
-    for (i = 0;  i < S_DATA(x->str.str_def)->length;  i++)
-      travel_push_new(structure_ref(x,x->str.str_def,i));
-    break;
-  default:
-    break;
 
-  }
+  if (is_marked(x)) {
+
+    if (imcdr(x) || !x->d.f)
+      vs_check_push(x);
+    if (!imcdr(x))
+      x->d.f=1;
+
+  } else switch (type_of(x)) {
+
+    case t_symbol:
+
+      if (dgs && x->s.s_hpack==Cnil) {
+    	mark(x);
+      }
+      break;
+
+    case t_cons:
+
+      {
+	object y=x->c.c_cdr;
+	mark(x);
+	travel_push(x->c.c_car);
+	travel_push(y);
+      }
+      break;
+
+    case t_vector:
+    case t_array:
+
+      mark(x);
+      if (dga && (enum aelttype)x->a.a_elttype==aet_object)
+	for (i=0;i<x->a.a_dim;i++)
+	  travel_push(x->a.a_self[i]);
+      break;
+
+    case t_structure:
+
+      mark(x);
+      for (i = 0;  i < S_DATA(x->str.str_def)->length;  i++)
+	travel_push(structure_ref(x,x->str.str_def,i));
+      break;
+
+    default:
+
+      break;
+
+    }
 
 }
 
 
 static void
-travel_clear_new(object x) {
+travel_clear(object x) {
 
   int i;
 
- BEGIN:
-  if (NULL_OR_ON_C_STACK(x) || !is_marked(x)) return;
+  if (is_imm_fixnum(x))
+    return;
+
+  if (!is_marked(x))
+    return;
+
   unmark(x);
+  if (!imcdr(x))
+    x->d.f=0;
+
   switch (type_of(x)) {
+
   case t_cons:
-    travel_clear_new(x->c.c_car);
-    x=x->c.c_cdr;
-    goto BEGIN;
+
+    travel_clear(x->c.c_car);
+    travel_clear(x->c.c_cdr);
     break;
-  case t_array:
-    if ((enum aelttype)x->a.a_elttype == aet_object)
-      for (i=0;i<x->a.a_dim;i++)
-	travel_clear_new(x->a.a_self[i]);
-    break;
+
   case t_vector:
-    if ((enum aelttype)x->v.v_elttype == aet_object)
-      for (i=0;i<x->v.v_fillp;i++)
-	travel_clear_new(x->v.v_self[i]);
+  case t_array:
+
+    if (dga && (enum aelttype)x->a.a_elttype == aet_object)
+      for (i=0;i<x->a.a_dim;i++)
+	travel_clear(x->a.a_self[i]);
     break;
+
   case t_structure:
+
     for (i = 0;  i < S_DATA(x->str.str_def)->length;  i++)
-      travel_clear_new(structure_ref(x,x->str.str_def,i));
+      travel_clear(structure_ref(x,x->str.str_def,i));
     break;
+
   default:
+
     break;
 
   }
 
 }
 
-
 static void
-setupPRINTcircle(object x,int dogensyms) {
+travel(object x,int mdgs,int mdga) {
 
   BEGIN_NO_INTERRUPT;
-  dgs=dogensyms;
-  travel_push_new(x);
-  dgs=0;
-  PRINTvs_limit = vs_top;
-  travel_clear_new(x);
+  dgs=mdgs;
+  dga=mdga;
+  travel_push(x);
+  travel_clear(x);
   END_NO_INTERRUPT;
 
 }
 
-/* char travel_push_type[32];  */
+object sLeq;
 
-/* static void */
-/* travel_push_object(x) */
-/* object x; */
-/* { */
-/* 	enum type t; */
-/* 	int i; */
-/* 	object *vp; */
+static void
+setupPRINTcircle(object x,int dogensyms) {
 
-/* 	cs_check(x); */
+  object *vp=vs_top,*v=vp,h;
+  fixnum j;
 
-/* BEGIN: */
-/* 	t = type_of(x); */
-/* 	if(travel_push_type[(int)t]==0) return; */
-/* 	if(t==t_symbol && x->s.s_hpack != Cnil) return; */
+  travel(x,dogensyms,PRINTarray);
 
-/* 	for (vp = PRINTvs_top;  vp < vs_top;  vp += 2) */
-/* 		if (x == *vp) { */
-/* 			if (vp[1] != Cnil) */
-/* 				return; */
-/* 			vp[1] = Ct; */
-/* 			return; */
-/* 		} */
-/* 	vs_check_push(x); */
-/* 	vs_check_push(Cnil); */
-/* 	if (t == t_array && (enum aelttype)x->a.a_elttype == aet_object) */
-/* 		for (i = 0;  i < x->a.a_dim;  i++) */
-/* 			travel_push_object(x->a.a_self[i]); */
-/* 	else if (t == t_vector && (enum aelttype)x->v.v_elttype == aet_object) */
-/* 		for (i = 0;  i < x->v.v_fillp;  i++) */
-/* 			travel_push_object(x->v.v_self[i]); */
-/* 	else if (t == t_cons) { */
-/* 		travel_push_object(x->c.c_car); */
-/* 		x = x->c.c_cdr; */
-/* 		goto BEGIN; */
-/* 	} else if (t == t_structure) { */
-/* 		for (i = 0;  i < S_DATA(x->str.str_def)->length;  i++) */
-/* 		  travel_push_object(structure_ref(x,x->str.str_def,i)); */
-/* 	} */
-/* } */
+  h=vs_top>vp ? gcl_make_hash_table(sLeq) : Cnil;
+  for (j=0;v<vs_top;v++)
+    if (!imcdr(*v) || gethash(*v,h)->hte_key==OBJNULL)
+      sethash(*v,h,make_fixnum((j++)<<1));
 
-/* static void */
-/* setupPRINTcircle(x,dogensyms) */
-/*      object x; */
-/*      int dogensyms; */
-/* {  object *vp,*vq; */
-/*    travel_push_type[(int)t_symbol]=dogensyms; */
-/*    travel_push_type[(int)t_array]= */
-/*        (travel_push_type[(int)t_vector]=PRINTarray); */
-/*    travel_push_object(x); */
-/*    for (vp = vq = PRINTvs_top;  vp < vs_top;  vp += 2) */
-/*      if (vp[1] != Cnil) { */
-/*        vq[0] = vp[0]; */
-/*        vq[1] = Cnil; */
-/*        vq += 2; */
-/*      } */
-/*    PRINTvs_limit = vs_top = vq; */
-/*  } */
+  vs_top=vp;
+  vs_push(h);
+
+}
+
+void
+travel_find_sharing(object x,object table) {
+
+  object *vp=vs_top;
+
+  travel(x,1,1);
+
+  for (;vs_top>vp;vs_top--)
+      sethash(vs_head,table,make_fixnum(-2));
+
+}
 
 void
 setupPRINTdefault(x)
@@ -1606,8 +1563,8 @@ object x;
 		vs_push(PRINTstream);
 		FEwrong_type_argument(sLstream, PRINTstream);
 	}
-	PRINTescape = symbol_value(sLAprint_escapeA) != Cnil;
 	PRINTreadably = symbol_value(sLAprint_readablyA) != Cnil;
+	PRINTescape = PRINTreadably || symbol_value(sLAprint_escapeA) != Cnil;
 	PRINTpretty = symbol_value(sLAprint_prettyA) != Cnil;
 	PRINTcircle = symbol_value(sLAprint_circleA) != Cnil;
 	y = symbol_value(sLAprint_baseA);

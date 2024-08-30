@@ -1,4 +1,4 @@
-(in-package "SI"  )
+(in-package :si)
 
 (eval-when (compile eval)
 (defmacro while (test &body body)
@@ -7,28 +7,6 @@
    `(the ,(if  (get op 'compiler::predicate)  't 'fixnum)
 	 (,op (the fixnum ,x) (the fixnum ,y))))
 (defmacro fcr (x) `(load-time-value (compile-regexp ,x))))
-
-(eval-when (compile eval load)
-(defun sharp-u-reader (stream subchar arg)
-  subchar arg
-  (let ((tem (make-array 10 :element-type 'string-char :fill-pointer 0)))
-    (or (eql (read-char stream) #\")
-	(error "sharp-u-reader reader needs a \" right after it"))
-    (loop
-     (let ((ch (read-char stream)))
-       (cond ((eql ch #\") (return tem))
-	     ((eql ch #\\)
-	      (setq ch (read-char stream))
-	      (setq ch (or (cdr (assoc ch '((#\n . #\newline)
-					    (#\t . #\tab)
-					    (#\r . #\return))))
-			   ch))))
-       (vector-push-extend ch tem)))
-    tem))
-
-(set-dispatch-macro-character #\# #\u 'sharp-u-reader)
-
-)
 
 (defconstant +crlu+ (compile-regexp #u""))
 (defconstant +crnp+ (compile-regexp #u"[]"))
@@ -44,7 +22,7 @@
    (or (and (<= 0 start ) (<= start len))
        (error "illegal file start ~a" start))
    (let ((tem (make-array (- len start)
-			  :element-type 'string-char)))
+			  :element-type 'character)))
      (if (> start 0) (file-position st start))
      (si::fread tem 0 (length tem) st) tem)))
 
@@ -105,7 +83,7 @@
 	     ((> extra 0)
 	      (setq tem 
 		    (make-array (f + (length x) extra)
-				:element-type 'string-char :fill-pointer 0))
+				:element-type 'character :fill-pointer 0))
 	      (setq i 0)
 	      (go AGAIN))
 	     (t (setq tem x)))
@@ -194,41 +172,40 @@
 
 (defvar *old-lib-directory* nil)
 (defun setup-info (name &aux tem file)
-  (or (eq *old-lib-directory* si::*lib-directory*)
-      (progn
-	(setq *old-lib-directory* si::*lib-directory*)
-	(push (si::string-concatenate
-	       si::*lib-directory* "info/") *info-paths*)
-	(setq *info-paths* (si::fix-load-path *info-paths*))))
-  (cond ((or (equal name "DIR"))
-	 (setq name "dir")))
-;; compressed info reading -- search for gzipped files, and open with base filename
+
+  (unless (eq *old-lib-directory* *lib-directory*)
+    (setq *old-lib-directory* *lib-directory*)
+    (push (string-concatenate *lib-directory* "info/") *info-paths*)
+    (setq *info-paths* (fix-load-path *info-paths*)))
+
+  (when (equal name "DIR")
+    (setq name "dir"))
+
+  ;; compressed info reading -- search for gzipped files, and open with base filename
 ;; relying on si::*allow-gzipped-files* to uncompress
-  (setq file (si::file-search name *info-paths* '("" ".info" ".gz") nil))
+  (setq file (file-search name *info-paths* '("" ".info" ".gz") nil))
   (let ((ext (search ".gz" file)))
     (when ext
       (setq file (subseq file 0 ext))))
-  (cond ((and (null file)
-	      (not (equal name "dir")))
-	 (let* (
-		(tem (show-info "(dir)Top" nil nil))
-	       *case-fold-search*)
-	   (cond ((f >= (string-match
-	    (si::string-concatenate
-	    "\\(([^(]*"
-	     (re-quote-string name)
-	     "(.info)?)\\)")
-	    tem ) 0)
-		 (setq file  (get-match tem 1)))))))
-  (cond (file
-	 (let* ((na (namestring (truename file))))
-	   (cond ((setq tem (assoc na *info-data* :test 'equal))
-		  (setq *current-info-data* tem))
-		 (t   (setq *current-info-data*
-			    (list na (info-get-tags na) nil))
-		      (setq *info-data* (cons *current-info-data* *info-data*)
-			    )))))
-	(t (format t "(not found ~s)" name)))
+
+  (unless file
+    (unless (equal name "dir")
+      (let* ((tem (show-info "(dir)Top" nil nil))
+	     *case-fold-search*)
+	(cond ((<= 0 (string-match
+		      (string-concatenate "\\(([^(]*" (re-quote-string name) "(.info)?)\\)")
+		      tem))
+	       (setq file (get-match tem 1)))))))
+
+  (IF file
+      (let* ((na (namestring file )));(truename file)
+	(cond ((setq tem (assoc na *info-data* :test 'equal))
+	       (setq *current-info-data* tem))
+	      (t   (setq *current-info-data*
+			 (list na (info-get-tags na) nil))
+		   (setq *info-data* (cons *current-info-data* *info-data*)
+			 ))))
+      (format t "(not found ~s)" name))
   nil)
 			  
 (defun get-info-choices (pat type)

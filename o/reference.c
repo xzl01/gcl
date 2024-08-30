@@ -73,18 +73,14 @@ LFD(Lsymbol_function)(void)
 	if (type_of(sym) != t_symbol)
 		not_a_symbol(sym);
 	if (sym->s.s_sfdef != NOT_SPECIAL) {
-		vs_push(make_fixnum((long)(sym->s.s_sfdef)));
-		vs_base[0] = sLspecial;
-		stack_cons();
-		return;
+	  vs_base[0]=make_cons(sLspecial,make_fixnum((long)(sym->s.s_sfdef)));
+	  return;
 	}
 	if (sym->s.s_gfdef==OBJNULL)
 		FEundefined_function(sym);
 	if (sym->s.s_mflag) {
-		vs_push(sym->s.s_gfdef);
-		vs_base[0] = sLmacro;
-		stack_cons();
-		return;
+	  vs_base[0]=make_cons(sSmacro,sym->s.s_gfdef);
+	  return;
 	}
 	vs_base[0] = sym->s.s_gfdef;
 }
@@ -131,7 +127,7 @@ FFN(Ffunction)(object form)
 		vs_base[0] = MMcons(lex_env[2], vs_base[0]);
 		vs_base[0] = MMcons(lex_env[1], vs_base[0]);
 		vs_base[0] = MMcons(lex_env[0], vs_base[0]);
-		vs_base[0] = MMcons(sLlambda_closure, vs_base[0]);
+		vs_base[0] = MMcons(sSlambda_closure, vs_base[0]);
 	} else
 		FEinvalid_function(fun);
 }
@@ -173,7 +169,7 @@ LFD(Lmacro_function)(void)
 		vs_base[0] = Cnil;
 }
 
-LFD(Lspecial_form_p)(void)
+LFD(Lspecial_operator_p)(void)
 {
 	check_arg(1);
 	if (type_of(vs_base[0]) != t_symbol)
@@ -194,7 +190,6 @@ gcl_init_reference(void)
 	make_function("SYMBOL-VALUE", Lsymbol_value);
 	make_function("BOUNDP", Lboundp);
 	make_function("MACRO-FUNCTION", Lmacro_function);
-	make_function("SPECIAL-FORM-P", Lspecial_form_p);
-	make_function("SPECIAL-OPERATOR-P", Lspecial_form_p);
+	make_function("SPECIAL-OPERATOR-P", Lspecial_operator_p);
 }
 

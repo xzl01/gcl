@@ -29,6 +29,10 @@ Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 #include <string.h>
 #include "include.h"
 
+DEFUN_NEW("PATHNAME-DESIGNATORP",object,fSpathname_designatorp,SI,1,1,NONE,OO,OO,OO,OO,(object x),"") {
+  RETURN1(pathname_designatorp(x) ? Ct : Cnil);
+}
+
 DEFUNO_NEW("NULL",object,fLnull,LISP
 	  ,1,1,NONE,OO,OO,OO,OO,void,Lnull,(object x0),"")
 {
@@ -341,9 +345,9 @@ DEFUNO_NEW("FUNCTIONP",object,fLfunctionp,LISP
 			x0 = Cnil; }
 	else if (t == t_cons) {
 		x = x0->c.c_car;
-		if (x == sLlambda || x == sLlambda_block ||
+		if (x == sLlambda || x == sSlambda_block ||
 		    x == sSlambda_block_expanded ||
-		    x == sLlambda_closure || x == sLlambda_block_closure)
+		    x == sSlambda_closure || x == sSlambda_block_closure)
 			x0 = Ct;
 		else
 			x0 = Cnil;
@@ -357,6 +361,14 @@ fLfunctionp(object x) {
 }
 #endif
 
+
+DEFUNO_NEW("COMMONP",object,fScommonp,SI,1,1,NONE,OO,OO,OO,OO,void,siLcommonp,(object x0),"") {
+  if (type_of(x0) != t_spice)
+    x0 = Ct;
+  else
+    x0 = Cnil;
+  RETURN1(x0);
+}
 
 DEFUNO_NEW("COMPILED-FUNCTION-P",object,fLcompiled_function_p,LISP
    ,1,1,NONE,OO,OO,OO,OO,void,Lcompiled_function_p,(object x0),"")
@@ -374,18 +386,6 @@ DEFUNO_NEW("COMPILED-FUNCTION-P",object,fLcompiled_function_p,LISP
 	    
 	    
 	    )
-		x0 = Ct;
-	else
-		x0 = Cnil;
-RETURN1(x0);}
-
-DEFUNO_NEW("COMMONP",object,fLcommonp,LISP
-   ,1,1,NONE,OO,OO,OO,OO,void,Lcommonp,(object x0),"")
-
-{
-	/* 1 args */;
-
-	if (type_of(x0) != t_spice)
 		x0 = Ct;
 	else
 		x0 = Cnil;
@@ -425,7 +425,7 @@ eql1(register object x,register object y) {
 
   /*x and y are not == and not Cnil and not immfix*/
 
-  if (valid_cdr(x)||valid_cdr(y)||x->d.t!=y->d.t) return FALSE;
+  /* if (valid_cdr(x)||valid_cdr(y)||x->d.t!=y->d.t) return FALSE; */
   
   switch (x->d.t) {
 
@@ -450,23 +450,9 @@ equal1(register object x, register object y) {
 
   /*x and y are not == and not Cnil and not immfix*/
 
-#ifdef __MINGW32__ /*FIXME mingw compiler cannot do tail recursion and blows out stack*/
- BEGIN:
-  if (valid_cdr(x)) {
-    if (valid_cdr(y)&&equal(x->c.c_car,y->c.c_car)) {
-      x=x->c.c_cdr;
-      y=y->c.c_cdr;
-      if (x==y) return TRUE;
-      if (IMMNIL(x)||IMMNIL(y)) return FALSE;
-      goto BEGIN;
-    } else
-      return FALSE;
-  }
-#else
-  
-  if (valid_cdr(x)) return valid_cdr(y)&&equal(x->c.c_car,y->c.c_car)&&equal(x->c.c_cdr,y->c.c_cdr);
-
-#endif
+  /*gcc boolean expression tail position bug*/
+  /* if (valid_cdr(x)) return valid_cdr(y)&&equal(x->c.c_car,y->c.c_car)&&equal(x->c.c_cdr,y->c.c_cdr); */
+  if (valid_cdr(x)) return !valid_cdr(y)||!equal(x->c.c_car,y->c.c_car) ? FALSE : equal(x->c.c_cdr,y->c.c_cdr);
 
   if (valid_cdr(y)) return FALSE;
   
@@ -519,6 +505,12 @@ oequal(object x,object y) {
 DEFUN_NEW("EQUAL",object,fLequal,LISP,2,2,NONE,OO,OO,OO,OO,(object x0,object x1),"") {
   RETURN1(equal(x0, x1) ? Ct : Cnil);
 }
+#ifdef STATIC_FUNCTION_POINTERS
+object
+fLequal(object x,object y) {
+  return FFN(fLequal)(x,y);
+}
+#endif
 
 bool
 equalp1(register object x, register object y) {
@@ -528,7 +520,9 @@ equalp1(register object x, register object y) {
   
   /*x and y are not == and not Cnil*/
 
-  if (listp(x)) return listp(y)&&equalp(x->c.c_car,y->c.c_car)&&equalp(x->c.c_cdr,y->c.c_cdr);
+  /*gcc boolean expression tail position bug*/
+  /* if (listp(x)) return listp(y)&&equalp(x->c.c_car,y->c.c_car)&&equalp(x->c.c_cdr,y->c.c_cdr); */
+  if (listp(x)) return !listp(y)||!equalp(x->c.c_car,y->c.c_car) ? FALSE : equalp(x->c.c_cdr,y->c.c_cdr);
     
   if (listp(y)) return FALSE;
 
@@ -754,14 +748,13 @@ BEGIN:
 	if (tx == t_complex)
 		return(contains_sharp_comma(x->cmp.cmp_real) ||
 		       contains_sharp_comma(x->cmp.cmp_imag));
-	if (tx == t_vector)
-	{
-		int i;
-	   if (x->v.v_elttype == aet_object)
-		for (i = 0;  i < x->v.v_fillp;  i++)
-			if (contains_sharp_comma(x->v.v_self[i]))
-				return(TRUE);
-		return(FALSE);
+	if (tx == t_vector) {
+	  int i;
+	  if (x->v.v_elttype == aet_object)
+	    for (i = 0;  i < x->v.v_fillp;  i++)
+	      if (contains_sharp_comma(x->v.v_self[i]))
+		return(TRUE);
+	  return(FALSE);
 	}
 	if (tx == t_cons) {
 		if (x->c.c_car == siSsharp_comma)

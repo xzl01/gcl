@@ -1,45 +1,35 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<!-- Created by GNU Texinfo 5.2, http://www.gnu.org/software/texinfo/ -->
+<!-- Created by GNU Texinfo 6.7, http://www.gnu.org/software/texinfo/ -->
 <head>
-<title>GCL TK Manual: tk-menu-bar</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>tk-menu-bar (GCL TK Manual)</title>
 
-<meta name="description" content="GCL TK Manual: tk-menu-bar">
-<meta name="keywords" content="GCL TK Manual: tk-menu-bar">
+<meta name="description" content="tk-menu-bar (GCL TK Manual)">
+<meta name="keywords" content="tk-menu-bar (GCL TK Manual)">
 <meta name="resource-type" content="document">
 <meta name="distribution" content="global">
 <meta name="Generator" content="makeinfo">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link href="index.html#Top" rel="start" title="Top">
+<link href="index.html" rel="start" title="Top">
 <link href="wm.html#SEC_Contents" rel="contents" title="Table of Contents">
-<link href="Control.html#Control" rel="up" title="Control">
-<link href="option.html#option" rel="next" title="option">
-<link href="lower.html#lower" rel="prev" title="lower">
+<link href="Control.html" rel="up" title="Control">
+<link href="option.html" rel="next" title="option">
+<link href="lower.html" rel="prev" title="lower">
 <style type="text/css">
 <!--
 a.summary-letter {text-decoration: none}
-blockquote.smallquotation {font-size: smaller}
+blockquote.indentedblock {margin-right: 0em}
 div.display {margin-left: 3.2em}
 div.example {margin-left: 3.2em}
-div.indentedblock {margin-left: 3.2em}
 div.lisp {margin-left: 3.2em}
-div.smalldisplay {margin-left: 3.2em}
-div.smallexample {margin-left: 3.2em}
-div.smallindentedblock {margin-left: 3.2em; font-size: smaller}
-div.smalllisp {margin-left: 3.2em}
-kbd {font-style:oblique}
+kbd {font-style: oblique}
 pre.display {font-family: inherit}
 pre.format {font-family: inherit}
 pre.menu-comment {font-family: serif}
 pre.menu-preformatted {font-family: serif}
-pre.smalldisplay {font-family: inherit; font-size: smaller}
-pre.smallexample {font-size: smaller}
-pre.smallformat {font-family: inherit; font-size: smaller}
-pre.smalllisp {font-size: smaller}
-span.nocodebreak {white-space:nowrap}
-span.nolinebreak {white-space:nowrap}
-span.roman {font-family:serif; font-weight:normal}
-span.sansserif {font-family:sans-serif; font-weight:normal}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
 ul.no-bullet {list-style: none}
 -->
 </style>
@@ -47,25 +37,21 @@ ul.no-bullet {list-style: none}
 
 </head>
 
-<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
-<a name="tk_002dmenu_002dbar"></a>
-<div class="header">
+<body lang="en">
+<span id="tk_002dmenu_002dbar"></span><div class="header">
 <p>
-Next: <a href="option.html#option" accesskey="n" rel="next">option</a>, Previous: <a href="lower.html#lower" accesskey="p" rel="prev">lower</a>, Up: <a href="Control.html#Control" accesskey="u" rel="up">Control</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
+Next: <a href="option.html" accesskey="n" rel="next">option</a>, Previous: <a href="lower.html" accesskey="p" rel="prev">lower</a>, Up: <a href="Control.html" accesskey="u" rel="up">Control</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
 </div>
 <hr>
-<a name="tk_002dmenu_002dbar-1"></a>
-<h3 class="section">3.10 tk-menu-bar</h3>
+<span id="tk_002dmenu_002dbar-1"></span><h3 class="section">3.10 tk-menu-bar</h3>
 
 <p>tk-menu-bar, tk_bindForTraversal \- Support for menu bars
-</p><a name="Synopsis-24"></a>
-<h4 class="unnumberedsubsec">Synopsis</h4>
+</p><span id="Synopsis-24"></span><h4 class="unnumberedsubsec">Synopsis</h4>
 <p><b>tk-menu-bar </b><i>frame </i><span class="roman">?</span><i>menu menu ...</i>?
 </p><br>
 <p><b>tk_bindForTraversal </b><i>arg arg ... </i>
 </p>
-<a name="Description-21"></a>
-<h4 class="unnumberedsubsec">Description</h4>
+<span id="Description-21"></span><h4 class="unnumberedsubsec">Description</h4>
 
 <p>These two commands are Tcl procedures in the Tk script library.
 They provide support for menu bars.
@@ -129,8 +115,7 @@ It sets up bindings for all the named widgets and
 classes so that the menu traversal system will be invoked when
 appropriate keystrokes are typed in those widgets or classes.
 </p>
-<a name="g_t_0022Menu-Traversal-Bindings_0022"></a>
-<h4 class="unnumberedsubsec">&quot;Menu Traversal Bindings&quot;</h4>
+<span id="g_t_0022Menu-Traversal-Bindings_0022"></span><h4 class="unnumberedsubsec">&quot;Menu Traversal Bindings&quot;</h4>
 
 <p>Once an application has made the three arrangements described
 above, menu traversal will be available.
@@ -185,13 +170,12 @@ to be taken, and the menu traversal to end.
 <p>When a menu traversal completes, the input focus reverts to the
 window that contained it when the traversal started.
 </p>
-<a name="Keywords-24"></a>
-<h4 class="unnumberedsubsec">Keywords</h4>
+<span id="Keywords-24"></span><h4 class="unnumberedsubsec">Keywords</h4>
 <p>keyboard traversal, menu, menu bar, post
 </p><hr>
 <div class="header">
 <p>
-Next: <a href="option.html#option" accesskey="n" rel="next">option</a>, Previous: <a href="lower.html#lower" accesskey="p" rel="prev">lower</a>, Up: <a href="Control.html#Control" accesskey="u" rel="up">Control</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
+Next: <a href="option.html" accesskey="n" rel="next">option</a>, Previous: <a href="lower.html" accesskey="p" rel="prev">lower</a>, Up: <a href="Control.html" accesskey="u" rel="up">Control</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
 </div>
 
 

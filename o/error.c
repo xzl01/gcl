@@ -27,6 +27,7 @@ Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
 #include <stdlib.h>
+#include <string.h>
 #include "include.h"
 object siSuniversal_error_handler;
 
@@ -35,13 +36,13 @@ object sSterminal_interrupt;
 void
 assert_error(const char *a,unsigned l,const char *f,const char *n) {
 
-  if (!raw_image)
-    FEerror("The assertion ~a on line ~a of ~a in function ~a failed",4,
+  if (!raw_image && core_end && core_end==sbrk(0))
+    FEerror("The assertion ~a on line ~a of ~a in function ~a failed: ~a",5,
 	    make_simple_string(a),make_fixnum(l),
-	    make_simple_string(f),make_simple_string(n));
+	    make_simple_string(f),make_simple_string(n),make_simple_string(strerror(errno)));
   else {
-    fprintf(stderr,"The assertion %s on line %d of %s in function %s failed",a,l,f,n);
-    exit(-1);
+    emsg("The assertion %s on line %d of %s in function %s failed: %s",a,l,f,n,strerror(errno));
+    do_gcl_abort();
   }
 
 }
@@ -67,27 +68,27 @@ ihs_function_name(object x)
 		y = x->c.c_car;
 		if (y == sLlambda)
 			return(sLlambda);
-		if (y == sLlambda_closure)
-			return(sLlambda_closure);
-		if (y == sLlambda_block || y == sSlambda_block_expanded) {
+		if (y == sSlambda_closure)
+			return(sSlambda_closure);
+		if (y == sSlambda_block || y == sSlambda_block_expanded) {
 			x = x->c.c_cdr;
 			if (type_of(x) != t_cons)
-				return(sLlambda_block);
+				return(sSlambda_block);
 			return(x->c.c_car);
 		}
-		if (y == sLlambda_block_closure) {
+		if (y == sSlambda_block_closure) {
 			x = x->c.c_cdr;
 			if (type_of(x) != t_cons)
-				return(sLlambda_block_closure);
+				return(sSlambda_block_closure);
 			x = x->c.c_cdr;
 			if (type_of(x) != t_cons)
-				return(sLlambda_block_closure);
+				return(sSlambda_block_closure);
 			x = x->c.c_cdr;
 			if (type_of(x) != t_cons)
-				return(sLlambda_block_closure);
+				return(sSlambda_block_closure);
 			x = x->c.c_cdr;
 			if (type_of(x) != t_cons)
-				return(sLlambda_block_closure);
+				return(sSlambda_block_closure);
 			return(x->c.c_car);
 		}
 		/* a general special form */
@@ -125,12 +126,11 @@ ihs_top_function_name(ihs_ptr h)
 	return(Cnil);
 }
 
-object
-Icall_gen_error_handler(object ci,object cs,object en,object es,ufixnum n,...) { 
+static object
+Icall_gen_error_handler_ap(object ci,object cs,object en,object es,ufixnum n,va_list ap) {
 
   object *b;
   ufixnum i;
-  va_list ap;
 
   n+=5;
   b=alloca(n*sizeof(*b));
@@ -140,14 +140,46 @@ Icall_gen_error_handler(object ci,object cs,object en,object es,ufixnum n,...) {
   b[3] = cs;
   b[4] = es;
    
-  va_start(ap,n);
   for (i=5;i<n;i++)
     b[i]= va_arg(ap,object);
-  va_end(ap);
 
-  return IapplyVector(sSuniversal_error_handler,n,b);
+  IapplyVector(sSuniversal_error_handler,n,b);
+
+  return Cnil;
 
 }
+
+object
+Icall_gen_error_handler(object ci,object cs,object en,object es,ufixnum n,...) {
+
+  object x;
+  va_list ap;
+
+  va_start(ap,n);
+
+  x=Icall_gen_error_handler_ap(ci,cs,en,es,n,ap);
+
+  va_end(ap);
+
+  return x;
+
+}
+
+object
+Icall_gen_error_handler_noreturn(object ci,object cs,object en,object es,ufixnum n,...) {
+
+  va_list ap;
+
+  va_start(ap,n);
+
+  Icall_gen_error_handler_ap(ci,cs,en,es,n,ap);
+
+  va_end(ap);
+
+  while (1);
+
+}
+
 
 /*
 	Lisp interface to IHS
@@ -384,9 +416,9 @@ DEFUN_NEW("UNIVERSAL-ERROR-HANDLER",object,fSuniversal_error_handler,SI
 	int i;
 	/* 5 args */
 	for (i = 0;  i < error_fmt_string->st.st_fillp;  i++)
-	  fputc(error_fmt_string->st.st_self[i],stdout);
+	  fputc(error_fmt_string->st.st_self[i],stderr);
 	printf("\nLisp initialization failed.\n");
-	exit(0);
+	do_gcl_abort();
 	RETURN1(x0);
 }
 
@@ -489,49 +521,78 @@ vfun_wrong_number_of_args(object x)
 
 
 void
-check_arg_range(int n, int m)
-{  
-  object x,x1;
+check_arg_range(int n, int m) {
 
-  x=make_fixnum(n);
-  x1=make_fixnum(VFUN_NARGS);
   if (VFUN_NARGS < n)
-    Icall_error_handler(
-			sKtoo_few_arguments,
-			 make_simple_string("Needed at least ~D args, but received ~d"),
-			 2,x,x1);
-   else if (VFUN_NARGS > m)
-          Icall_error_handler(
-			 sKtoo_many_arguments,
-			 make_simple_string("Needed no more than ~D args, but received ~d"),
-			 2,x,x1);
- }
+    FEtoo_few_arguments(0,VFUN_NARGS);
+  if (VFUN_NARGS > m)
+    FEtoo_many_arguments(0,VFUN_NARGS);
+
+}
 			 
      
 DEF_ORDINARY("TERMINAL-INTERRUPT",sSterminal_interrupt,SI,"");
-DEF_ORDINARY("WRONG-TYPE-ARGUMENT",sKwrong_type_argument,KEYWORD,"");
-DEF_ORDINARY("TOO-FEW-ARGUMENTS",sKtoo_few_arguments,KEYWORD,"");
-DEF_ORDINARY("TOO-MANY-ARGUMENTS",sKtoo_many_arguments,KEYWORD,"");
-DEF_ORDINARY("UNEXPECTED-KEYWORD",sKunexpected_keyword,KEYWORD,"");
-DEF_ORDINARY("INVALID-FORM",sKinvalid_form,KEYWORD,"");
-DEF_ORDINARY("UNBOUND-VARIABLE",sKunbound_variable,KEYWORD,"");
-DEF_ORDINARY("INVALID-VARIABLE",sKinvalid_variable,KEYWORD,"");
-DEF_ORDINARY("UNDEFINED-FUNCTION",sKundefined_function,KEYWORD,"");
-DEF_ORDINARY("INVALID-FUNCTION",sKinvalid_function,KEYWORD,"");
-DEF_ORDINARY("PACKAGE-ERROR",sKpackage_error,KEYWORD,"");
-DEF_ORDINARY("DATUM",sKdatum,KEYWORD,"");
-DEF_ORDINARY("EXPECTED-TYPE",sKexpected_type,KEYWORD,"");
-DEF_ORDINARY("PACKAGE",sKpackage,KEYWORD,"");
-DEF_ORDINARY("FORMAT-CONTROL",sKformat_control,KEYWORD,"");
-DEF_ORDINARY("FORMAT-ARGUMENTS",sKformat_arguments,KEYWORD,"");
 DEF_ORDINARY("CATCH",sKcatch,KEYWORD,"");
 DEF_ORDINARY("PROTECT",sKprotect,KEYWORD,"");
 DEF_ORDINARY("CATCHALL",sKcatchall,KEYWORD,"");
 
 
+DEF_ORDINARY("CONDITION",sLcondition,LISP,"");
+DEF_ORDINARY("SERIOUS-CONDITION",sLserious_condition,LISP,"");
+DEF_ORDINARY("SIMPLE-CONDITION",sLsimple_condition,LISP,"");
+
+DEF_ORDINARY("ERROR",sLerror,LISP,"");
+DEF_ORDINARY("SIMPLE-ERROR",sLsimple_error,LISP,"");
+DEF_ORDINARY("FORMAT-CONTROL",sKformat_control,KEYWORD,"");
+DEF_ORDINARY("FORMAT-ARGUMENTS",sKformat_arguments,KEYWORD,"");
+
+DEF_ORDINARY("TYPE-ERROR",sLtype_error,LISP,"");
+DEF_ORDINARY("DATUM",sKdatum,KEYWORD,"");
+DEF_ORDINARY("EXPECTED-TYPE",sKexpected_type,KEYWORD,"");
+DEF_ORDINARY("SIMPLE-TYPE-ERROR",sLsimple_type_error,LISP,"");
+
+DEF_ORDINARY("PROGRAM-ERROR",sLprogram_error,LISP,"");
+DEF_ORDINARY("CONTROL-ERROR",sLcontrol_error,LISP,"");
+DEF_ORDINARY("PACKAGE-ERROR",sLpackage_error,LISP,"");
+DEF_ORDINARY("PACKAGE",sKpackage,KEYWORD,"");
+
+DEF_ORDINARY("STREAM-ERROR",sLstream_error,LISP,"");
+DEF_ORDINARY("STREAM",sKstream,KEYWORD,"");
+DEF_ORDINARY("END-OF-FILE",sLend_of_file,LISP,"");
+
+DEF_ORDINARY("FILE-ERROR",sLfile_error,LISP,"");
+DEF_ORDINARY("PATHNAME",sKpathname,KEYWORD,"");
+
+DEF_ORDINARY("CELL-ERROR",sLcell_error,LISP,"");
+DEF_ORDINARY("NAME",sKname,KEYWORD,"");
+DEF_ORDINARY("UNBOUND-SLOT",sLunbound_slot,LISP,"");
+DEF_ORDINARY("UNBOUND-VARIABLE",sLunbound_variable,LISP,"");
+DEF_ORDINARY("UNDEFINED-FUNCTION",sLundefined_function,LISP,"");
+
+DEF_ORDINARY("ARITHMETIC-ERROR",sLarithmetic_error,LISP,"");
+DEF_ORDINARY("OPERATION",sKoperation,KEYWORD,"");
+DEF_ORDINARY("OPERANDS",sKoperands,KEYWORD,"");
+DEF_ORDINARY("DIVISION-BY-ZERO",sLdivision_by_zero,LISP,"");
+DEF_ORDINARY("FLOATING-POINT-OVERFLOW",sLfloating_point_overflow,LISP,"");
+DEF_ORDINARY("FLOATING-POINT-UNDERFLOW",sLfloating_point_underflow,LISP,"");
+DEF_ORDINARY("FLOATING-POINT-INEXACT",sLfloating_point_inexact,LISP,"");
+DEF_ORDINARY("FLOATING-POINT-INVALID-OPERATION",sLfloating_point_invalid_operation,LISP,"");
+
+DEF_ORDINARY("PARSE-ERROR",sLparse_error,LISP,"");
+
+DEF_ORDINARY("PRINT-NOT-READABLE",sLprint_not_readable,LISP,"");
+
+DEF_ORDINARY("READER-ERROR",sLreader_error,LISP,"");
+DEF_ORDINARY("PATHNAME-ERROR",sLpathname_error,SI,"");
+
+DEF_ORDINARY("STORAGE-CONDITION",sLstorage_condition,LISP,"");
+
+DEF_ORDINARY("WARNING",sLwarning,LISP,"");
+DEF_ORDINARY("SIMPLE-WARNING",sLsimple_warning,LISP,"");
+DEF_ORDINARY("STYLE-WARNING",sLstyle_warning,LISP,"");
+
 void
-gcl_init_error(void)
-{
-	null_string = make_simple_string("");
-	enter_mark_origin(&null_string);
+gcl_init_error(void) {
+  null_string = make_simple_string("");
+  enter_mark_origin(&null_string);
 }

@@ -1,45 +1,35 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<!-- Created by GNU Texinfo 5.2, http://www.gnu.org/software/texinfo/ -->
+<!-- Created by GNU Texinfo 6.7, http://www.gnu.org/software/texinfo/ -->
 <head>
-<title>GCL TK Manual: Linked Variables</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Linked Variables (GCL TK Manual)</title>
 
-<meta name="description" content="GCL TK Manual: Linked Variables">
-<meta name="keywords" content="GCL TK Manual: Linked Variables">
+<meta name="description" content="Linked Variables (GCL TK Manual)">
+<meta name="keywords" content="Linked Variables (GCL TK Manual)">
 <meta name="resource-type" content="document">
 <meta name="distribution" content="global">
 <meta name="Generator" content="makeinfo">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link href="index.html#Top" rel="start" title="Top">
+<link href="index.html" rel="start" title="Top">
 <link href="wm.html#SEC_Contents" rel="contents" title="Table of Contents">
-<link href="General.html#General" rel="up" title="General">
-<link href="tkconnect.html#tkconnect" rel="next" title="tkconnect">
-<link href="Lisp-Functions-Invoked-from-Graphics.html#Lisp-Functions-Invoked-from-Graphics" rel="prev" title="Lisp Functions Invoked from Graphics">
+<link href="General.html" rel="up" title="General">
+<link href="tkconnect.html" rel="next" title="tkconnect">
+<link href="Lisp-Functions-Invoked-from-Graphics.html" rel="prev" title="Lisp Functions Invoked from Graphics">
 <style type="text/css">
 <!--
 a.summary-letter {text-decoration: none}
-blockquote.smallquotation {font-size: smaller}
+blockquote.indentedblock {margin-right: 0em}
 div.display {margin-left: 3.2em}
 div.example {margin-left: 3.2em}
-div.indentedblock {margin-left: 3.2em}
 div.lisp {margin-left: 3.2em}
-div.smalldisplay {margin-left: 3.2em}
-div.smallexample {margin-left: 3.2em}
-div.smallindentedblock {margin-left: 3.2em; font-size: smaller}
-div.smalllisp {margin-left: 3.2em}
-kbd {font-style:oblique}
+kbd {font-style: oblique}
 pre.display {font-family: inherit}
 pre.format {font-family: inherit}
 pre.menu-comment {font-family: serif}
 pre.menu-preformatted {font-family: serif}
-pre.smalldisplay {font-family: inherit; font-size: smaller}
-pre.smallexample {font-size: smaller}
-pre.smallformat {font-family: inherit; font-size: smaller}
-pre.smalllisp {font-size: smaller}
-span.nocodebreak {white-space:nowrap}
-span.nolinebreak {white-space:nowrap}
-span.roman {font-family:serif; font-weight:normal}
-span.sansserif {font-family:sans-serif; font-weight:normal}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
 ul.no-bullet {list-style: none}
 -->
 </style>
@@ -47,15 +37,13 @@ ul.no-bullet {list-style: none}
 
 </head>
 
-<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
-<a name="Linked-Variables"></a>
-<div class="header">
+<body lang="en">
+<span id="Linked-Variables"></span><div class="header">
 <p>
-Next: <a href="tkconnect.html#tkconnect" accesskey="n" rel="next">tkconnect</a>, Previous: <a href="Lisp-Functions-Invoked-from-Graphics.html#Lisp-Functions-Invoked-from-Graphics" accesskey="p" rel="prev">Lisp Functions Invoked from Graphics</a>, Up: <a href="General.html#General" accesskey="u" rel="up">General</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
+Next: <a href="tkconnect.html" accesskey="n" rel="next">tkconnect</a>, Previous: <a href="Lisp-Functions-Invoked-from-Graphics.html" accesskey="p" rel="prev">Lisp Functions Invoked from Graphics</a>, Up: <a href="General.html" accesskey="u" rel="up">General</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
 </div>
 <hr>
-<a name="Linked-Variables-1"></a>
-<h3 class="section">1.7 Linked Variables</h3>
+<span id="Linked-Variables-1"></span><h3 class="section">1.7 Linked Variables</h3>
 
 <p>It is possible to link lisp variables to <b>TK</b> variables.  In general
 when the <b>TK</b> variable is changed, by for instance clicking on a
@@ -109,7 +97,7 @@ always a variable containing a string.
 <p>The first two examples are the same in that the default variable type
 for a checkbutton is <code>boolean</code>.  Notice that the specification of a
 variable type is by <code>(<i>type</i> variable)</code>.  The types which are
-permissible are those which have coercion-fucntions, See <a href="Return-Values.html#Return-Values">Return Values</a>.  In the first example a variable <code>*joe*</code> will be linked, and
+permissible are those which have coercion-fucntions, See <a href="Return-Values.html">Return Values</a>.  In the first example a variable <code>*joe*</code> will be linked, and
 its default initial value will be set to nil, since the default initial
 state of the check button is off, and the default off value is nil.
 Actually on the <b>TK</b> side, the corresponding boolean values are <code>&quot;1&quot;</code>
@@ -120,7 +108,7 @@ and <code>nil</code>.
 <i>type</i> is <code>t</code>).   The initial value will be made to be <code>-1</code>,
 since the checkbutton is off.   Clicking on <code>.checkbutton3</code> will
 result in the value of <code>*debug*</code> being changed to 100, and the light
-in the button will be toggled to on, See <a href="checkbutton.html#checkbutton">checkbutton</a>.  You may
+in the button will be toggled to on, See <a href="checkbutton.html">checkbutton</a>.  You may
 set the variable to be another value besides 100.
 </p>
 <p>You may also call
@@ -152,7 +140,7 @@ call <code>link-variable</code>.
 <hr>
 <div class="header">
 <p>
-Next: <a href="tkconnect.html#tkconnect" accesskey="n" rel="next">tkconnect</a>, Previous: <a href="Lisp-Functions-Invoked-from-Graphics.html#Lisp-Functions-Invoked-from-Graphics" accesskey="p" rel="prev">Lisp Functions Invoked from Graphics</a>, Up: <a href="General.html#General" accesskey="u" rel="up">General</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
+Next: <a href="tkconnect.html" accesskey="n" rel="next">tkconnect</a>, Previous: <a href="Lisp-Functions-Invoked-from-Graphics.html" accesskey="p" rel="prev">Lisp Functions Invoked from Graphics</a>, Up: <a href="General.html" accesskey="u" rel="up">General</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
 </div>
 
 

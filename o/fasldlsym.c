@@ -84,7 +84,7 @@ fasload(object faslfile) {
   massert(!psystem(b));
 
   if (!(dlp = dlopen(buf,RTLD_NOW))) {
-    fputs(dlerror(),stderr);
+    emsg(dlerror());
     FEerror("Cannot open for dynamic link ~a",1,make_simple_string(filename));
   }
   
@@ -94,17 +94,14 @@ fasload(object faslfile) {
   memcpy(b,x->st.st_self,x->st.st_fillp);
   b[x->st.st_fillp]=0;
   if (!(fptr=dlsym(dlp,b))) {
-    fputs(dlerror(),stderr);
+    emsg(dlerror());
     FEerror("Cannot lookup ~a in ~a",2,make_simple_string(b),make_simple_string(filename));
   }
 
   SEEK_TO_END_OFILE(faslstream->sm.sm_fp);
 
   data = read_fasl_vector(faslstream);
-  memory = alloc_object(t_cfdata);
-  memory->cfd.cfd_self = NULL;
-  memory->cfd.cfd_start = NULL;
-  memory->cfd.cfd_size = 0;
+  memory=new_cfdata();
 
   if(symbol_value(sLAload_verboseA)!=Cnil)	
     printf(" start address (dynamic) %p ",fptr);

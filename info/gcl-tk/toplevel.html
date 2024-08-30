@@ -1,45 +1,35 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<!-- Created by GNU Texinfo 5.2, http://www.gnu.org/software/texinfo/ -->
+<!-- Created by GNU Texinfo 6.7, http://www.gnu.org/software/texinfo/ -->
 <head>
-<title>GCL TK Manual: toplevel</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>toplevel (GCL TK Manual)</title>
 
-<meta name="description" content="GCL TK Manual: toplevel">
-<meta name="keywords" content="GCL TK Manual: toplevel">
+<meta name="description" content="toplevel (GCL TK Manual)">
+<meta name="keywords" content="toplevel (GCL TK Manual)">
 <meta name="resource-type" content="document">
 <meta name="distribution" content="global">
 <meta name="Generator" content="makeinfo">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link href="index.html#Top" rel="start" title="Top">
+<link href="index.html" rel="start" title="Top">
 <link href="wm.html#SEC_Contents" rel="contents" title="Table of Contents">
-<link href="Widgets.html#Widgets" rel="up" title="Widgets">
-<link href="Control.html#Control" rel="next" title="Control">
-<link href="radiobutton.html#radiobutton" rel="prev" title="radiobutton">
+<link href="Widgets.html" rel="up" title="Widgets">
+<link href="Control.html" rel="next" title="Control">
+<link href="radiobutton.html" rel="prev" title="radiobutton">
 <style type="text/css">
 <!--
 a.summary-letter {text-decoration: none}
-blockquote.smallquotation {font-size: smaller}
+blockquote.indentedblock {margin-right: 0em}
 div.display {margin-left: 3.2em}
 div.example {margin-left: 3.2em}
-div.indentedblock {margin-left: 3.2em}
 div.lisp {margin-left: 3.2em}
-div.smalldisplay {margin-left: 3.2em}
-div.smallexample {margin-left: 3.2em}
-div.smallindentedblock {margin-left: 3.2em; font-size: smaller}
-div.smalllisp {margin-left: 3.2em}
-kbd {font-style:oblique}
+kbd {font-style: oblique}
 pre.display {font-family: inherit}
 pre.format {font-family: inherit}
 pre.menu-comment {font-family: serif}
 pre.menu-preformatted {font-family: serif}
-pre.smalldisplay {font-family: inherit; font-size: smaller}
-pre.smallexample {font-size: smaller}
-pre.smallformat {font-family: inherit; font-size: smaller}
-pre.smalllisp {font-size: smaller}
-span.nocodebreak {white-space:nowrap}
-span.nolinebreak {white-space:nowrap}
-span.roman {font-family:serif; font-weight:normal}
-span.sansserif {font-family:sans-serif; font-weight:normal}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
 ul.no-bullet {list-style: none}
 -->
 </style>
@@ -47,22 +37,18 @@ ul.no-bullet {list-style: none}
 
 </head>
 
-<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
-<a name="toplevel"></a>
-<div class="header">
+<body lang="en">
+<span id="toplevel"></span><div class="header">
 <p>
-Previous: <a href="radiobutton.html#radiobutton" accesskey="p" rel="prev">radiobutton</a>, Up: <a href="Widgets.html#Widgets" accesskey="u" rel="up">Widgets</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
+Previous: <a href="radiobutton.html" accesskey="p" rel="prev">radiobutton</a>, Up: <a href="Widgets.html" accesskey="u" rel="up">Widgets</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
 </div>
 <hr>
-<a name="toplevel-1"></a>
-<h3 class="section">2.15 toplevel</h3>
+<span id="toplevel-1"></span><h3 class="section">2.15 toplevel</h3>
 
 <p>toplevel \- Create and manipulate toplevel widgets
-</p><a name="Synopsis-14"></a>
-<h4 class="unnumberedsubsec">Synopsis</h4>
+</p><span id="Synopsis-14"></span><h4 class="unnumberedsubsec">Synopsis</h4>
 <p><b>toplevel</b><i> </i><i>pathName </i><span class="roman">?</span><b>:screen </b><i>screenName</i><span class="roman">? ?</span><b>:class </b><i>className</i><span class="roman">? ?</span><i>options</i>?
-</p><a name="Standard-Options-14"></a>
-<h4 class="unnumberedsubsec">Standard Options</h4>
+</p><span id="Standard-Options-14"></span><h4 class="unnumberedsubsec">Standard Options</h4>
 
 
 <div class="example">
@@ -71,12 +57,10 @@ borderWidth                 relief
 </pre></div>
 
 
-<p>See <a href="options.html#options">options</a>, for more information.
-</p><a name="Arguments-for-Toplevel"></a>
-<h4 class="unnumberedsubsec">Arguments for Toplevel</h4>
+<p>See <a href="options.html">options</a>, for more information.
+</p><span id="Arguments-for-Toplevel"></span><h4 class="unnumberedsubsec">Arguments for Toplevel</h4>
 
-<a name="Description-11"></a>
-<h4 class="unnumberedsubsec">Description</h4>
+<span id="Description-11"></span><h4 class="unnumberedsubsec">Description</h4>
 
 <p>The <b>toplevel</b> command creates a new toplevel widget (given
 by the <i>pathName</i> argument).  Additional
@@ -116,8 +100,7 @@ below.  However, the <b>winfo :class</b> command may be used to query
 the class of a window, and <b>winfo :screen</b> may be used to query
 its screen.
 </p>
-<a name="A-Toplevel-Widget_0027s-Arguments"></a>
-<h4 class="unnumberedsubsec">A Toplevel Widget&rsquo;s Arguments</h4>
+<span id="A-Toplevel-Widget_0027s-Arguments"></span><h4 class="unnumberedsubsec">A Toplevel Widget&rsquo;s Arguments</h4>
 
 <p>The <b>toplevel</b> command creates a new Tcl command whose
 name is the same as the path name of the toplevel&rsquo;s window.  This
@@ -150,14 +133,12 @@ command.
 </p>
 </dd>
 </dl>
-<a name="Bindings-8"></a>
-<h4 class="unnumberedsubsec">Bindings</h4>
+<span id="Bindings-8"></span><h4 class="unnumberedsubsec">Bindings</h4>
 
 <p>When a new toplevel is created, it has no default event bindings:
 toplevels are not intended to be interactive.
 </p>
-<a name="Keywords-14"></a>
-<h4 class="unnumberedsubsec">Keywords</h4>
+<span id="Keywords-14"></span><h4 class="unnumberedsubsec">Keywords</h4>
 <p>toplevel, widget
 </p>
 
@@ -166,7 +147,7 @@ toplevels are not intended to be interactive.
 <hr>
 <div class="header">
 <p>
-Previous: <a href="radiobutton.html#radiobutton" accesskey="p" rel="prev">radiobutton</a>, Up: <a href="Widgets.html#Widgets" accesskey="u" rel="up">Widgets</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
+Previous: <a href="radiobutton.html" accesskey="p" rel="prev">radiobutton</a>, Up: <a href="Widgets.html" accesskey="u" rel="up">Widgets</a> &nbsp; [<a href="wm.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
 </div>
 
 

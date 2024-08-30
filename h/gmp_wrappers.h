@@ -1,12 +1,8 @@
-#ifndef GMP_EXTERN
-#define GMP_EXTERN extern
-#endif
-#ifndef GMP_EXTERN_INLINE
-#define GMP_EXTERN_INLINE GMP_EXTERN __inline__
-#endif
+#ifndef GMP_WRAPPERS_H
+#define GMP_WRAPPERS_H
 
-GMP_EXTERN jmp_buf gmp_jmp;
-GMP_EXTERN int jmp_gmp,gmp_relocatable;
+EXTER jmp_buf gmp_jmp;
+EXTER int jmp_gmp,gmp_relocatable;
 
 #define join(a_,b_) a_ ## b_
 #define Join(a_,b_) join(a_,b_)
@@ -95,7 +91,7 @@ GMP_EXTERN int jmp_gmp,gmp_relocatable;
    set to -1 otherwise.  20040815 CM*/
 
 #define MEM_GMP_CALL(n_,rt_,a_,s_,b_...) \
-   GMP_EXTERN_INLINE Join(RF_,rt_) Join(m,a_)(Join(P,n_)(b_)) { \
+   INLINE Join(RF_,rt_) Join(m,a_)(Join(P,n_)(b_)) { \
            int j;\
            Join(RD_,rt_);\
            if (gmp_relocatable) {\
@@ -152,6 +148,8 @@ MEM_GMP_CALL(1,gmp_ulint,mpz_popcount,0,mpz_t)
 /*MEM_GMP_CALL(2,void *,mpz_realloc,mpz_t,mp_size_t)*/
 MEM_GMP_CALL(1,size_t,mpz_size,0,mpz_t)
 MEM_GMP_CALL(2,size_t,mpz_sizeinbase,0,mpz_t,int)
+MEM_GMP_CALL(1,void,gmp_randinit_default,0,__gmp_randstate_struct *)
+MEM_GMP_CALL(2,void,gmp_randseed_ui,0,__gmp_randstate_struct *,unsigned long int)
 
      /* FIXME: find a way to have this follow the convention in gmp.h*/
 
@@ -195,3 +193,7 @@ MEM_GMP_CALL(2,size_t,mpz_sizeinbase,0,mpz_t,int)
 /*#define __gmpz_realloc m__gmpz_realloc*/
 #define __gmpz_size m__gmpz_size
 #define __gmpz_sizeinbase m__gmpz_sizeinbase
+#define __gmp_randinit_default m__gmp_randinit_default
+#define __gmp_randseed_ui m__gmp_randseed_ui
+
+#endif /*GMP_WRAPPERS_H*/

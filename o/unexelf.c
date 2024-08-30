@@ -401,7 +401,7 @@ Filesz      Memsz       Flags       Align
    Instead we read the whole file, modify it, and write it out.  */
 
 #ifndef emacs
-#define fatal(a, b...) fprintf (stderr, a, ##b), exit (1)
+#define fatal(a, b...) emsg(a,##b),do_gcl_abort()
 #else
 #include "config.h"
 extern void fatal (char *, ...);
@@ -427,6 +427,8 @@ extern void fatal (char *, ...);
 #if __sgi
 #include <syms.h> /* for HDRR declaration */
 #endif /* __sgi */
+
+#include "page.h"
 
 #ifndef MAP_ANON
 #ifdef MAP_ANONYMOUS
@@ -604,7 +606,7 @@ find_section (char *name, char *section_names, char *file_name, ElfW(Ehdr) *old_
   for (idx = 1; idx < old_file_h->e_shnum; idx++)
     {
 #ifdef DEBUG
-      fprintf (stderr, "Looking for %s - found %s\n", name,
+      emsg("Looking for %s - found %s\n", name,
 	       section_names + OLD_SECTION_H (idx).sh_name);
 #endif
       if (!strcmp (section_names + OLD_SECTION_H (idx).sh_name,
@@ -634,7 +636,7 @@ find_section (char *name, char *section_names, char *file_name, ElfW(Ehdr) *old_
 static void
 unexec (char *new_name, char *old_name, unsigned int data_start, unsigned int bss_start, unsigned int entry_address)
 {
-  int new_file, old_file, new_file_size;
+  int new_file, old_file;
 
   /* Pointers to the base of the image of the two files. */
   caddr_t old_base, new_base;
@@ -654,17 +656,14 @@ unexec (char *new_name, char *old_name, unsigned int data_start, unsigned int bs
   /* Point to the section name table in the old file */
   char *old_section_names;
 
-  ElfW(Addr) old_bss_addr, new_bss_addr;
-  ElfW(Word) old_bss_size, new_data2_size,old_bss_offset;
-  ElfW(Off)  new_data2_offset;
-  ElfW(Addr) new_data2_addr;
+  ElfW(Addr) old_bss_addr, new_bss_addr,new_data2_addr;
+  ElfW(Off)  old_bss_size, new_data2_size,old_bss_offset,new_data2_offset,old_file_size,new_file_size,data_bss_offset;
 
   int n, nn;
   int old_bss_index, old_sbss_index;
   int old_data_index, new_data2_index;
-  int old_mdebug_index;
+  /* int old_mdebug_index; */
   struct stat stat_buf;
-  int old_file_size;
 
   /* Open the old file, allocate a buffer of the right size, and read
      in the file contents.  */
@@ -706,8 +705,8 @@ unexec (char *new_name, char *old_name, unsigned int data_start, unsigned int bs
 
   /* Find the mdebug section, if any.  */
 
-  old_mdebug_index = find_section (".mdebug", old_section_names,
-				   old_name, old_file_h, old_section_h, 1);
+  /* old_mdebug_index = find_section (".mdebug", old_section_names, */
+  /* 				   old_name, old_file_h, old_section_h, 1); */
 
   /* Find the old .bss section.  Figure out parameters of the new
    * data2 and bss sections.
@@ -755,13 +754,13 @@ unexec (char *new_name, char *old_name, unsigned int data_start, unsigned int bs
     (new_data2_addr - OLD_SECTION_H (old_data_index).sh_addr);
 
 #ifdef DEBUG
-  fprintf (stderr, "old_bss_index %d\n", old_bss_index);
-  fprintf (stderr, "old_bss_addr %x\n", old_bss_addr);
-  fprintf (stderr, "old_bss_size %x\n", old_bss_size);
-  fprintf (stderr, "new_bss_addr %x\n", new_bss_addr);
-  fprintf (stderr, "new_data2_addr %x\n", new_data2_addr);
-  fprintf (stderr, "new_data2_size %x\n", new_data2_size);
-  fprintf (stderr, "new_data2_offset %x\n", new_data2_offset);
+  emsg("old_bss_index %d\n", old_bss_index);
+  emsg("old_bss_addr %x\n", old_bss_addr);
+  emsg("old_bss_size %x\n", old_bss_size);
+  emsg("new_bss_addr %x\n", new_bss_addr);
+  emsg("new_data2_addr %x\n", new_data2_addr);
+  emsg("new_data2_size %x\n", new_data2_size);
+  emsg("new_data2_offset %x\n", new_data2_offset);
 #endif
 
   if ((unsigned) new_bss_addr < (unsigned) old_bss_addr + old_bss_size)
@@ -775,7 +774,9 @@ unexec (char *new_name, char *old_name, unsigned int data_start, unsigned int bs
   if (new_file < 0)
     fatal ("Can't creat (%s): errno %d\n", new_name, errno);
 
-  new_file_size = stat_buf.st_size + old_file_h->e_shentsize + new_data2_size + (new_data2_offset-old_bss_offset);
+  data_bss_offset=CEI(new_data2_offset-old_bss_offset,sizeof(long));/*????, e.g. sparc64*/
+
+  new_file_size = stat_buf.st_size + old_file_h->e_shentsize + new_data2_size + data_bss_offset;
 
   if (ftruncate (new_file, new_file_size))
     fatal ("Can't ftruncate (%s): errno %d\n", new_name, errno);
@@ -787,7 +788,7 @@ unexec (char *new_name, char *old_name, unsigned int data_start, unsigned int bs
   new_file_h = (ElfW(Ehdr) *) new_base;
   new_program_h = (ElfW(Phdr) *) ((byte *) new_base + old_file_h->e_phoff);
   new_section_h = (ElfW(Shdr) *)
-    ((byte *) new_base + old_file_h->e_shoff + new_data2_size + (new_data2_offset-old_bss_offset));
+    ((byte *) new_base + old_file_h->e_shoff + new_data2_size + data_bss_offset);
 
 
   /* Make our new file, program and section headers as copies of the
@@ -805,14 +806,14 @@ unexec (char *new_name, char *old_name, unsigned int data_start, unsigned int bs
    * further away now.
    */
 
-  new_file_h->e_shoff += new_data2_size + (new_data2_offset-old_bss_offset);
+  new_file_h->e_shoff += new_data2_size + data_bss_offset;
   new_file_h->e_shnum += 1;
 
 #ifdef DEBUG
-  fprintf (stderr, "Old section offset %x\n", old_file_h->e_shoff);
-  fprintf (stderr, "Old section count %d\n", old_file_h->e_shnum);
-  fprintf (stderr, "New section offset %x\n", new_file_h->e_shoff);
-  fprintf (stderr, "New section count %d\n", new_file_h->e_shnum);
+  emsg("Old section offset %x\n", old_file_h->e_shoff);
+  emsg("Old section count %d\n", old_file_h->e_shnum);
+  emsg("New section offset %x\n", new_file_h->e_shoff);
+  emsg("New section count %d\n", new_file_h->e_shnum);
 #endif
 
   /* Fix up a new program header.  Extend the writable data segment so
@@ -886,7 +887,7 @@ unexec (char *new_name, char *old_name, unsigned int data_start, unsigned int bs
 
   /* Walk through all section headers, insert the new data2 section right
      before the new bss section. */
-  for (n = 1, nn = 1; n < (int) old_file_h->e_shnum; n++, nn++)
+  for (n = 0, nn = 0; n < (int) old_file_h->e_shnum; n++, nn++)
     {
       caddr_t src;
       /* If it is (s)bss section, insert the new data2 section before it.  */
@@ -961,7 +962,7 @@ unexec (char *new_name, char *old_name, unsigned int data_start, unsigned int bs
 	  if (NEW_SECTION_H (nn).sh_offset >= old_bss_offset ||
 	      /* solaris has symtab straddling bss offset */
 	      NEW_SECTION_H (nn).sh_offset+NEW_SECTION_H (nn).sh_size > old_bss_offset)
-	    NEW_SECTION_H (nn).sh_offset += new_data2_size+(new_data2_offset-old_bss_offset);
+	    NEW_SECTION_H (nn).sh_offset += new_data2_size+data_bss_offset;
 #endif
 	  /* Any section that was originally placed after the section
 	     header table should now be off by the size of one section

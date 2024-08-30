@@ -22,35 +22,19 @@
 ;;;;                            array routines
 
 
-(in-package 'lisp)
-
-
-(export '(make-array array-displacement vector
-          array-element-type array-rank array-dimension
-          array-dimensions
-          array-in-bounds-p array-row-major-index
-          adjustable-array-p
-          bit sbit 
-          bit-and bit-ior bit-xor bit-eqv bit-nand bit-nor
-          bit-andc1 bit-andc2 bit-orc1 bit-orc2 bit-not
-          array-has-fill-pointer-p fill-pointer
-          vector-push vector-push-extend vector-pop
-          adjust-array upgraded-array-element-type))
-
-(in-package 'system)
-
+(in-package :si)
 
 (proclaim '(optimize (safety 2) (space 3)))
 
 (defvar *baet-hash* (make-hash-table :test 'equal))
-(defun best-array-element-type (type)
-  (or (gethash type *baet-hash*)
-      (setf (gethash type *baet-hash*)
-	    (if type
-		(car (member type '(string-char bit signed-char unsigned-char signed-short unsigned-short
-					fixnum short-float long-float t)
-			     :test 'subtypep)) t)))))
-	 
+(defun best-array-element-type (type &aux
+				     (tps '(character bit signed-char unsigned-char signed-short unsigned-short
+						      fixnum short-float long-float t)))
+  (if type
+    (or (car (member type tps))
+	(gethash type *baet-hash*)
+	(setf (gethash type *baet-hash*) (car (member type tps :test 'subtypep)))) t))
+
 (defun upgraded-array-element-type (type &optional environment)
   (declare (ignore environment))
   (best-array-element-type type))
@@ -277,8 +261,6 @@
 			  (displaced-index-offset 0)
 			  (static (staticp array))
                      &aux (fill-pointer (or fill-pointer (when (array-has-fill-pointer-p array) (fill-pointer array)))))
-
-  (declare (ignore element-type))
 
   (let ((x (if initial-contents-supplied-p
 	       (make-array new-dimensions

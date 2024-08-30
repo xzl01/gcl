@@ -28,6 +28,8 @@ Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 #include <unistd.h>
 #include <string.h>
 #include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 static void
 init_main(void);
@@ -38,14 +40,17 @@ initlisp(void);
 static int
 multiply_stacks(int);
 
-#define IN_MAIN
-
 #ifdef KCLOVM
 #include <ovm/ovm.h>
 void change_contexts();
 int ovm_process_created; 
 void initialize_process();
 #endif
+
+
+#define EXTER
+#define INLINE
+
 
 #include "include.h"
 #include <signal.h>
@@ -75,6 +80,7 @@ char *system_directory;
 #define EXTRA_BUFSIZE 8
 char stdin_buf[BUFSIZ + EXTRA_BUFSIZE];
 char stdout_buf[BUFSIZ + EXTRA_BUFSIZE];
+char stderr_buf[BUFSIZ + EXTRA_BUFSIZE];
 
 #include "stacks.h"
 
@@ -118,8 +124,9 @@ cstack_dir(fixnum j) {
 
 fixnum log_maxpage_bound=sizeof(fixnum)*8-1;
 
-inline int
+int
 mbrk(void *v) {
+
   ufixnum uv=(ufixnum)v,uc=(ufixnum)sbrk(0),ux,um;
   fixnum m=((1UL<<(sizeof(fixnum)*8-1))-1);
 
@@ -134,17 +141,21 @@ mbrk(void *v) {
     um=uc;
     ux=uv;
   }
+
   if (((fixnum)(ux-um))<0)
     return mbrk((void *)uc+(uv<uc ? -m : m)) || mbrk(v);
+
   return uc==(ufixnum)sbrk(uv-uc) ? 0 : -1;
+
 }
     
 #if defined(__CYGWIN__)||defined(__MINGW32__)
 
-#include <Windows.h>
+#include <windows.h>
 
-ufixnum
-get_phys_pages_no_malloc(void) {
+static ufixnum
+get_phys_pages_no_malloc(char n) {
+
   MEMORYSTATUS m;
 
   m.dwLength=sizeof(m);
@@ -157,8 +168,9 @@ get_phys_pages_no_malloc(void) {
 
 #include <sys/sysctl.h>
 
-ufixnum
-get_phys_pages_no_malloc(void) {
+static ufixnum
+get_phys_pages_no_malloc(char n) {
+
   uint64_t s;
   size_t z=sizeof(s);
   int m[2]={CTL_HW,HW_MEMSIZE};
@@ -170,41 +182,120 @@ get_phys_pages_no_malloc(void) {
 
 }
 
-#elif defined(__sun__)
+#elif defined(__sun__) || defined(__GNU__)
 
-ufixnum
-get_phys_pages_no_malloc(void) {
+static ufixnum
+get_phys_pages_no_malloc(char n) {
 
   return sysconf(_SC_PHYS_PAGES);
 
 }
 
-#else 
+#elif defined(FREEBSD)
 
-ufixnum
-get_phys_pages_no_malloc(void) {
-  int l;
-  char b[PAGESIZE],*c;
-  const char *k="MemTotal:",*f="/proc/meminfo";
-  ufixnum res=0,n;
+#include <sys/types.h>
+#include <sys/sysctl.h>
+
+static ufixnum
+get_phys_pages_no_malloc(char n) {
+
+  size_t i,len=sizeof(i);
+
+  return (sysctlbyname("hw.physmem",&i,&len,NULL,0) ? 0 : i)>>PAGEWIDTH;
   
-  if ((l=open(f,O_RDONLY))!=-1) {
-    if ((n=read(l,b,sizeof(b)))<sizeof(b) && 
-	!(b[n]=0) && 
-	(c=strstr(b,k)) && 
-	sscanf(c+strlen(k),"%lu",&n)==1)
-      res=n;
-    close(l);
-  }
-  return res>>(PAGEWIDTH-10);
+}
+
+#else /*Linux*/
+
+#include <sys/sysinfo.h>
+
+static ufixnum
+get_phys_pages_no_malloc(char freep) {
+
+  struct sysinfo s;
+
+  return sysinfo(&s) ? 0 : ((freep ? s.freeram : s.totalram)>>PAGEWIDTH)*s.mem_unit;
+  
 }
 
 #endif
 
+static ufixnum
+get_phys_pages1(char freep) {
+
+  return get_phys_pages_no_malloc(freep);
+
+}
+
+static void
+get_gc_environ(void) {
+
+  const char *e;
+  
+  mem_multiple=1.0;
+  if ((e=getenv("GCL_MEM_MULTIPLE"))) {
+    massert(sscanf(e,"%lf",&mem_multiple)==1);
+    massert(mem_multiple>=0.0);
+  }
+
+  gc_alloc_min=0.05;
+  if ((e=getenv("GCL_GC_ALLOC_MIN"))) {
+    massert(sscanf(e,"%lf",&gc_alloc_min)==1);
+    massert(gc_alloc_min>=0.0);
+  }
+
+  gc_page_min=0.5;
+  if ((e=getenv("GCL_GC_PAGE_MIN"))||(e=getenv("GCL_GC_PAGE_THRESH"))) {/*legacy support*/
+    massert(sscanf(e,"%lf",&gc_page_min)==1);
+    massert(gc_page_min>=0.0);
+  }
+
+  gc_page_max=0.75;
+  if ((e=getenv("GCL_GC_PAGE_MAX"))) {
+    massert(sscanf(e,"%lf",&gc_page_max)==1);
+    massert(gc_page_max>=0.0);
+  }
+
+  multiprocess_memory_pool=
+    (e=getenv("GCL_MULTIPROCESS_MEMORY_POOL")) && (*e=='t' || *e=='T');
+
+  wait_on_abort=0;
+  if ((e=getenv("GCL_WAIT_ON_ABORT")))
+    massert(sscanf(e,"%lu",&wait_on_abort)==1);
+  
+}
+
+static void
+setup_maxpages(double scale) {
+
+  void *beg=data_start ? data_start : sbrk(0);
+  ufixnum maxpages=real_maxpage-page(beg),npages,i;
+
+  for (npages=0,i=t_start;i<t_other;i++)
+    npages+=tm_table[i].tm_maxpage=tm_table[i].tm_npage;
+
+  massert(scale*maxpages>=npages);
+
+  maxpages*=scale;
+  phys_pages*=scale;
+  real_maxpage=maxpages+page(beg);
+  
+  resv_pages=available_pages=0;
+  available_pages=check_avail_pages();
+  
+  resv_pages=available_pages/100;
+  available_pages-=resv_pages;
+  
+  recent_allocation=0;
+
+}
+
+void *initial_sbrk=NULL;
+
 int
 update_real_maxpage(void) {
 
-  ufixnum i,j,k;
+  ufixnum i,j;
   void *end,*cur,*beg;
 #ifdef __MINGW32__
   static fixnum n;
@@ -215,6 +306,9 @@ update_real_maxpage(void) {
   }
 #endif
 
+#ifdef DEFINED_REAL_MAXPAGE
+  real_maxpage=DEFINED_REAL_MAXPAGE;
+#else
   massert(cur=sbrk(0));
   beg=data_start ? data_start : cur;
   for (i=0,j=(1L<<log_maxpage_bound);j>PAGESIZE;j>>=1)
@@ -224,32 +318,13 @@ update_real_maxpage(void) {
 	i+=j;
       }
   massert(!mbrk(cur));
-
-  phys_pages=get_phys_pages_no_malloc();
-
-#ifdef BRK_DOES_NOT_GUARANTEE_ALLOCATION
-  if (phys_pages>0 && real_maxpage>phys_pages+page(beg)) real_maxpage=phys_pages+page(beg);
 #endif
 
-  available_pages=real_maxpage-page(beg);
-  for (i=t_start,j=0;i<t_other;i++) {
-    k=tm_table[i].tm_maxpage;
-    if (tm_table[i].tm_type==t_relocatable)
-      k*=2;
-    else
-      j+=k;
-    available_pages-=k;
-  }
-  resv_pages=40<available_pages ? 40 : available_pages;
-  available_pages-=resv_pages;
+  phys_pages=ufmin(get_phys_pages1(0)+page(beg),real_maxpage)-page(beg);
 
-  new_holepage=available_pages/starting_hole_div;
-  k=available_pages/20;
-  j*=starting_relb_heap_mult;
-  j=j<k ? j : k;
-  if (maxrbpage<j)
-    set_tm_maxpage(tm_table+t_relocatable,j);
-
+  get_gc_environ();
+  setup_maxpages(mem_multiple);
+  
   return 0;
 
 }
@@ -257,31 +332,16 @@ update_real_maxpage(void) {
 static int
 minimize_image(void) {
 
-#ifdef SGC
-  int in_sgc=sgc_enabled;
-#else
-  int in_sgc=0;
-#endif
-  extern long new_holepage;
-  fixnum old_holepage=new_holepage,i;
-  void *new;
+  fixnum i;
   
-  if (in_sgc) sgc_quit();
-  holepage=new_holepage=1;
-  GBC(t_relocatable);
-  if (in_sgc) sgc_start();
-  new = (void *)(((((ufixnum)rb_pointer)+ PAGESIZE-1)/PAGESIZE)*PAGESIZE);
-  core_end = new;
-  rb_end=rb_limit=new;
-  set_tm_maxpage(tm_table+t_relocatable,(nrbpage=((char *)new-REAL_RB_START)/PAGESIZE));
-  new_holepage=old_holepage;
-  
-#ifdef GCL_GPROF
+  empty_relblock();
+  nrbpage=0;
+  resize_hole(0,t_relocatable,0);
+
   gprof_cleanup();
-#endif
   
 #if defined(BSD) || defined(ATT)  
-  mbrk(core_end);
+  mbrk(core_end=heap_end);
 #endif
   
   cbgbccount = tm_table[t_contiguous].tm_adjgbccnt = tm_table[t_contiguous].tm_opt_maxpage = 0;
@@ -301,11 +361,12 @@ DEFUN_NEW("SET-LOG-MAXPAGE-BOUND",object,fSset_log_maxpage_bound,SI,1,1,NONE,II,
   l=l<def ? l : def;
   end=data_start+(1L<<l)-PAGESIZE;
   GBC(t_relocatable);
-  dend=heap_end+PAGESIZE+(((rb_pointer-REAL_RB_START)+PAGESIZE-1)&(-PAGESIZE));
+  dend=heap_end+PAGESIZE+CEI(rb_pointer-rb_begin(),PAGESIZE);
   if (end >= dend) {
     minimize_image();
-    log_maxpage_bound=l;
+    log_maxpage_bound=l;/*FIXME maybe this should be under mem_multiple, not over*/
     update_real_maxpage();
+    maybe_set_hole_from_maxpages();
   }
 
   return (object)log_maxpage_bound;
@@ -352,38 +413,126 @@ gcl_mprotect(void *v,unsigned long l,int p) {
 }
 #endif
 
+DEFVAR("*CODE-BLOCK-RESERVE*",sSAcode_block_reserveA,SI,Cnil,"");
+
+#define HAVE_GCL_CLEANUP
+
+void
+gcl_cleanup(int gc) {
+
+  if (getenv("GCL_WAIT"))
+    sleep(30);
+  
+#if defined(USE_CLEANUP)
+  {extern void _cleanup(void);_cleanup();}
+#endif
+
+  gprof_cleanup();
+
+  if (gc) {
+
+    saving_system=TRUE;
+    GBC(t_other);
+    saving_system=FALSE;
+    
+    minimize_image();
+    
+    raw_image=FALSE;
+    cs_org=0;
+    initial_sbrk=core_end;
+
+  }
+
+  close_pool();
+
+}
+
+/*gcc boolean expression tail position bug*/
+static char *stack_to_be_allocated;
+
+int
+stack_ret(char *s,unsigned long size) {
+  int r,i;
+  for (i=r=0;i<size;i++)
+    r^=((unsigned char)s[i])|((ufixnum)(s+i));
+  return r;
+}
+
+int
+get_stack_to_be_allocated(unsigned long size) {
+   stack_to_be_allocated=alloca(size);
+   memset(stack_to_be_allocated,0,size);
+   return stack_ret(stack_to_be_allocated,size);
+ }
+
+DEFUN_NEW("EQUAL-TAIL-RECURSION-CHECK",object,fSequal_tail_recursion_check,SI,1,1,NONE,II,OO,OO,OO,(fixnum s),"") {
+  object x0=make_list(s/sizeof(object)),x1=make_list(s/sizeof(object));
+  char *w;
+  get_stack_to_be_allocated(s);
+  fLequal(x0,x1);
+  for (w=stack_to_be_allocated;w<stack_to_be_allocated+s && !*w;w++);
+  RETURN1((object)(w-stack_to_be_allocated));
+}
+
+#if !defined(DARWIN)&&!defined(__MINGW32__)
+
+static int
+mbin(const char *s,char *o) {
+
+  struct stat ss;
+
+  if (!stat(s,&ss) && (ss.st_mode&S_IFMT)==S_IFREG && !access(s,R_OK|X_OK)) {
+    massert(realpath(s,o));
+    return 1;
+  }
+
+  return 0;
+
+}
+
+static int
+which(const char *n,char *o) {
+
+  char *s;
+
+  if (strchr(n,'/'))
+    return mbin(n,o);
+
+  massert(snprintf(FN1,sizeof(FN1),"%s",getenv("PATH"))>1);
+  for (s=NULL;(s=strtok(s ? NULL : FN1,":"));) {
+
+    massert(snprintf(FN2,sizeof(FN2),"%s/%s",s,n));
+    if (mbin(FN2,o))
+      return 1;
+
+  }
+
+  return 0;
+
+}
+
+#endif
+
+static int ARGC;
+static char **ARGV;
+
 int
 main(int argc, char **argv, char **envp) {
 
-  gcl_init_alloc(&argv);
-
-#ifdef GET_FULL_PATH_SELF
   GET_FULL_PATH_SELF(kcl_self);
-#else
-  kcl_self = argv[0];
-#endif
-#ifdef __MINGW32__
-  {
-    char *s=kcl_self;
-    for (;*s;s++) if (*s=='\\') *s='/';
-  }
-#endif	
   *argv=kcl_self;
-  
+
 #ifdef CAN_UNRANDOMIZE_SBRK
 #include <stdio.h>
 #include <stdlib.h>
 #include "unrandomize.h"
 #endif
-  
-#ifdef LD_BIND_NOW
-#include <stdio.h>
-#include <stdlib.h>
-#include "ld_bind_now.h"
-#endif
-  
+
+  gcl_init_alloc(alloca(1));
+
   setbuf(stdin, stdin_buf); 
   setbuf(stdout, stdout_buf);
+  setbuf(stderr, stderr_buf);
 #ifdef _WIN32
   _fmode = _O_BINARY;
   _setmode( _fileno( stdin ), _O_BINARY );
@@ -392,7 +541,6 @@ main(int argc, char **argv, char **envp) {
 #endif
   ARGC = argc;
   ARGV = argv;
-  ENVP = envp;
   
   vs_top = vs_base = vs_org;
   ihs_top = ihs_org-1;
@@ -404,9 +552,9 @@ main(int argc, char **argv, char **envp) {
     printf("GCL (GNU Common Lisp)  %s  %ld pages\n",LISP_IMPLEMENTATION_VERSION,real_maxpage);
     fflush(stdout);
     
-    if (argc>1) {
-      massert(argv[1][strlen(argv[1])-1]=='/');
-      system_directory=argv[1];
+    if (ARGC>1) {
+      massert(ARGV[1][strlen(ARGV[1])-1]=='/');
+      system_directory=ARGV[1];
     }
 
     initlisp();
@@ -422,22 +570,17 @@ main(int argc, char **argv, char **envp) {
 
     terminal_io->sm.sm_object0->sm.sm_fp = stdin;
     terminal_io->sm.sm_object1->sm.sm_fp = stdout;
-#ifdef LD_BIND_NOW /*FIXME currently mips only, verify that these two requirements are the same*/
-    reinit_gmp();
-#endif
+    standard_error->sm.sm_fp = stderr;
+
     gcl_init_big1();
-#ifdef HAVE_READLINE
+#ifdef USE_READLINE
     gcl_init_readline_function();
 #endif
 #ifdef NEED_STACK_CHK_GUARD
-  __stack_chk_guard=random_ulong();/*Cannot be safely set inside a function which returns*/
+    __stack_chk_guard=random_ulong();/*Cannot be safely set inside a function which returns*/
 #endif
-
+  
   }
-
-#ifdef _WIN32
-  detect_wine();
-#endif
 
   sSAlisp_maxpagesA->s.s_dbind = make_fixnum(real_maxpage);
 
@@ -465,6 +608,14 @@ void install_segmentation_catcher(void)
   (void) gcl_signal(SIGBUS,segmentation_catcher);
 }
 
+void
+do_gcl_abort(void) {
+  if (wait_on_abort)
+    sleep(wait_on_abort);
+  gcl_cleanup(0);
+  abort();
+}
+
 int catch_fatal=1;
 void
 error(char *s)
@@ -480,7 +631,7 @@ error(char *s)
 	   FEerror("Caught fatal error [memory may be damaged]",0); }
 	printf("\nUnrecoverable error: %s.\n", s);
 	fflush(stdout);
-	abort();
+	do_gcl_abort();
 }
 
 static void
@@ -497,7 +648,7 @@ initlisp(void) {
 	    || NULL_OR_ON_C_STACK(pagetoinfo(first_data_page))
 	    || NULL_OR_ON_C_STACK(core_end-1)) {
 	  /* check person has correct definition of above */
-	  fprintf(stderr,"%p %d "
+	  emsg("%p %d "
 #if defined(IM_FIX_BASE)
 		  "%p %d %p %d "
 #endif
@@ -549,22 +700,10 @@ initlisp(void) {
 	import(Ct, lisp_package);
 	export(Ct, lisp_package);
 
-#ifdef ANSI_COMMON_LISP
-/*  	Cnil->s.s_hpack = common_lisp_package; */
-	import(Cnil, common_lisp_package);
-	export(Cnil, common_lisp_package);
-
-/*  	Ct->s.s_hpack = common_lisp_package; */
-	import(Ct, common_lisp_package);
-	export(Ct, common_lisp_package);
-#endif
-
-/* 	sLquote = make_ordinary("QUOTE"); */
-/* 	sLfunction = make_ordinary("FUNCTION"); */
 	sLlambda = make_ordinary("LAMBDA");
-	sLlambda_block = make_ordinary("LAMBDA-BLOCK");
-	sLlambda_closure = make_ordinary("LAMBDA-CLOSURE");
-	sLlambda_block_closure = make_ordinary("LAMBDA-BLOCK-CLOSURE");
+	sSlambda_block = make_si_ordinary("LAMBDA-BLOCK");
+	sSlambda_closure = make_si_ordinary("LAMBDA-CLOSURE");
+	sSlambda_block_closure = make_si_ordinary("LAMBDA-BLOCK-CLOSURE");
 	sLspecial = make_ordinary("SPECIAL");
 
 	
@@ -634,7 +773,7 @@ initlisp(void) {
 #ifdef CMAC
 	gcl_init_cmac();
 #endif	
-#ifdef HAVE_READLINE
+#ifdef USE_READLINE
 	gcl_init_readline();
 #endif
 
@@ -702,7 +841,7 @@ segmentation_catcher(int i) {
 /* 	error("end of file"); */
 /* } */
 
-DEFUNO_NEW("BYE",object,fLbye,LISP
+DEFUNO_NEW("BYE",object,fSbye,SI
        ,0,1,NONE,OO,OO,OO,OO,void,Lby,(object exitc),"")
 {	int n=VFUN_NARGS;
 	int exit_code;
@@ -714,9 +853,9 @@ DEFUNO_NEW("BYE",object,fLbye,LISP
 }
 
 
-DEFUN_NEW("QUIT",object,fLquit,LISP
+DEFUN_NEW("QUIT",object,fSquit,SI
        ,0,1,NONE,OO,OO,OO,OO,(object exitc),"")
-{	return FFN(fLbye)(exitc); }
+{	return FFN(fSbye)(exitc); }
  
 /* DEFUN_NEW("EXIT",object,fLexit,LISP */
 /*        ,0,1,NONE,OI,OO,OO,OO,(fixnum exitc),"") */
@@ -921,7 +1060,7 @@ static void
 FFN(siLinitialization_failure)(void) {
   check_arg(0);
   printf("lisp initialization failed\n");
-  exit(0);
+  do_gcl_abort();
 }
 
 DEFUNO_NEW("IDENTITY",object,fLidentity,LISP
@@ -929,12 +1068,6 @@ DEFUNO_NEW("IDENTITY",object,fLidentity,LISP
 {
 	/* 1 args */
   RETURN1 (x0);
-}
-
-DEFUNO_NEW("GCL-COMPILE-TIME",object,fSgcl_compile_time,SI
-       ,0,0,NONE,OO,OO,OO,OO,void,Lgcl_compile_time,(void),"")
-{
-  RETURN1 (make_simple_string(__DATE__ " " __TIME__));
 }
 
 DEFUNO_NEW("LDB1",object,fSldb1,SI
@@ -949,7 +1082,6 @@ DEFUN_NEW("LISP-IMPLEMENTATION-VERSION",object,fLlisp_implementation_version,LIS
 	/* 0 args */
 	RETURN1((make_simple_string(LISP_IMPLEMENTATION_VERSION)));
 }
-
 
 static void
 FFN(siLsave_system)(void) {
@@ -970,14 +1102,7 @@ FFN(siLsave_system)(void) {
   DO_BEFORE_SAVE
 #endif	
     
-  saving_system = TRUE;
-
-  minimize_image();
-
-  saving_system = FALSE;
-
-  Lsave();
-  alloc_page(-(holepage+nrbpage));
+  siLsave();
 
 }
 
@@ -990,7 +1115,7 @@ DEFVAR("*COMMAND-ARGS*",sSAcommand_argsA,SI,sLnil,"");
 static void
 init_main(void) {
 
-  make_function("BY", Lby);
+  make_si_function("BY", Lby);
   make_si_function("ARGC", siLargc);
   make_si_function("ARGV", siLargv);
   
@@ -1038,6 +1163,10 @@ init_main(void) {
   ADD_FEATURE("WIN32");
 #endif
 
+#if defined(__CYGWIN__)
+  ADD_FEATURE("CYGWIN");
+#endif
+
 #ifdef IEEEFLOAT
   ADD_FEATURE("IEEE-FLOATING-POINT");
 #endif
@@ -1078,8 +1207,12 @@ init_main(void) {
       }  }
 #endif	 
   
-#ifdef HAVE_READLINE
+#ifdef USE_READLINE
+#ifdef READLINE_IS_EDITLINE
+  ADD_FEATURE("EDITLINE");
+#else
   ADD_FEATURE("READLINE");
+#endif
 #endif
 #if !defined(USE_DLOPEN)
   ADD_FEATURE("NATIVE-RELOC");
@@ -1100,6 +1233,10 @@ init_main(void) {
   ADD_FEATURE("STATIC");
 #endif	 
 
+#ifdef LARGE_MEMORY_MODEL
+  ADD_FEATURE("LARGE-MEMORY-MODEL");
+#endif
+
   make_special("*FEATURES*",features);}
   
   make_si_function("SAVE-SYSTEM", siLsave_system);
@@ -1108,11 +1245,7 @@ init_main(void) {
   
 }
 
-#ifdef SGC
-#include "writable.h"
-#endif
-
-#ifdef HAVE_PRINT_INSN_I386
+#ifdef HAVE_DIS_ASM_H
 
 #include "dis-asm.h"
 
@@ -1120,6 +1253,16 @@ static char b[4096],*bp;
 
 static int
 my_fprintf(void *v,const char *f,...) {
+  va_list va;
+  int r;
+  va_start(va,f);
+  bp+=(r=vsnprintf(bp,sizeof(b)-(bp-b),f,va));
+  va_end(va);
+  return r;
+}
+
+static int
+my_fprintf_styled(void *v,enum disassembler_style,const char *f,...) {
   va_list va;
   int r;
   va_start(va,f);
@@ -1141,29 +1284,37 @@ my_pa(bfd_vma addr,struct disassemble_info *dinfo) {
 
 #endif
 
+
 DEFUN_NEW("DISASSEMBLE-INSTRUCTION",object,fSdisassemble_instruction,SI,1,1,NONE,OI,OO,OO,OO,(fixnum addr),"") {
 
-#ifdef HAVE_PRINT_INSN_I386
+#if defined(HAVE_DIS_ASM_H) && defined(OUTPUT_ARCH)
 
   static disassemble_info i;
   void *v;
-  int (*s)();
-  int j;
-
-  memset(&i,0,sizeof(i));
-#ifdef __i386__
-  i.disassembler_options="i386";
-#endif
-  i.fprintf_func=my_fprintf;
-  i.read_memory_func=my_read;
-  i.print_address_func=my_pa;
-  bp=b;
+  void * (*s)();
+  fixnum j,j1,k;
+  object x;
 
   if ((v=dlopen("libopcodes.so",RTLD_NOW))) {
-    if ((s=dlsym(v,"print_insn_i386"))) {
-      j=s(addr,&i);
-      my_fprintf(NULL," ;");
-      return MMcons(make_simple_string(b),make_fixnum(j));
+    if ((s=dlsym(v,"init_disassemble_info"))) {
+      s(&i, stdout,(fprintf_ftype) my_fprintf,my_fprintf_styled);
+      i.read_memory_func=my_read;
+      i.print_address_func=my_pa;
+      if ((s=dlsym(v,"disassembler"))) {
+	disassembler_ftype disasm=(disassembler_ftype)(ufixnum)s(OUTPUT_ARCH,false,0,NULL);/*bfd_mach_x86_64*/
+	bp=b;
+	disasm(addr,&i);
+	my_fprintf(NULL," ;");
+	x=make_simple_string(b);
+
+	j1=j=(addr-16)&(~16UL);
+	bp=b;
+	for (k=0;k<16;k++) {
+	  j+=disasm(j,&i);
+	  my_fprintf(NULL," ;");
+	}
+	return MMcons(x,MMcons(make_simple_string(b),make_fixnum(j-j1)));
+      }
     }
     massert(!dlclose(v));
   }

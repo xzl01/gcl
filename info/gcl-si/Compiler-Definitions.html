@@ -1,46 +1,36 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<!-- Created by GNU Texinfo 5.2, http://www.gnu.org/software/texinfo/ -->
+<!-- Created by GNU Texinfo 6.7, http://www.gnu.org/software/texinfo/ -->
 <head>
-<title>GCL SI Manual: Compiler Definitions</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Compiler Definitions (GCL SI Manual)</title>
 
-<meta name="description" content="GCL SI Manual: Compiler Definitions">
-<meta name="keywords" content="GCL SI Manual: Compiler Definitions">
+<meta name="description" content="Compiler Definitions (GCL SI Manual)">
+<meta name="keywords" content="Compiler Definitions (GCL SI Manual)">
 <meta name="resource-type" content="document">
 <meta name="distribution" content="global">
 <meta name="Generator" content="makeinfo">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link href="index.html#Top" rel="start" title="Top">
-<link href="Function-and-Variable-Index.html#Function-and-Variable-Index" rel="index" title="Function and Variable Index">
+<link href="index.html" rel="start" title="Top">
+<link href="Function-and-Variable-Index.html" rel="index" title="Function and Variable Index">
 <link href="Function-and-Variable-Index.html#SEC_Contents" rel="contents" title="Table of Contents">
-<link href="index.html#Top" rel="up" title="Top">
-<link href="Function-and-Variable-Index.html#Function-and-Variable-Index" rel="next" title="Function and Variable Index">
-<link href="Low-Level-X-Interface.html#Low-Level-X-Interface" rel="prev" title="Low Level X Interface">
+<link href="index.html" rel="up" title="Top">
+<link href="Function-and-Variable-Index.html" rel="next" title="Function and Variable Index">
+<link href="Low-Level-X-Interface.html" rel="prev" title="Low Level X Interface">
 <style type="text/css">
 <!--
 a.summary-letter {text-decoration: none}
-blockquote.smallquotation {font-size: smaller}
+blockquote.indentedblock {margin-right: 0em}
 div.display {margin-left: 3.2em}
 div.example {margin-left: 3.2em}
-div.indentedblock {margin-left: 3.2em}
 div.lisp {margin-left: 3.2em}
-div.smalldisplay {margin-left: 3.2em}
-div.smallexample {margin-left: 3.2em}
-div.smallindentedblock {margin-left: 3.2em; font-size: smaller}
-div.smalllisp {margin-left: 3.2em}
-kbd {font-style:oblique}
+kbd {font-style: oblique}
 pre.display {font-family: inherit}
 pre.format {font-family: inherit}
 pre.menu-comment {font-family: serif}
 pre.menu-preformatted {font-family: serif}
-pre.smalldisplay {font-family: inherit; font-size: smaller}
-pre.smallexample {font-size: smaller}
-pre.smallformat {font-family: inherit; font-size: smaller}
-pre.smalllisp {font-size: smaller}
-span.nocodebreak {white-space:nowrap}
-span.nolinebreak {white-space:nowrap}
-span.roman {font-family:serif; font-weight:normal}
-span.sansserif {font-family:sans-serif; font-weight:normal}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
 ul.no-bullet {list-style: none}
 -->
 </style>
@@ -48,18 +38,16 @@ ul.no-bullet {list-style: none}
 
 </head>
 
-<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
-<a name="Compiler-Definitions"></a>
-<div class="header">
+<body lang="en">
+<span id="Compiler-Definitions"></span><div class="header">
 <p>
-Next: <a href="Function-and-Variable-Index.html#Function-and-Variable-Index" accesskey="n" rel="next">Function and Variable Index</a>, Previous: <a href="Miscellaneous.html#Miscellaneous" accesskey="p" rel="prev">Miscellaneous</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Function-and-Variable-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Function-and-Variable-Index.html#Function-and-Variable-Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="Function-and-Variable-Index.html" accesskey="n" rel="next">Function and Variable Index</a>, Previous: <a href="Miscellaneous.html" accesskey="p" rel="prev">Miscellaneous</a>, Up: <a href="index.html" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Function-and-Variable-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Function-and-Variable-Index.html" title="Index" rel="index">Index</a>]</p>
 </div>
 <hr>
-<a name="Compiler-Definitions-1"></a>
-<h2 class="chapter">20 Compiler Definitions</h2>
+<span id="Compiler-Definitions-1"></span><h2 class="chapter">20 Compiler Definitions</h2>
 
 <dl>
-<dt><a name="index-EMIT_002dFN"></a>Function: <strong>EMIT-FN</strong> <em>(turn-on)</em></dt>
+<dt id="index-EMIT_002dFN">Function: <strong>EMIT-FN</strong> <em>(turn-on)</em></dt>
 <dd><p>Package:COMPILER
 </p>
 <p>If TURN-ON is t, the subsequent calls to  COMPILE-FILE will
@@ -71,7 +59,7 @@ This latter file must be manually loaded to call emit-fn.
 
 </dd></dl>
 <dl>
-<dt><a name="index-_002aCMPINCLUDE_002dSTRING_002a"></a>Variable: <strong>*CMPINCLUDE-STRING*</strong></dt>
+<dt id="index-_002aCMPINCLUDE_002dSTRING_002a">Variable: <strong>*CMPINCLUDE-STRING*</strong></dt>
 <dd><p>Package:COMPILER
 If it is a string it holds the text of the cmpinclude.h file appropriate for
 this version.  Otherwise the usual #include of *cmpinclude* will be used.  To
@@ -80,7 +68,7 @@ disable this feature set *cmpinclude-string* to NIL in the init-form.
 
 </dd></dl>
 <dl>
-<dt><a name="index-EMIT_002dFN-1"></a>Function: <strong>EMIT-FN</strong> <em>(turn-on)</em></dt>
+<dt id="index-EMIT_002dFN-1">Function: <strong>EMIT-FN</strong> <em>(turn-on)</em></dt>
 <dd><p>Package:COMPILER
 </p>
 
@@ -106,7 +94,7 @@ tools.
 
 </dd></dl>
 <dl>
-<dt><a name="index-MAKE_002dALL_002dPROCLAIMS"></a>Function: <strong>MAKE-ALL-PROCLAIMS</strong> <em>(&amp;rest directories)</em></dt>
+<dt id="index-MAKE_002dALL_002dPROCLAIMS">Function: <strong>MAKE-ALL-PROCLAIMS</strong> <em>(&amp;rest directories)</em></dt>
 <dd><p>Package:COMPILER
 </p>
 
@@ -135,7 +123,7 @@ proclamations.
 
 </dd></dl>
 <dl>
-<dt><a name="index-MAKE_002dPROCLAIMS"></a>Function: <strong>MAKE-PROCLAIMS</strong> <em>(&amp;optional (stream *standard-output*))</em></dt>
+<dt id="index-MAKE_002dPROCLAIMS">Function: <strong>MAKE-PROCLAIMS</strong> <em>(&amp;optional (stream *standard-output*))</em></dt>
 <dd><p>Package:COMPILER
 </p>
 
@@ -146,7 +134,7 @@ on how to collect this.  Simply use LOAD to load in .fn files.
 
 </dd></dl>
 <dl>
-<dt><a name="index-LIST_002dUNDEFINED_002dFUNCTIONS"></a>Function: <strong>LIST-UNDEFINED-FUNCTIONS</strong> <em>()</em></dt>
+<dt id="index-LIST_002dUNDEFINED_002dFUNCTIONS">Function: <strong>LIST-UNDEFINED-FUNCTIONS</strong> <em>()</em></dt>
 <dd><p>Package:COMPILER
 </p>
 
@@ -165,7 +153,7 @@ or
 
 </dd></dl>
 <dl>
-<dt><a name="index-WHO_002dCALLS"></a>Function: <strong>WHO-CALLS</strong> <em>(function-name)</em></dt>
+<dt id="index-WHO_002dCALLS">Function: <strong>WHO-CALLS</strong> <em>(function-name)</em></dt>
 <dd><p>Package:COMPILER
 </p>
 
@@ -174,7 +162,7 @@ or
 
 </dd></dl>
 <dl>
-<dt><a name="index-LIST_002dUNCALLED_002dFUNCTIONS"></a>Function: <strong>LIST-UNCALLED-FUNCTIONS</strong> <em>()</em></dt>
+<dt id="index-LIST_002dUNCALLED_002dFUNCTIONS">Function: <strong>LIST-UNCALLED-FUNCTIONS</strong> <em>()</em></dt>
 <dd><p>Package:COMPILER
 </p>
 
@@ -187,7 +175,7 @@ special compiler optimizer properties which would eliminate an actual call.
 
 </dd></dl>
 <dl>
-<dt><a name="index-_002aCC_002a"></a>Variable: <strong>*CC*</strong></dt>
+<dt id="index-_002aCC_002a">Variable: <strong>*CC*</strong></dt>
 <dd><p>Package:COMPILER
 Has value a string which controls which C compiler is used by GCL.
 Usually this string is obtained from the machine.defs file, but
@@ -196,7 +184,7 @@ may be reset by the user, to change compilers or add an include path.
 
 </dd></dl>
 <dl>
-<dt><a name="index-_002aSPLIT_002dFILES_002a"></a>Variable: <strong>*SPLIT-FILES*</strong></dt>
+<dt id="index-_002aSPLIT_002dFILES_002a">Variable: <strong>*SPLIT-FILES*</strong></dt>
 <dd><p>Package:COMPILER
 This affects the behaviour of compile-file, and is useful for cases where
 the C compiler cannot handle large C files resulting from lisp compilation.
@@ -214,7 +202,7 @@ The package information will be inserted in each file.
 
 </dd></dl>
 <dl>
-<dt><a name="index-_002aCOMPILE_002dORDINARIES_002a"></a>Variable: <strong>*COMPILE-ORDINARIES*</strong></dt>
+<dt id="index-_002aCOMPILE_002dORDINARIES_002a">Variable: <strong>*COMPILE-ORDINARIES*</strong></dt>
 <dd><p>Package:COMPILER
 If this has a non nil value [default = nil], then all top level
 forms will be compiled into machine instructions.    Otherwise
@@ -227,7 +215,7 @@ with (progn &rsquo;compile ...) will do so.
 <hr>
 <div class="header">
 <p>
-Next: <a href="Function-and-Variable-Index.html#Function-and-Variable-Index" accesskey="n" rel="next">Function and Variable Index</a>, Previous: <a href="Miscellaneous.html#Miscellaneous" accesskey="p" rel="prev">Miscellaneous</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Function-and-Variable-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Function-and-Variable-Index.html#Function-and-Variable-Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="Function-and-Variable-Index.html" accesskey="n" rel="next">Function and Variable Index</a>, Previous: <a href="Miscellaneous.html" accesskey="p" rel="prev">Miscellaneous</a>, Up: <a href="index.html" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Function-and-Variable-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Function-and-Variable-Index.html" title="Index" rel="index">Index</a>]</p>
 </div>
 
 

@@ -172,7 +172,7 @@ DEFUNO_NEW("FSET",object,fSfset,SI
 		sym->s.s_mflag = FALSE;
 	} else if (car(function) == sLspecial)
 		FEerror("Cannot define a special form.", 0);
-	else if (function->c.c_car == sLmacro) {
+	else if (function->c.c_car == sSmacro) {
 		sym->s.s_gfdef = function->c.c_cdr;
 		sym->s.s_mflag = TRUE;
 	} else {
@@ -259,7 +259,7 @@ DEFUNO_NEW("FMAKUNBOUND",object,fLfmakunbound,LISP
 static void
 FFN(Fsetf)(object form)
 {
-	object result,*t,*t1;
+	object *t,*t1;
 	if (endp(form)) {
 		vs_base = vs_top;
 		vs_push(Cnil);
@@ -269,7 +269,7 @@ FFN(Fsetf)(object form)
 			vs_top = top;
 			if (endp(MMcdr(form)))
 			FEinvalid_form("No value for ~S.", form->c.c_car);
-			result = setf(MMcar(form), MMcadr(form));
+			setf(MMcar(form), MMcadr(form));
 			form = MMcddr(form);
 		} while (!endp(form));
 		t=vs_base;
@@ -388,14 +388,7 @@ EVAL:
 
 OTHERWISE:
 	vs_base = vs_top;
-	vs_push(sLsetf);
-	vs_push(place);
-	vs_push(form);
-	result=vs_top[-1];
-	vs_push(Cnil);
-	stack_cons();
-	stack_cons();
-	stack_cons();
+	vs_push(list(3,sLsetf,place,result=form));
 /***/
 #define VS_PUSH_ENV \
 	if(lex_env[1]){ \
@@ -428,9 +421,7 @@ FFN(Fpush)(object form)
 		return;
 	}
 	vs_base = vs_top;
-	vs_push(sLpush);
-	vs_push(form);
-	stack_cons();
+	vs_push(make_cons(sLpush,form));
 /***/
          VS_PUSH_ENV ;
 /***/
@@ -457,9 +448,7 @@ FFN(Fpop)(object form)
 		return;
 	}
 	vs_base = vs_top;
-	vs_push(sLpop);
-	vs_push(form);
-	stack_cons();
+	vs_push(make_cons(sLpop,form));
 /***/
 	VS_PUSH_ENV ;
 /***/
@@ -495,9 +484,7 @@ FFN(Fincf)(object form)
 		return;
 	}
 	vs_base = vs_top;
-	vs_push(sLincf);
-	vs_push(form);
-	stack_cons();
+	vs_push(make_cons(sLincf,form));
 /***/
 	VS_PUSH_ENV ;
 /***/
@@ -533,9 +520,7 @@ FFN(Fdecf)(object form)
 		return;
 	}
 	vs_base = vs_top;
-	vs_push(sLdecf);
-	vs_push(form);
-	stack_cons();
+	vs_push(make_cons(sLdecf,form));
 /***/
 	VS_PUSH_ENV ;
 /***/

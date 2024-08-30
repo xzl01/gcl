@@ -1,46 +1,36 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<!-- Created by GNU Texinfo 5.2, http://www.gnu.org/software/texinfo/ -->
+<!-- Created by GNU Texinfo 6.7, http://www.gnu.org/software/texinfo/ -->
 <head>
-<title>GCL SI Manual: System Definitions</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>System Definitions (GCL SI Manual)</title>
 
-<meta name="description" content="GCL SI Manual: System Definitions">
-<meta name="keywords" content="GCL SI Manual: System Definitions">
+<meta name="description" content="System Definitions (GCL SI Manual)">
+<meta name="keywords" content="System Definitions (GCL SI Manual)">
 <meta name="resource-type" content="document">
 <meta name="distribution" content="global">
 <meta name="Generator" content="makeinfo">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link href="index.html#Top" rel="start" title="Top">
-<link href="Function-and-Variable-Index.html#Function-and-Variable-Index" rel="index" title="Function and Variable Index">
+<link href="index.html" rel="start" title="Top">
+<link href="Function-and-Variable-Index.html" rel="index" title="Function and Variable Index">
 <link href="Function-and-Variable-Index.html#SEC_Contents" rel="contents" title="Table of Contents">
-<link href="index.html#Top" rel="up" title="Top">
-<link href="Regular-Expressions.html#Regular-Expressions" rel="next" title="Regular Expressions">
-<link href="Available-Symbols.html#Available-Symbols" rel="prev" title="Available Symbols">
+<link href="index.html" rel="up" title="Top">
+<link href="Regular-Expressions.html" rel="next" title="Regular Expressions">
+<link href="Available-Symbols.html" rel="prev" title="Available Symbols">
 <style type="text/css">
 <!--
 a.summary-letter {text-decoration: none}
-blockquote.smallquotation {font-size: smaller}
+blockquote.indentedblock {margin-right: 0em}
 div.display {margin-left: 3.2em}
 div.example {margin-left: 3.2em}
-div.indentedblock {margin-left: 3.2em}
 div.lisp {margin-left: 3.2em}
-div.smalldisplay {margin-left: 3.2em}
-div.smallexample {margin-left: 3.2em}
-div.smallindentedblock {margin-left: 3.2em; font-size: smaller}
-div.smalllisp {margin-left: 3.2em}
-kbd {font-style:oblique}
+kbd {font-style: oblique}
 pre.display {font-family: inherit}
 pre.format {font-family: inherit}
 pre.menu-comment {font-family: serif}
 pre.menu-preformatted {font-family: serif}
-pre.smalldisplay {font-family: inherit; font-size: smaller}
-pre.smallexample {font-size: smaller}
-pre.smallformat {font-family: inherit; font-size: smaller}
-pre.smalllisp {font-size: smaller}
-span.nocodebreak {white-space:nowrap}
-span.nolinebreak {white-space:nowrap}
-span.roman {font-family:serif; font-weight:normal}
-span.sansserif {font-family:sans-serif; font-weight:normal}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
 ul.no-bullet {list-style: none}
 -->
 </style>
@@ -48,19 +38,17 @@ ul.no-bullet {list-style: none}
 
 </head>
 
-<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
-<a name="System-Definitions"></a>
-<div class="header">
+<body lang="en">
+<span id="System-Definitions"></span><div class="header">
 <p>
-Next: <a href="Debugging.html#Debugging" accesskey="n" rel="next">Debugging</a>, Previous: <a href="C-Interface.html#C-Interface" accesskey="p" rel="prev">C Interface</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Function-and-Variable-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Function-and-Variable-Index.html#Function-and-Variable-Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="Debugging.html" accesskey="n" rel="next">Debugging</a>, Previous: <a href="C-Interface.html" accesskey="p" rel="prev">C Interface</a>, Up: <a href="index.html" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Function-and-Variable-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Function-and-Variable-Index.html" title="Index" rel="index">Index</a>]</p>
 </div>
 <hr>
-<a name="System-Definitions-1"></a>
-<h2 class="chapter">17 System Definitions</h2>
+<span id="System-Definitions-1"></span><h2 class="chapter">17 System Definitions</h2>
 
 
 <dl>
-<dt><a name="index-ALLOCATE_002dCONTIGUOUS_002dPAGES"></a>Function: <strong>ALLOCATE-CONTIGUOUS-PAGES</strong> <em>(number &amp;optional (really-allocate nil))</em></dt>
+<dt id="index-ALLOCATE_002dCONTIGUOUS_002dPAGES">Function: <strong>ALLOCATE-CONTIGUOUS-PAGES</strong> <em>(number &amp;optional (really-allocate nil))</em></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL specific: Sets the maximum number of pages for contiguous blocks to
@@ -70,7 +58,7 @@ number of pages will be allocated immediately.
 
 </dd></dl>
 <dl>
-<dt><a name="index-FREEZE_002dDEFSTRUCT"></a>Function: <strong>FREEZE-DEFSTRUCT</strong> <em>(name)</em></dt>
+<dt id="index-FREEZE_002dDEFSTRUCT">Function: <strong>FREEZE-DEFSTRUCT</strong> <em>(name)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>The inline defstruct type checker will be made more efficient, in that
@@ -80,7 +68,7 @@ calling this the defstruct should not be altered.
 
 </dd></dl>
 <dl>
-<dt><a name="index-MAXIMUM_002dALLOCATABLE_002dPAGES"></a>Function: <strong>MAXIMUM-ALLOCATABLE-PAGES</strong> <em>(type)</em></dt>
+<dt id="index-MAXIMUM_002dALLOCATABLE_002dPAGES">Function: <strong>MAXIMUM-ALLOCATABLE-PAGES</strong> <em>(type)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL specific: Returns the current maximum number of pages for the type class
@@ -89,7 +77,7 @@ of the GCL implementation type TYPE.
 
 </dd></dl>
 <dl>
-<dt><a name="index-ALLOCATED_002dRELOCATABLE_002dPAGES"></a>Function: <strong>ALLOCATED-RELOCATABLE-PAGES</strong> <em>()</em></dt>
+<dt id="index-ALLOCATED_002dRELOCATABLE_002dPAGES">Function: <strong>ALLOCATED-RELOCATABLE-PAGES</strong> <em>()</em></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL specific: Returns the number of pages currently allocated for relocatable
@@ -98,7 +86,7 @@ blocks.
 
 </dd></dl>
 <dl>
-<dt><a name="index-PUTPROP"></a>Function: <strong>PUTPROP</strong> <em>(symbol value indicator)</em></dt>
+<dt id="index-PUTPROP">Function: <strong>PUTPROP</strong> <em>(symbol value indicator)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>Give SYMBOL the VALUE on INDICATOR property.
@@ -106,7 +94,7 @@ blocks.
 
 </dd></dl>
 <dl>
-<dt><a name="index-ALLOCATED_002dPAGES"></a>Function: <strong>ALLOCATED-PAGES</strong> <em>(type)</em></dt>
+<dt id="index-ALLOCATED_002dPAGES">Function: <strong>ALLOCATED-PAGES</strong> <em>(type)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL specific: Returns the number of pages currently allocated for the type
@@ -115,7 +103,7 @@ class of the GCL implementation type TYPE.
 
 </dd></dl>
 <dl>
-<dt><a name="index-ALLOCATE_002dRELOCATABLE_002dPAGES"></a>Function: <strong>ALLOCATE-RELOCATABLE-PAGES</strong> <em>(number)</em></dt>
+<dt id="index-ALLOCATE_002dRELOCATABLE_002dPAGES">Function: <strong>ALLOCATE-RELOCATABLE-PAGES</strong> <em>(number)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL specific: Sets the maximum number of pages for relocatable blocks to
@@ -124,7 +112,7 @@ NUMBER.
 
 </dd></dl>
 <dl>
-<dt><a name="index-ALLOCATED_002dCONTIGUOUS_002dPAGES"></a>Function: <strong>ALLOCATED-CONTIGUOUS-PAGES</strong> <em>()</em></dt>
+<dt id="index-ALLOCATED_002dCONTIGUOUS_002dPAGES">Function: <strong>ALLOCATED-CONTIGUOUS-PAGES</strong> <em>()</em></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL specific: Returns the number of pages currently allocated for contiguous
@@ -133,7 +121,7 @@ blocks.
 
 </dd></dl>
 <dl>
-<dt><a name="index-MAXIMUM_002dCONTIGUOUS_002dPAGES"></a>Function: <strong>MAXIMUM-CONTIGUOUS-PAGES</strong> <em>()</em></dt>
+<dt id="index-MAXIMUM_002dCONTIGUOUS_002dPAGES">Function: <strong>MAXIMUM-CONTIGUOUS-PAGES</strong> <em>()</em></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL specific: Returns the current maximum number of pages for contiguous
@@ -142,7 +130,7 @@ blocks.
 
 </dd></dl>
 <dl>
-<dt><a name="index-GET_002dHOLE_002dSIZE"></a>Function: <strong>GET-HOLE-SIZE</strong> <em>()</em></dt>
+<dt id="index-GET_002dHOLE_002dSIZE">Function: <strong>GET-HOLE-SIZE</strong> <em>()</em></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL specific: Returns as a fixnum the size of the memory hole (in pages).
@@ -150,7 +138,7 @@ blocks.
 
 </dd></dl>
 <dl>
-<dt><a name="index-SPECIALP"></a>Function: <strong>SPECIALP</strong> <em>(symbol)</em></dt>
+<dt id="index-SPECIALP">Function: <strong>SPECIALP</strong> <em>(symbol)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL specific: Returns T if the SYMBOL is a globally special variable; NIL
@@ -159,7 +147,7 @@ otherwise.
 
 </dd></dl>
 <dl>
-<dt><a name="index-OUTPUT_002dSTREAM_002dSTRING"></a>Function: <strong>OUTPUT-STREAM-STRING</strong> <em>(string-output-stream)</em></dt>
+<dt id="index-OUTPUT_002dSTREAM_002dSTRING">Function: <strong>OUTPUT-STREAM-STRING</strong> <em>(string-output-stream)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL specific: Returns the string corresponding to the STRING-OUTPUT-STREAM.
@@ -167,7 +155,7 @@ otherwise.
 
 </dd></dl>
 <dl>
-<dt><a name="index-GET_002dSTRING_002dINPUT_002dSTREAM_002dINDEX"></a>Function: <strong>GET-STRING-INPUT-STREAM-INDEX</strong> <em>(string-input-stream)</em></dt>
+<dt id="index-GET_002dSTRING_002dINPUT_002dSTREAM_002dINDEX">Function: <strong>GET-STRING-INPUT-STREAM-INDEX</strong> <em>(string-input-stream)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL specific: Returns the current index of the STRING-INPUT-STREAM.
@@ -175,7 +163,7 @@ otherwise.
 
 </dd></dl>
 <dl>
-<dt><a name="index-STRING_002dCONCATENATE"></a>Function: <strong>STRING-CONCATENATE</strong> <em>(&amp;rest strings)</em></dt>
+<dt id="index-STRING_002dCONCATENATE">Function: <strong>STRING-CONCATENATE</strong> <em>(&amp;rest strings)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL specific: Returns the result of concatenating the given STRINGS.
@@ -183,7 +171,7 @@ otherwise.
 
 </dd></dl>
 <dl>
-<dt><a name="index-BDS_002dVAR"></a>Function: <strong>BDS-VAR</strong> <em>(i)</em></dt>
+<dt id="index-BDS_002dVAR">Function: <strong>BDS-VAR</strong> <em>(i)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL specific: Returns the symbol of the i-th entity in the bind stack.
@@ -191,7 +179,7 @@ otherwise.
 
 </dd></dl>
 <dl>
-<dt><a name="index-ERROR_002dSET"></a>Function: <strong>ERROR-SET</strong> <em>(form)</em></dt>
+<dt id="index-ERROR_002dSET">Function: <strong>ERROR-SET</strong> <em>(form)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL specific: Evaluates the FORM in the null environment.  If the evaluation
@@ -204,7 +192,7 @@ value.
 
 </dd></dl>
 <dl>
-<dt><a name="index-COMPILED_002dFUNCTION_002dNAME"></a>Function: <strong>COMPILED-FUNCTION-NAME</strong> <em>(compiled-function-object)</em></dt>
+<dt id="index-COMPILED_002dFUNCTION_002dNAME">Function: <strong>COMPILED-FUNCTION-NAME</strong> <em>(compiled-function-object)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL specific: Returns the name of the COMPILED-FUNCTION-OBJECT.
@@ -212,7 +200,7 @@ value.
 
 </dd></dl>
 <dl>
-<dt><a name="index-STRUCTUREP"></a>Function: <strong>STRUCTUREP</strong> <em>(object)</em></dt>
+<dt id="index-STRUCTUREP">Function: <strong>STRUCTUREP</strong> <em>(object)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL specific: Returns T if the OBJECT is a structure; NIL otherwise.
@@ -220,7 +208,7 @@ value.
 
 </dd></dl>
 <dl>
-<dt><a name="index-IHS_002dVS"></a>Function: <strong>IHS-VS</strong> <em>(i)</em></dt>
+<dt id="index-IHS_002dVS">Function: <strong>IHS-VS</strong> <em>(i)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL specific: Returns the value stack index of the i-th entity in the
@@ -229,7 +217,7 @@ invocation history stack.
 
 </dd></dl>
 <dl>
-<dt><a name="index-UNIVERSAL_002dERROR_002dHANDLER"></a>Function: <strong>UNIVERSAL-ERROR-HANDLER</strong> <em>(error-name correctable function-name continue-format-string error-format-string &amp;rest args)</em></dt>
+<dt id="index-UNIVERSAL_002dERROR_002dHANDLER">Function: <strong>UNIVERSAL-ERROR-HANDLER</strong> <em>(error-name correctable function-name continue-format-string error-format-string &amp;rest args)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL specific: Starts the error handler of GCL.  When an error is detected,
@@ -245,7 +233,7 @@ HANDLER.
 
 </dd></dl>
 <dl>
-<dt><a name="index-_002aINTERRUPT_002dENABLE_002a"></a>Variable: <strong>*INTERRUPT-ENABLE*</strong></dt>
+<dt id="index-_002aINTERRUPT_002dENABLE_002a">Variable: <strong>*INTERRUPT-ENABLE*</strong></dt>
 <dd><p>Package:SI
 GCL specific: If the value of SI:*INTERRUPT-ENABLE* is non-NIL, GCL signals
 an error on the terminal interrupt (this is the default case).  If it is NIL,
@@ -254,7 +242,7 @@ GCL ignores the interrupt and assigns T to SI:*INTERRUPT-ENABLE*.
 
 </dd></dl>
 <dl>
-<dt><a name="index-CHDIR"></a>Function: <strong>CHDIR</strong> <em>(pathname)</em></dt>
+<dt id="index-CHDIR">Function: <strong>CHDIR</strong> <em>(pathname)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL/UNIX specific: Changes the current working directory to the specified
@@ -263,7 +251,7 @@ pathname.
 
 </dd></dl>
 <dl>
-<dt><a name="index-COPY_002dSTREAM"></a>Function: <strong>COPY-STREAM</strong> <em>(in-stream out-stream)</em></dt>
+<dt id="index-COPY_002dSTREAM">Function: <strong>COPY-STREAM</strong> <em>(in-stream out-stream)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL specific: Copies IN-STREAM to OUT-STREAM until the end-of-file on IN-
@@ -272,7 +260,7 @@ STREAM.
 
 </dd></dl>
 <dl>
-<dt><a name="index-INIT_002dSYSTEM"></a>Function: <strong>INIT-SYSTEM</strong> <em>()</em></dt>
+<dt id="index-INIT_002dSYSTEM">Function: <strong>INIT-SYSTEM</strong> <em>()</em></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL specific: Initializes the library and the compiler of GCL.  Since they
@@ -282,7 +270,7 @@ SYSTEM will cause an error.
 
 </dd></dl>
 <dl>
-<dt><a name="index-_002aINDENT_002dFORMATTED_002dOUTPUT_002a"></a>Variable: <strong>*INDENT-FORMATTED-OUTPUT*</strong></dt>
+<dt id="index-_002aINDENT_002dFORMATTED_002dOUTPUT_002a">Variable: <strong>*INDENT-FORMATTED-OUTPUT*</strong></dt>
 <dd><p>Package:SI
 GCL specific: The FORMAT directive ~% indents the next line if the value of
 this variable is non-NIL.  If NIL, ~% simply does Newline.
@@ -290,7 +278,7 @@ this variable is non-NIL.  If NIL, ~% simply does Newline.
 
 </dd></dl>
 <dl>
-<dt><a name="index-SET_002dHOLE_002dSIZE"></a>Function: <strong>SET-HOLE-SIZE</strong> <em>(fixnum)</em></dt>
+<dt id="index-SET_002dHOLE_002dSIZE">Function: <strong>SET-HOLE-SIZE</strong> <em>(fixnum)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL specific: Sets the size of the memory hole (in pages).
@@ -298,7 +286,7 @@ this variable is non-NIL.  If NIL, ~% simply does Newline.
 
 </dd></dl>
 <dl>
-<dt><a name="index-FRS_002dBDS"></a>Function: <strong>FRS-BDS</strong> <em>(i)</em></dt>
+<dt id="index-FRS_002dBDS">Function: <strong>FRS-BDS</strong> <em>(i)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL specific: Returns the bind stack index of the i-th entity in the frame
@@ -307,7 +295,7 @@ stack.
 
 </dd></dl>
 <dl>
-<dt><a name="index-IHS_002dFUN"></a>Function: <strong>IHS-FUN</strong> <em>(i)</em></dt>
+<dt id="index-IHS_002dFUN">Function: <strong>IHS-FUN</strong> <em>(i)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL specific: Returns the function value of the i-th entity in the invocation
@@ -316,7 +304,7 @@ history stack.
 
 </dd></dl>
 <dl>
-<dt><a name="index-_002aMAKE_002dCONSTANT"></a>Function: <strong>*MAKE-CONSTANT</strong> <em>(symbol value)</em></dt>
+<dt id="index-_002aMAKE_002dCONSTANT">Function: <strong>*MAKE-CONSTANT</strong> <em>(symbol value)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL specific: Makes the SYMBOL a constant with the specified VALUE.
@@ -324,7 +312,7 @@ history stack.
 
 </dd></dl>
 <dl>
-<dt><a name="index-FIXNUMP"></a>Function: <strong>FIXNUMP</strong> <em>(object)</em></dt>
+<dt id="index-FIXNUMP">Function: <strong>FIXNUMP</strong> <em>(object)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL specific: Returns T if the OBJECT is a fixnum; NIL otherwise.
@@ -332,7 +320,7 @@ history stack.
 
 </dd></dl>
 <dl>
-<dt><a name="index-BDS_002dVAL"></a>Function: <strong>BDS-VAL</strong> <em>(i)</em></dt>
+<dt id="index-BDS_002dVAL">Function: <strong>BDS-VAL</strong> <em>(i)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL specific: Returns the value of the i-th entity in the bind stack.
@@ -340,7 +328,7 @@ history stack.
 
 </dd></dl>
 <dl>
-<dt><a name="index-STRING_002dTO_002dOBJECT"></a>Function: <strong>STRING-TO-OBJECT</strong> <em>(string)</em></dt>
+<dt id="index-STRING_002dTO_002dOBJECT">Function: <strong>STRING-TO-OBJECT</strong> <em>(string)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL specific: (SI:STRING-TO-OBJECT STRING) is equivalent to
@@ -349,14 +337,14 @@ history stack.
 
 </dd></dl>
 <dl>
-<dt><a name="index-_002aSYSTEM_002dDIRECTORY_002a"></a>Variable: <strong>*SYSTEM-DIRECTORY*</strong></dt>
+<dt id="index-_002aSYSTEM_002dDIRECTORY_002a">Variable: <strong>*SYSTEM-DIRECTORY*</strong></dt>
 <dd><p>Package:SI
 GCL specific: Holds the name of the system directory of GCL.
 </p>
 
 </dd></dl>
 <dl>
-<dt><a name="index-FRS_002dIHS"></a>Function: <strong>FRS-IHS</strong> <em>(i)</em></dt>
+<dt id="index-FRS_002dIHS">Function: <strong>FRS-IHS</strong> <em>(i)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL specific: Returns the invocation history stack index of the i-th entity
@@ -365,7 +353,7 @@ in the frame stack.
 
 </dd></dl>
 <dl>
-<dt><a name="index-RESET_002dGBC_002dCOUNT"></a>Function: <strong>RESET-GBC-COUNT</strong> <em>()</em></dt>
+<dt id="index-RESET_002dGBC_002dCOUNT">Function: <strong>RESET-GBC-COUNT</strong> <em>()</em></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL specific: Resets the counter of the garbage collector that records how
@@ -375,7 +363,7 @@ type.
 
 </dd></dl>
 <dl>
-<dt><a name="index-CATCH_002dBAD_002dSIGNALS"></a>Function: <strong>CATCH-BAD-SIGNALS</strong> <em>()</em></dt>
+<dt id="index-CATCH_002dBAD_002dSIGNALS">Function: <strong>CATCH-BAD-SIGNALS</strong> <em>()</em></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL/BSD specific: Installs a signal catcher for bad signals:
@@ -388,7 +376,7 @@ is caught during garbage collection, GCL terminates immediately.
 
 </dd></dl>
 <dl>
-<dt><a name="index-RESET_002dSTACK_002dLIMITS"></a>Function: <strong>RESET-STACK-LIMITS</strong> <em>()</em></dt>
+<dt id="index-RESET_002dSTACK_002dLIMITS">Function: <strong>RESET-STACK-LIMITS</strong> <em>()</em></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL specific: Resets the stack limits to the normal state.  When a stack has
@@ -399,7 +387,7 @@ SI:RESET-STACK-LIMITS.
 
 </dd></dl>
 <dl>
-<dt><a name="index-_002aGBC_002dMESSAGE_002a"></a>Variable: <strong>*GBC-MESSAGE*</strong></dt>
+<dt id="index-_002aGBC_002dMESSAGE_002a">Variable: <strong>*GBC-MESSAGE*</strong></dt>
 <dd><p>Package:SI
 GCL specific: If the value of SI:*GBC-MESSAGE* is non-NIL, the garbage
 collector prints some information on the terminal.  Usually SI:*GBC-MESSAGE*
@@ -408,7 +396,7 @@ should be set NIL.
 
 </dd></dl>
 <dl>
-<dt><a name="index-_002aGBC_002dNOTIFY_002a"></a>Variable: <strong>*GBC-NOTIFY*</strong></dt>
+<dt id="index-_002aGBC_002dNOTIFY_002a">Variable: <strong>*GBC-NOTIFY*</strong></dt>
 <dd><p>Package:SI
 GCL specific: If the value is non-NIL, the garbage
 collector prints a very brief one line message about the area causing the collection,
@@ -417,7 +405,7 @@ and the time spent in internal time units.
 
 </dd></dl>
 <dl>
-<dt><a name="index-_002aAFTER_002dGBC_002dHOOK_002a"></a>Variable: <strong>*AFTER-GBC-HOOK*</strong></dt>
+<dt id="index-_002aAFTER_002dGBC_002dHOOK_002a">Variable: <strong>*AFTER-GBC-HOOK*</strong></dt>
 <dd><p>Package:SI
 Defaults to nil, but may be set to a function of one argument TYPE which is
 a lisp variable indicating the TYPE which caused the current collection.
@@ -425,7 +413,7 @@ a lisp variable indicating the TYPE which caused the current collection.
 
 </dd></dl>
 <dl>
-<dt><a name="index-ALLOCATED"></a>Funcition: <strong>ALLOCATED</strong> <em>(type)</em></dt>
+<dt id="index-ALLOCATED">Funcition: <strong>ALLOCATED</strong> <em>(type)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>Returns 6 values:
@@ -460,7 +448,7 @@ CONS BIGNUM RATIO COMPLEX STRUCTURE.
 </dd></dl>
 
 <dl>
-<dt><a name="index-_002aMAKE_002dSPECIAL"></a>Function: <strong>*MAKE-SPECIAL</strong> <em>(symbol)</em></dt>
+<dt id="index-_002aMAKE_002dSPECIAL">Function: <strong>*MAKE-SPECIAL</strong> <em>(symbol)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL specific: Makes the SYMBOL globally special.
@@ -468,7 +456,7 @@ CONS BIGNUM RATIO COMPLEX STRUCTURE.
 
 </dd></dl>
 <dl>
-<dt><a name="index-MAKE_002dSTRING_002dOUTPUT_002dSTREAM_002dFROM_002dSTRING"></a>Function: <strong>MAKE-STRING-OUTPUT-STREAM-FROM-STRING</strong> <em>(string)</em></dt>
+<dt id="index-MAKE_002dSTRING_002dOUTPUT_002dSTREAM_002dFROM_002dSTRING">Function: <strong>MAKE-STRING-OUTPUT-STREAM-FROM-STRING</strong> <em>(string)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL specific: Creates a string-output-stream corresponding to the STRING and
@@ -477,7 +465,7 @@ returns it.  The STRING should have a fill-pointer.
 
 </dd></dl>
 <dl>
-<dt><a name="index-_002aIGNORE_002dEOF_002dON_002dTERMINAL_002dIO_002a"></a>Variable: <strong>*IGNORE-EOF-ON-TERMINAL-IO*</strong></dt>
+<dt id="index-_002aIGNORE_002dEOF_002dON_002dTERMINAL_002dIO_002a">Variable: <strong>*IGNORE-EOF-ON-TERMINAL-IO*</strong></dt>
 <dd><p>Package:SI
 GCL specific: If the value of SI:*IGNORE-EOF-ON-TERMINAL-IO* is non-NIL, GCL
 ignores the eof-character (usually ^D) on the terminal and the terminal never
@@ -487,7 +475,7 @@ NIL.
 
 </dd></dl>
 <dl>
-<dt><a name="index-ADDRESS"></a>Function: <strong>ADDRESS</strong> <em>(object)</em></dt>
+<dt id="index-ADDRESS">Function: <strong>ADDRESS</strong> <em>(object)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL specific: Returns the address of the OBJECT as a fixnum.  The address of
@@ -497,7 +485,7 @@ an object depends on the version of GCL.  E.g. (SI:ADDRESS NIL) returns
 
 </dd></dl>
 <dl>
-<dt><a name="index-_002aLISP_002dMAXPAGES_002a"></a>Variable: <strong>*LISP-MAXPAGES*</strong></dt>
+<dt id="index-_002aLISP_002dMAXPAGES_002a">Variable: <strong>*LISP-MAXPAGES*</strong></dt>
 <dd><p>Package:SI
 GCL specific: Holds the maximum number of pages (1 page = 2048 bytes) for the
 GCL process.  The result of changing the value of SI:*LISP-MAXPAGES* is
@@ -506,7 +494,7 @@ unpredictable.
 
 </dd></dl>
 <dl>
-<dt><a name="index-ARGC"></a>Function: <strong>ARGC</strong> <em>()</em></dt>
+<dt id="index-ARGC">Function: <strong>ARGC</strong> <em>()</em></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL specific: Returns the number of arguments on the command line that invoked
@@ -515,7 +503,7 @@ the GCL process.
 
 </dd></dl>
 <dl>
-<dt><a name="index-NANI"></a>Function: <strong>NANI</strong> <em>(fixnum)</em></dt>
+<dt id="index-NANI">Function: <strong>NANI</strong> <em>(fixnum)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL specific: Returns the object in the address FIXNUM.  This function is
@@ -525,7 +513,7 @@ SI:NANI is quite dangerous and should be used with care.
 
 </dd></dl>
 <dl>
-<dt><a name="index-_002aNOTIFY_002dGBC_002a"></a>Variable: <strong>*NOTIFY-GBC*</strong></dt>
+<dt id="index-_002aNOTIFY_002dGBC_002a">Variable: <strong>*NOTIFY-GBC*</strong></dt>
 <dd><p>Package:SI
 GCL specific: If the value of this variable is non-NIL, then the garbage
 collector notifies that it begins to run whenever it is invoked.  Otherwise,
@@ -534,7 +522,7 @@ garbage collection begins silently.
 
 </dd></dl>
 <dl>
-<dt><a name="index-SAVE_002dSYSTEM"></a>Function: <strong>SAVE-SYSTEM</strong> <em>(pathname)</em></dt>
+<dt id="index-SAVE_002dSYSTEM">Function: <strong>SAVE-SYSTEM</strong> <em>(pathname)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL specific: Saves the current GCL core imange into a program file specified
@@ -548,7 +536,7 @@ resetting io streams.   It would not be possible to continue normally.
 
 </dd></dl>
 <dl>
-<dt><a name="index-UNCATCH_002dBAD_002dSIGNALS"></a>Function: <strong>UNCATCH-BAD-SIGNALS</strong> <em>()</em></dt>
+<dt id="index-UNCATCH_002dBAD_002dSIGNALS">Function: <strong>UNCATCH-BAD-SIGNALS</strong> <em>()</em></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL/BSD specific: Undoes the effect of SI:CATCH-BAD-SIGNALS.
@@ -556,7 +544,7 @@ resetting io streams.   It would not be possible to continue normally.
 
 </dd></dl>
 <dl>
-<dt><a name="index-VS"></a>Function: <strong>VS</strong> <em>(i)</em></dt>
+<dt id="index-VS">Function: <strong>VS</strong> <em>(i)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL specific: Returns the i-th entity in the value stack.
@@ -564,7 +552,7 @@ resetting io streams.   It would not be possible to continue normally.
 
 </dd></dl>
 <dl>
-<dt><a name="index-DISPLACED_002dARRAY_002dP"></a>Function: <strong>DISPLACED-ARRAY-P</strong> <em>(array)</em></dt>
+<dt id="index-DISPLACED_002dARRAY_002dP">Function: <strong>DISPLACED-ARRAY-P</strong> <em>(array)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL specific: Returns T if the ARRAY is a displaced array; NIL otherwise.
@@ -572,7 +560,7 @@ resetting io streams.   It would not be possible to continue normally.
 
 </dd></dl>
 <dl>
-<dt><a name="index-ARGV"></a>Function: <strong>ARGV</strong> <em>(fixnum)</em></dt>
+<dt id="index-ARGV">Function: <strong>ARGV</strong> <em>(fixnum)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL specific: Returns the FIXNUM-th argument on the command line that invoked
@@ -581,7 +569,7 @@ the GCL process.
 
 </dd></dl>
 <dl>
-<dt><a name="index-_002aDEFAULT_002dTIME_002dZONE_002a"></a>Variable: <strong>*DEFAULT-TIME-ZONE*</strong></dt>
+<dt id="index-_002aDEFAULT_002dTIME_002dZONE_002a">Variable: <strong>*DEFAULT-TIME-ZONE*</strong></dt>
 <dd><p>Package:SI
 GCL specific: Holds the default time zone.  The initial value of SI:*DEFAULT-
 TIME-ZONE* is 6 (the time zone of Austin, Texas).
@@ -589,7 +577,7 @@ TIME-ZONE* is 6 (the time zone of Austin, Texas).
 
 </dd></dl>
 <dl>
-<dt><a name="index-GETENV"></a>Function: <strong>GETENV</strong> <em>(string)</em></dt>
+<dt id="index-GETENV">Function: <strong>GETENV</strong> <em>(string)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL/UNIX specific: Returns the environment with the name STRING as a string;
@@ -598,7 +586,7 @@ if the environment specified by STRING is not found, returns NIL.
 
 </dd></dl>
 <dl>
-<dt><a name="index-FASLINK"></a>Function: <strong>FASLINK</strong> <em>(file string)</em></dt>
+<dt id="index-FASLINK">Function: <strong>FASLINK</strong> <em>(file string)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL/BSD specific: Loads the FASL file FILE while linking the object files and
@@ -624,7 +612,7 @@ you should of course add joe.o to the above &quot;EXTRAS= joe.o foo.o..&quot;
 
 </dd></dl>
 <dl>
-<dt><a name="index-TOP_002dLEVEL"></a>Function: <strong>TOP-LEVEL</strong> <em>()</em></dt>
+<dt id="index-TOP_002dLEVEL">Function: <strong>TOP-LEVEL</strong> <em>()</em></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL specific: Starts the standard top-level listner of GCL.  When the GCL
@@ -636,7 +624,7 @@ redefined top-level.
 
 </dd></dl>
 <dl>
-<dt><a name="index-FRS_002dVS"></a>Function: <strong>FRS-VS</strong> <em>(i)</em></dt>
+<dt id="index-FRS_002dVS">Function: <strong>FRS-VS</strong> <em>(i)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>GCL specific: Returns the value stack index of the i-th entity in the frame
@@ -645,7 +633,7 @@ stack.
 
 </dd></dl>
 <dl>
-<dt><a name="index-WRITE_002dDEBUG_002dSYMBOLS"></a>Function: <strong>WRITE-DEBUG-SYMBOLS</strong> <em>(start file &amp;key (main-file &quot;/usr/local/schelter/xgcl/unixport/raw_gcl&quot;) (output-file &quot;debug-symbols.o&quot; ))</em></dt>
+<dt id="index-WRITE_002dDEBUG_002dSYMBOLS">Function: <strong>WRITE-DEBUG-SYMBOLS</strong> <em>(start file &amp;key (main-file &quot;/usr/local/schelter/xgcl/unixport/raw_gcl&quot;) (output-file &quot;debug-symbols.o&quot; ))</em></dt>
 <dd><p>Package:SI
 </p>
 <p>Write out a file of debug-symbols using address START as the place
@@ -657,7 +645,7 @@ last is a keyword argument.
 
 </dd></dl>
 <dl>
-<dt><a name="index-PROF"></a>Function: <strong>PROF</strong> <em>(x y)</em></dt>
+<dt id="index-PROF">Function: <strong>PROF</strong> <em>(x y)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>These functions in the SI package are GCL specific, and allow monitoring
@@ -688,7 +676,7 @@ the code.
 
 </dd></dl>
 <dl>
-<dt><a name="index-CATCH_002dFATAL"></a>Function: <strong>CATCH-FATAL</strong> <em>(i)</em></dt>
+<dt id="index-CATCH_002dFATAL">Function: <strong>CATCH-FATAL</strong> <em>(i)</em></dt>
 <dd><p>Package:SI
 </p>
 
@@ -703,7 +691,7 @@ than zero.  Catching can be turned off by making catch_fatal = 0.
 
 </dd></dl>
 <dl>
-<dt><a name="index-_002aMULTIPLY_002dSTACKS_002a"></a>Variable: <strong>*MULTIPLY-STACKS*</strong></dt>
+<dt id="index-_002aMULTIPLY_002dSTACKS_002a">Variable: <strong>*MULTIPLY-STACKS*</strong></dt>
 <dd><p>Package:SI
 </p>
 <p>If this variable is set to a positive fixnum, then the next time through the
@@ -723,7 +711,7 @@ can leave you in an inconsistent state.
 
 </dd></dl>
 <dl>
-<dt><a name="index-GBC_002dTIME"></a>Function: <strong>GBC-TIME</strong> <em>(&amp;optional x)</em></dt>
+<dt id="index-GBC_002dTIME">Function: <strong>GBC-TIME</strong> <em>(&amp;optional x)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>Sets the internal C variable gc_time to X if X is supplied and then
@@ -735,7 +723,7 @@ internal time units spent there.   The initial value of gc_time is -1.
 
 </dd></dl>
 <dl>
-<dt><a name="index-FWRITE"></a>Function: <strong>FWRITE</strong> <em>(string start count stream)</em></dt>
+<dt id="index-FWRITE">Function: <strong>FWRITE</strong> <em>(string start count stream)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>Write from STRING starting at char START (or 0 if it is nil) COUNT characters
@@ -746,7 +734,7 @@ returned by FP-OUTPUT-STREAM.  Returns nil if it fails.
 
 </dd></dl>
 <dl>
-<dt><a name="index-FREAD"></a>Function: <strong>FREAD</strong> <em>(string start count stream)</em></dt>
+<dt id="index-FREAD">Function: <strong>FREAD</strong> <em>(string start count stream)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>Read characters into STRING starting at char START (or 0 if it is nil) COUNT
@@ -758,7 +746,7 @@ if it succeeds.
 
 </dd></dl>
 <dl>
-<dt><a name="index-SGC_002dON"></a>Function: <strong>SGC-ON</strong> <em>(&amp;optional ON)</em></dt>
+<dt id="index-SGC_002dON">Function: <strong>SGC-ON</strong> <em>(&amp;optional ON)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>If ON is not nil then SGC (stratified garbage collection) is turned
@@ -797,7 +785,7 @@ cannot tell which pages have been written too.
 
 </dd></dl>
 <dl>
-<dt><a name="index-ALLOCATE_002dSGC"></a>Function: <strong>ALLOCATE-SGC</strong> <em>(type min-pages max-pages percent-free)</em></dt>
+<dt id="index-ALLOCATE_002dSGC">Function: <strong>ALLOCATE-SGC</strong> <em>(type min-pages max-pages percent-free)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>If MIN-PAGES is 0, then this type will not be swept by SGC.    Otherwise
@@ -809,7 +797,7 @@ A list of the previous values for min, max and percent are returned.
 
 </dd></dl>
 <dl>
-<dt><a name="index-ALLOCATE_002dGROWTH"></a>Function: <strong>ALLOCATE-GROWTH</strong> <em>(type min max percent percent-free)</em></dt>
+<dt id="index-ALLOCATE_002dGROWTH">Function: <strong>ALLOCATE-GROWTH</strong> <em>(type min max percent percent-free)</em></dt>
 <dd><p>Package:SI
 </p>
 
@@ -845,7 +833,7 @@ would return the current values, but not make any changes.
 
 </dd></dl>
 <dl>
-<dt><a name="index-OPEN_002dFASD"></a>Function: <strong>OPEN-FASD</strong> <em>(stream direction eof-value table)</em></dt>
+<dt id="index-OPEN_002dFASD">Function: <strong>OPEN-FASD</strong> <em>(stream direction eof-value table)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>Given file STREAM open for input or output in DIRECTION,
@@ -880,7 +868,7 @@ and it makes bootstrapping more difficult.   It is in &quot;cmpnew/fasdmacros.ls
 
 </dd></dl>
 <dl>
-<dt><a name="index-WRITE_002dFASD_002dTOP"></a>Function: <strong>WRITE-FASD-TOP</strong> <em>(X FASD-STREAM)</em></dt>
+<dt id="index-WRITE_002dFASD_002dTOP">Function: <strong>WRITE-FASD-TOP</strong> <em>(X FASD-STREAM)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>Write X to FASD-STREAM.
@@ -888,7 +876,7 @@ and it makes bootstrapping more difficult.   It is in &quot;cmpnew/fasdmacros.ls
 
 </dd></dl>
 <dl>
-<dt><a name="index-READ_002dFASD_002dTOP"></a>Function: <strong>READ-FASD-TOP</strong> <em>(FASD-STREAM)</em></dt>
+<dt id="index-READ_002dFASD_002dTOP">Function: <strong>READ-FASD-TOP</strong> <em>(FASD-STREAM)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>Read the next object from FASD-STREAM.   Return the eof-value of FASD-STREAM if we
@@ -898,7 +886,7 @@ stream causes an error.
 
 </dd></dl>
 <dl>
-<dt><a name="index-CLOSE_002dFASD"></a>Function: <strong>CLOSE-FASD</strong> <em>(FASD-STREAM)</em></dt>
+<dt id="index-CLOSE_002dFASD">Function: <strong>CLOSE-FASD</strong> <em>(FASD-STREAM)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>On output write an eof marker to the associated file stream, and then
@@ -915,7 +903,7 @@ to OPEN-FASD the same file or file stream again with out first calling CLOSE-FAS
 
 </dd></dl>
 <dl>
-<dt><a name="index-FIND_002dSHARING_002dTOP"></a>Function: <strong>FIND-SHARING-TOP</strong> <em>(x table)</em></dt>
+<dt id="index-FIND_002dSHARING_002dTOP">Function: <strong>FIND-SHARING-TOP</strong> <em>(x table)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>X is any lisp object and TABLE is an eq hash table.  This walks through X
@@ -927,14 +915,14 @@ file, which you wish to share structure.
 
 </dd></dl>
 <dl>
-<dt><a name="index-_002aLOAD_002dPATHNAME_002a"></a>Variable: <strong>*LOAD-PATHNAME*</strong></dt>
+<dt id="index-_002aLOAD_002dPATHNAME_002a">Variable: <strong>*LOAD-PATHNAME*</strong></dt>
 <dd><p>Package:SI
 Load binds this to the pathname of the file being loaded.
 </p>
 
 </dd></dl>
 <dl>
-<dt><a name="index-DEFINE_002dINLINE_002dFUNCTION"></a>Macro: <strong>DEFINE-INLINE-FUNCTION</strong> <em>(fname vars &amp;body body)</em></dt>
+<dt id="index-DEFINE_002dINLINE_002dFUNCTION">Macro: <strong>DEFINE-INLINE-FUNCTION</strong> <em>(fname vars &amp;body body)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>This is equivalent to defun except that VARS may not contain
@@ -948,7 +936,7 @@ Example:
 
 </dd></dl>
 <dl>
-<dt><a name="index-DEFINE_002dCOMPILER_002dMACRO"></a>Macro: <strong>DEFINE-COMPILER-MACRO</strong> <em>(fname vars &amp;body body)</em></dt>
+<dt id="index-DEFINE_002dCOMPILER_002dMACRO">Macro: <strong>DEFINE-COMPILER-MACRO</strong> <em>(fname vars &amp;body body)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>FNAME may be the name of a function, but at compile time the macro
@@ -959,7 +947,7 @@ expansion given by this is used.
 
 </dd></dl>
 <dl>
-<dt><a name="index-DBL"></a>Function: <strong>DBL</strong> <em>()</em></dt>
+<dt id="index-DBL">Function: <strong>DBL</strong> <em>()</em></dt>
 <dd><p>Package:SI
 </p>
 <p>Invoke a top level loop, in which debug commands may be entered.
@@ -970,7 +958,7 @@ See SOURCE-LEVEL-DEBUG
 
 </dd></dl>
 <dl>
-<dt><a name="index-NLOAD"></a>Function: <strong>NLOAD</strong> <em>(file)</em></dt>
+<dt id="index-NLOAD">Function: <strong>NLOAD</strong> <em>(file)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>Load a file with the readtable bound to a special readtable, which
@@ -980,7 +968,7 @@ see SOURCE-LEVEL-DEBUG
 
 </dd></dl>
 <dl>
-<dt><a name="index-BREAK_002dFUNCTION"></a>Function: <strong>BREAK-FUNCTION</strong> <em>(function &amp;optional line absolute)</em></dt>
+<dt id="index-BREAK_002dFUNCTION">Function: <strong>BREAK-FUNCTION</strong> <em>(function &amp;optional line absolute)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>Set a breakpoint for a FUNCTION at LINE if the function has source
@@ -991,7 +979,7 @@ emacs command.
 
 </dd></dl>
 <dl>
-<dt><a name="index-XDR_002dOPEN"></a>Function: <strong>XDR-OPEN</strong> <em>(stream)</em></dt>
+<dt id="index-XDR_002dOPEN">Function: <strong>XDR-OPEN</strong> <em>(stream)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>Returns an object suitable for passing to XDR-READ if the stream
@@ -1003,7 +991,7 @@ or si::fp-output-stream would act as the identity.
 
 </dd></dl>
 <dl>
-<dt><a name="index-FP_002dINPUT_002dSTREAM"></a>Function: <strong>FP-INPUT-STREAM</strong> <em>(stream)</em></dt>
+<dt id="index-FP_002dINPUT_002dSTREAM">Function: <strong>FP-INPUT-STREAM</strong> <em>(stream)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>Return a unix stream for input associated to STREAM if possible,
@@ -1012,7 +1000,7 @@ otherwise return nil.
 
 </dd></dl>
 <dl>
-<dt><a name="index-FP_002dOUTPUT_002dSTREAM"></a>Function: <strong>FP-OUTPUT-STREAM</strong> <em>(stream)</em></dt>
+<dt id="index-FP_002dOUTPUT_002dSTREAM">Function: <strong>FP-OUTPUT-STREAM</strong> <em>(stream)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>Return a unix stream for output associated to STREAM if possible,
@@ -1022,7 +1010,7 @@ otherwise return nil.
 
 </dd></dl>
 <dl>
-<dt><a name="index-XDR_002dREAD"></a>Function: <strong>XDR-READ</strong> <em>(stream element)</em></dt>
+<dt id="index-XDR_002dREAD">Function: <strong>XDR-READ</strong> <em>(stream element)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>Read one item from STREAM of type the type of ELEMENT.    The representation
@@ -1032,7 +1020,7 @@ used by the basic unix rpc calls.
 
 </dd></dl>
 <dl>
-<dt><a name="index-XDR_002dWRITE"></a>Function: <strong>XDR-WRITE</strong> <em>(stream element)</em></dt>
+<dt id="index-XDR_002dWRITE">Function: <strong>XDR-WRITE</strong> <em>(stream element)</em></dt>
 <dd><p>Package:SI
 </p>
 <p>Write to STREAM the given ELEMENT.
@@ -1042,7 +1030,7 @@ used by the basic unix rpc calls.
 
 </dd></dl>
 <dl>
-<dt><a name="index-_002aTOP_002dLEVEL_002dHOOK_002a"></a>Variable: <strong>*TOP-LEVEL-HOOK*</strong></dt>
+<dt id="index-_002aTOP_002dLEVEL_002dHOOK_002a">Variable: <strong>*TOP-LEVEL-HOOK*</strong></dt>
 <dd><p>Package:SI
 If this variable is has a function as its value at start up time, then
 it is run immediately after the init.lsp file is loaded.    This is useful
@@ -1051,7 +1039,7 @@ for starting up an alternate top level loop.
 
 </dd></dl>
 <dl>
-<dt><a name="index-RUN_002dPROCESS"></a>Function: <strong>RUN-PROCESS</strong> <em>(string arglist)</em></dt>
+<dt id="index-RUN_002dPROCESS">Function: <strong>RUN-PROCESS</strong> <em>(string arglist)</em></dt>
 <dd><p>Package:SI
 </p>
 
@@ -1067,13 +1055,13 @@ if you call it too many times.
 </dd></dl>
 
 <dl>
-<dt><a name="index-_002aCASE_002dFOLD_002dSEARCH_002a"></a>Variable: <strong>*CASE-FOLD-SEARCH*</strong></dt>
+<dt id="index-_002aCASE_002dFOLD_002dSEARCH_002a">Variable: <strong>*CASE-FOLD-SEARCH*</strong></dt>
 <dd><p>Package: SI
 Non nil means that a string-match should ignore case
 </p></dd></dl>
 
 <dl>
-<dt><a name="index-STRING_002dMATCH"></a>Function: <strong>STRING-MATCH</strong> <em>(pattern string &amp;optional start end)</em></dt>
+<dt id="index-STRING_002dMATCH">Function: <strong>STRING-MATCH</strong> <em>(pattern string &amp;optional start end)</em></dt>
 <dd><p>Package: SI
 Match regexp PATTERN in STRING starting in string starting at START
 and ending at END.  Return -1 if match not found, otherwise
@@ -1083,24 +1071,24 @@ the matches, to be obtained with match-beginning and match-end.
 If it already contains such an array, then the contents of it will
 be over written.
 </p>
-<p>The form of a regexp pattern is discussed in See <a href="Regular-Expressions.html#Regular-Expressions">Regular Expressions</a>.
+<p>The form of a regexp pattern is discussed in See <a href="Regular-Expressions.html">Regular Expressions</a>.
 </p>
 </dd></dl>
 
 <dl>
-<dt><a name="index-MATCH_002dBEGINNING"></a>Function: <strong>MATCH-BEGINNING</strong> <em>(index)</em></dt>
+<dt id="index-MATCH_002dBEGINNING">Function: <strong>MATCH-BEGINNING</strong> <em>(index)</em></dt>
 <dd><p>Returns the beginning of the I&rsquo;th match from the previous STRING-MATCH,
 where the 0th is for the whole regexp and the subsequent ones match parenthetical expressions.  -1 is returned if there is no match, or if the *match-data*
 vector is not a fixnum array.
 </p></dd></dl>
 
 <dl>
-<dt><a name="index-MATCH_002dEND"></a>Function: <strong>MATCH-END</strong> <em>(index)</em></dt>
+<dt id="index-MATCH_002dEND">Function: <strong>MATCH-END</strong> <em>(index)</em></dt>
 <dd><p>Returns the end of the I&rsquo;th match from the previous STRING-MATCH
 </p></dd></dl>
 
 <dl>
-<dt><a name="index-SOCKET"></a>Function: <strong>SOCKET</strong> <em>(port &amp;key host server async myaddr myport daemon)</em></dt>
+<dt id="index-SOCKET">Function: <strong>SOCKET</strong> <em>(port &amp;key host server async myaddr myport daemon)</em></dt>
 <dd>
 <p>Establishes a socket connection to the specified PORT under a variety
 of circumstances.  
@@ -1131,7 +1119,7 @@ and call the SERVER function on the stream returned by ACCEPT.
 </dd></dl>
 
 <dl>
-<dt><a name="index-ACCEPT"></a>Function: <strong>ACCEPT</strong> <em>(stream)</em></dt>
+<dt id="index-ACCEPT">Function: <strong>ACCEPT</strong> <em>(stream)</em></dt>
 <dd>
 <p>Creates a new two-way stream to handle an individual incoming
 connection to STREAM, which must have been created with the SOCKET
@@ -1143,14 +1131,14 @@ will be called automatically as needed.
 </dd></dl>
 
 <table class="menu" border="0" cellspacing="0">
-<tr><td align="left" valign="top">&bull; <a href="Regular-Expressions.html#Regular-Expressions" accesskey="1">Regular Expressions</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+<tr><td align="left" valign="top">&bull; <a href="Regular-Expressions.html" accesskey="1">Regular Expressions</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
 </td></tr>
 </table>
 
 <hr>
 <div class="header">
 <p>
-Next: <a href="Debugging.html#Debugging" accesskey="n" rel="next">Debugging</a>, Previous: <a href="C-Interface.html#C-Interface" accesskey="p" rel="prev">C Interface</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Function-and-Variable-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Function-and-Variable-Index.html#Function-and-Variable-Index" title="Index" rel="index">Index</a>]</p>
+Next: <a href="Debugging.html" accesskey="n" rel="next">Debugging</a>, Previous: <a href="C-Interface.html" accesskey="p" rel="prev">C Interface</a>, Up: <a href="index.html" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Function-and-Variable-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Function-and-Variable-Index.html" title="Index" rel="index">Index</a>]</p>
 </div>
 
 
